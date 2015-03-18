@@ -15,7 +15,6 @@
 *.log
 *.out
 *.ps
-*.pdf
 *.thm
 *.toc
 *.lof
