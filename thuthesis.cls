@@ -410,7 +410,7 @@
 \ifthu@doctor
   \setcounter{tocdepth}{2}
 \else
-  \setcounter{tocdepth}{3}
+  \setcounter{tocdepth}{2}
 \fi
 \renewcommand\tableofcontents{%
   \thu@chapter*[]{\contentsname}

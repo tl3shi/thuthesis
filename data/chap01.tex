@@ -9,6 +9,10 @@
 
 本章将介绍本文的相关背景，常用的凸包围体种类及应用，常见的碰撞检测算法及本文的结构安排。
 
+
+TODO 图表用中文表示
+
+
 \section{相关背景}
 
 随着计算机软硬件技术的不断升级和发展，人们的衣食住行都越来越离不开计算机。
@@ -238,8 +242,10 @@ Decompositions~）仅得到98个组成部分，同时保持了原始模型的大
 \end{figure}
 
 随着计算机软件技术和硬件的发展，有不少并行算法来计算包围体。
-文献\cite{karlsson2010parallel}利用~Intel SIMD~（Single Instruction Multiple Data~，单指令多数据流）~SSE~指令集和~OpenMP~实现了对~AABB~，~OBB~和~$k$-DOP~的计算。
-文献\cite{lauterbach2009fast}提出了在~CUDA~平台上基于~GPU~构造~AABB~包围体树的方法并应用于光线追踪。
+文献\cite{karlsson2010parallel}利用~Intel~单指令多数据流（Single Instruction
+Multiple Data~，简称SIMD）~SSE~指令集和~OpenMP~实现了对~AABB~，~OBB~和~$k$-DOP~的计算。
+文献\cite{lauterbach2009fast}提出了在~统一计算设备架构（Compute Unified Device
+Architecture，简称CUDA，后同）~平台上基于~GPU~构造~AABB~包围体树的方法并应用于光线追踪。
 
 \section{碰撞检测算法}
 \label{sec:collisiondetection}
@@ -299,7 +305,7 @@ Processing）碰撞检测，刚体和柔性模型的碰撞检测以及静态和�
 \label{lbl:bvh-example}
 \end{figure}
 
-在碰撞检测算法中，一般会对模型进行预处理建立起各自的~BVH~树，当两个模型进行相交检测时，自顶向下遍历两棵~BVH~树，若父节点没有相交，则没有必要进行子节点的相交测试，自顶向下的遍历算法如~Algorithm~\ref{alg:traverse-bvh-tree}~所示。
+在碰撞检测算法中，一般会对模型进行预处理建立起各自的~BVH~树，当两个模型进行相交检测时，自顶向下遍历两棵~BVH~树，若父节点没有相交，则没有必要进行子节点的相交测试，自顶向下的遍历算法如算法~\ref{alg:traverse-bvh-tree}~所示。
 
 \begin{algorithm}
 \algsetup{linenosize=\tiny}
@@ -332,7 +338,7 @@ $node_1$，$node_2$：BVH~树中的节点1、节点2
 \end{algorithmic}
 \end{algorithm}
 
-从~Algorithm~\ref{alg:traverse-bvh-tree}~可以看出，基于~BVH~的碰撞检测算法性能的好坏关键在于两个操作，一是分别来自两个~BVH~内部节点包围体之间的相交测试，二是~BVH~最底层叶子节点内的原生几何相交测试，常常利用~$T_{cost}
+从算法~\ref{alg:traverse-bvh-tree}~可以看出，基于~BVH~的碰撞检测算法性能的好坏关键在于两个操作，一是分别来自两个~BVH~内部节点包围体之间的相交测试，二是~BVH~最底层叶子节点内的原生几何相交测试，常常利用~$T_{cost}
 = n_v * C_v + n_p * C_p$ 来衡量单个相交测试的所付出的代价，其中$n_v$
 和$n_p$分别表示参与包围体节点相交测试的数量和参与原始几何相交测试的数量，$C_v$和$C_p$则表示相应的平均测试耗费的代价\cite{klosowski1998efficient}。
 当运动场景或连续碰撞的模型之间的碰撞检测时，往往还需要考虑到因物体模型旋转平移等变换产生的包围体的更新所付出的代价，即上述代价函数变成$T_{cost}

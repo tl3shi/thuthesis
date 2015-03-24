@@ -28,10 +28,21 @@
 \usepackage{algorithmic} %%format of the algorithm
 \renewcommand{\algorithmicrequire}{{输入:}} %%Use Input in the format of Algorithm
 \renewcommand{\algorithmicensure}{{输出:}} %%UseOutput in the format of Algorithm
+\floatname{algorithm}{算法}
 
-%\usepackage{graphicx}
-%\usepackage{geometry}
-%\usepackage{array}
+
+\usepackage{listings}
+\renewcommand\lstlistingname{代码}
+\renewcommand\lstlistlistingname{代码}
+
+\lstset{framexleftmargin=1.4em, basicstyle=\ttfamily\small,
+        %frame=shadowbox, numberstyle=\tiny, breaklines=true,
+        numberstyle=\tiny, breaklines=true,
+        keywordstyle=\color{blue!70},
+        commentstyle=\color{red!50!green!50!blue!50},
+        rulesepcolor=\color{red!20!green!20!blue!20},
+        xleftmargin=1.8em, numbers=none,fontadjust=true}
+\lstdefinelanguage{shader}{morekeywords={uniform, layout, uniform, vec2, vec3, vec4, in, out, gl_Position, dot, flat, int ,float, gl_VertexID, xyz, w, x, y, z, location, version, sampler2DRect},morecomment=[l]{//}}
 
 
 % 你可以在这里修改配置文件中的定义，导言区可以使用中文。
@@ -92,9 +103,9 @@
 \include{data/ack}
 
 % 附录
-% \begin{appendix}
-% \input{data/appendix01}
-% \end{appendix}
+\begin{appendix}
+\input{data/appendix}
+\end{appendix}
 
 % 个人简历
 \include{data/resume}
