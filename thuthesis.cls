@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 %%
 %% This is file `thuthesis.cls',
 %% generated with the docstrip utility.
@@ -410,7 +411,7 @@
 \ifthu@doctor
   \setcounter{tocdepth}{2}
 \else
-  \setcounter{tocdepth}{3}
+  \setcounter{tocdepth}{2}
 \fi
 \renewcommand\tableofcontents{%
   \thu@chapter*[]{\contentsname}

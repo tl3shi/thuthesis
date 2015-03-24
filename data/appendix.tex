@@ -1,0 +1,20 @@
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "../main"
+%%% End: 
+\chapter{基于着色器的并行算法关键代码}
+\label{appendix:shader-chapter}
+
+\section{基于深度缓冲的算法}
+\label{app-sec:shader-z-buffer}
+
+%\lstinputlisting[language={shader}, caption={Vertex shader(Z buffer algorithm)}, label=vertex_shader_zbuffer]{shader_zbuffer.vert}
+\lstinputlisting[language={shader}]{shader_zbuffer.vert}
+
+\lstinputlisting[language={shader}]{shader_zbuffer.frag}
+
+
+\section{基于乒乓技术的算法}
+\label{app-sec:shader-rtt-pingpong}
+
+\lstinputlisting[language={shader}]{shader_rrt_pingpong.frag}
