@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 %%
 %% This is file `thuthesis.cls',
 %% generated with the docstrip utility.

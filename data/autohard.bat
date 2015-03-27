@@ -1,0 +1,1 @@
+sed -i s/[htbp]/[H]/g *.tex

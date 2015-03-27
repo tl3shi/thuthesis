@@ -51,7 +51,7 @@ p_n$~为~$S$~的一个凸组合。一个点集~$P \subseteq E^2$~为凸的集合
 AABB（Asix Aligned Bounding Box）包围体是最常见最简单的包围体，俗称包围盒，其方向始终沿着坐标轴方向\cite{bergen1997efficient}。
 在平面中就是包含二维模型的矩形，如图\ref{fig:aabb-bunny}所示，为平面图形~Bunny~的~AABB~包围体（二维情况称包围矩形更合适，但为了统一，这里统称包围体，后同）。对应到三维空间中就是沿坐标轴方向包含模型的最小的长方体。
 
-\begin{figure}[H] % use float package if you want it here
+\begin{figure}[htbp] % use float package if you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-AABB.pdf}
   \caption{AABB 包围体}
@@ -73,7 +73,7 @@ AABB~包围体的数据结构通常有3种方式：
 ~OBB（Oriented Bounding Box）包围体是带方向的包围盒，可看作是~AABB~包围体沿任意方向转动一定角度后构成的包围体，因此通常情况下，~OBB~较~AABB~而言可以更紧致地贴近原始模型。
 如图\ref{fig:obb-bunny}所示为平面图形~Bunny~的~OBB~包围体。
 
-\begin{figure}[H] % use float package if you want it here
+\begin{figure}[htbp] % use float package if you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-OBB.pdf}
   \caption{OBB 包围体}
@@ -97,7 +97,7 @@ AABB~包围体的数据结构通常有3种方式：
 球形（Sphere）包围体，也称包围球（二维情况下即为包围圆，下同），即用一个半径尽量小的球包住给定所有点，该问题的求解是计算几何中的经典问题最小包围球的变种。
 如图\ref{fig:sphere-bunny}所示为平面图形~Bunny~的~Sphere~包围体。
 
-\begin{figure}[H] % use float package if you want it here
+\begin{figure}[htbp] % use float package if you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-Sphere.pdf}
   \caption{Sphere 包围体}
@@ -117,7 +117,7 @@ $k$-DOP（Discrete Orientation Polytope）包围体是一个由$k$个固定方�
 Directions Hull）\cite{weiyingmei2001}。
 在二维（三维）平面上，~k-DOP~就是一个由$k/2$对平行的固定方向的边（面）围成的凸多边形（多面体），其中$k\in\mathbb{N}$，$k\geq4$（$k\geq6$）。如图\ref{fig:8dop-bunny}所示，为平面图形~Bunny~的$8$-DOP。
 
-\begin{figure}[H] % use float package if you want it here
+\begin{figure}[htbp] % use float package if you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-8DOP.pdf}
   \caption{$k$-DOP 包围体（$k=8$）}
@@ -129,19 +129,22 @@ Directions Hull）\cite{weiyingmei2001}。
 与其他几种包围盒相比较而言，$k$-DOP~是取包围体存储计算和相交测试耗费时间的一个折衷，且可以通过修改$k$的值来提高包围体的灵活性。
 
 \subsection{Convex hull 包围体}
+\label{subsec:convexhull}
 
 凸包（Convex hull）是在计算几何中出现的概念，被定义为包含点集模型的最小凸集\cite{dengcg}，
 因此~Convex hull~包围体是最紧致的凸包围体，能够更好地近似模型本身。
 包围体的紧致程度以凸包为衡量标准，一个包围体的紧致性 $\tau$ 按照如下公式计算：
 
 \begin{equation}
+\label{equa:judge:tightness}
 \tau = \frac{V(CH)}{V(BV)}
 \end{equation}
+
 其中，$V(CH)$为凸包的体积，$V(BV)$~为包围体的体积，按照此公式计算出来的$\tau$越接近1表明其越紧致，凸包最紧致，其紧致性值1。
 
 图\ref{fig:convexhull-bunny}为二维凸包的示例。
 
-\begin{figure}[H] % use float package if you want it here
+\begin{figure}[htbp] % use float package if you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-Convexhull.pdf}
   \caption{Convex hull 包围体}
@@ -177,7 +180,7 @@ J.Guibas~\cite{Guibas2003Zonotopes}等人利用对偶的方法提出了一种用
 还有如图\ref{fig:subfig-bv-cylinder}所示的圆柱形\cite{Schomer2000Smallest}、图\ref{fig:subfig-bvcone}所示的圆锥形\cite{held1997erit}和如图\ref{fig:subfig-bv-ellipse}所示的椭球形\cite{Wang2004Efficient}等等包围体。
 \end{inparaenum}
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering%
   \subcaptionbox{圆柱形包围体\label{fig:subfig-bv-cylinder}}%[3cm] %标题的长度
     {\includegraphics[height=4cm]{bv-cylinder.png}}
@@ -205,7 +208,7 @@ J.Guibas~\cite{Guibas2003Zonotopes}等人利用对偶的方法提出了一种用
 \onlinecite{barequet2001efficiently}中提出的构造最小~OBB~包围体算法的基础上将物体分解成多个~OBB~包围体，用这些~OBB~包围体近似原始模型用于机器人抓取中，如图\ref{lbl:Huebner2008-example}所示。
 类似的还有~Sphere~包围体的分解\cite{hubbard1996approximating}（如图\ref{lbl:hubbard1996approximating-example}），~Tribox~的分解\cite{crosnier1999tribox}等。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
   \subcaptionbox{模型简化成~OBB~包围体\cite{huebner2008minimum}\label{lbl:Huebner2008-example}}%[3cm] %标题的长度
     {\includegraphics[height=4cm]{Huebner2008-example.png}}
@@ -221,7 +224,7 @@ Detail，多层次细节）~，并在07年将其扩展到三维\cite{lien2007app
 Decompositions~）将得到726240个组成部分，而近似凸分解（~ACD，Approximate Convex
 Decompositions~）仅得到98个组成部分，同时保持了原始模型的大致形状，这大大加速了渲染过程。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \centering
 \includegraphics[width=3in]{lien2007approximate-example.png}
 \caption{层次结构凸包围多面体的精确构造和近似构造\cite{lien2007approximate3d}}
@@ -231,7 +234,7 @@ Decompositions~）仅得到98个组成部分，同时保持了原始模型的大
 
 文献\cite{attene2008hierarchical}利用一种类似的方法将原始3D模型分解成一个具有层次结构的模型（图\ref{lbl:attene2008hierarchical-example:subfig1}所示），最顶层将是整个模型的凸包。将该算法应用到3D编辑环境中，能够更加方便地让用户选择模型的某个部分进行交互设计。效果如图\ref{lbl:attene2008hierarchical-example:subfig2} 所示，用户选择模型的头部，并进行拖拽能够较快速得到模型新的外观。\footnote{详情可参考视频：http://www.readcube.com/articles/10.1111/j.1467-8659.2008.01271.x }
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
   \subcaptionbox{层次结构的分解\label{lbl:attene2008hierarchical-example:subfig1}}
     {\includegraphics[height=2.8cm]{attene2008hierarchical-example-0.png}}
@@ -281,7 +284,7 @@ Processing）碰撞检测，刚体和柔性模型的碰撞检测以及静态和�
 通过将包围体组织成树形结构即层次结构包围体（BVH）能够将包围体预判阶段从理论上降低到对数时间复杂度（要求树是平衡的）。
 当构造原始复杂模型的包围体树时，复杂模型会被拆分成多个部分，每个部分用某种包围体近似，这构成了树型结构的叶子节点，这些节点会按照某种分组策略进行合并成更大的包围体分别构成其父节点，如此递归，最终形成一颗树，树最顶端是一个包含住原始物体的最粗糙的包围体，如图\ref{lbl:bvh-example}
 所示，为一个8层~AABB~包围体的~BVH（也可以看作是8层6-DOP的~BVH）。
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
   \subcaptionbox*{\label{lbl:bvh-bunny-center-0.png}}
     {\includegraphics[height=2.8cm]{bvh-bunny-center-0.png}}
@@ -351,7 +354,7 @@ C_u$，要提高碰撞检测的性能，就得想办法减小$T_{cost}$的值。
 文献\cite{chang2010efficient}利用~OBB~包围体相对的紧致优点和球形包围体相交测试简单性的优点进行组合，构造~OBB-Sphere~包围体，在进行相交测试时，先利用球形包围体进行测试，如果相交再用~OBB~进行测试。
 类似的，文献\cite{zhigang2010efficient}同时利用更加紧致的$k$-DOP~和~Sphere~包围体构造$k$-DOP-Sphere~包围体。
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \caption{碰撞检测中常用凸包围体比较}
 \begin{tabular*}{13cm}{ccccc}
