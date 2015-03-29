@@ -627,7 +627,7 @@ i5-2320 CPU @ 3.2GHz 8G RAM NVIDIA GeForce GTX
 \subsection{凸包围多面体生成效率}
 \label{subsec:exper:efficiency}
 
-如图~\ref{chart:exps:cputime}~所示为本文算法（CUDA）与传统的~CPU~算法对比结果，图中横纵坐标分别代表多面体面数和运行时间，其中虚线代表搜索截面的过程，实线为构造凸包围多面体总体耗时。
+如图~\ref{fig:chart:exps:cputime}~所示为本文算法（CUDA）与传统的~CPU~算法对比结果，图中横纵坐标分别代表多面体面数和运行时间，其中虚线代表搜索截面的过程，实线为构造凸包围多面体总体耗时。
 当模型点数量较大时，搜索截面的过程占据了算法绝大多数时间，且随着凸包围多面体的面数~$k$~值增加而线性增长，这与搜索截面时间复杂度($O(k\cdot
 n)$)一致，截面求交过程利用第\ref{subsec:intersection-dual-mapping}~节中的对偶映射法，其时间复杂度为$O(k\log k)$，
 当点数量极大时，如图~\ref{fig:exp:cpu:buggatti}~所示，实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略
@@ -660,10 +660,10 @@ n)$)一致，截面求交过程利用第\ref{subsec:intersection-dual-mapping}~�
    \includegraphics[width=\fourgraphicswidth\textwidth, page=5]{cudatime.pdf}
 }
 \caption{基于~CUDA~并行算法运行时间}
-\label{chart:exps:cputime}
+\label{fig:chart:exps:cputime}
 \end{figure}
 
-下图为着色器算法根据不同模型构造不同面的包围体所耗费的时间对比，横坐标表示多面体面数~$k$，纵坐标为运行时间（毫秒），曲线cpu、zbuffer和rtt\_pp分别表示基于CPU、深度缓冲和基于乒乓技术的算法的运行时间。
+图~\ref{fig:chart:exps:shadertime}为着色器算法根据不同模型构造不同面的包围体所耗费的时间对比，横坐标表示多面体面数~$k$，纵坐标为运行时间（毫秒），曲线cpu、zbuffer和rtt\_pp分别表示基于CPU、深度缓冲和基于乒乓技术的算法的运行时间。
 
 \begin{figure}[htbp] % use [htbp] to fix the position
 \centering
@@ -684,14 +684,13 @@ n)$)一致，截面求交过程利用第\ref{subsec:intersection-dual-mapping}~�
    \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{shadertime.pdf}
 }
 \caption{基于着色器的并行算法运行时间}
-\label{chart:exps:shadertime}
+\label{fig:chart:exps:shadertime}
 \end{figure}
 
 从实验结果可以看出，当模型规模不大时，如图~\ref{fig:exp:shader:apple}~所示的含有8千多个点的~Apple~模型，
-Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用中当模型规模较小时直接用~CPU~计算即可。
+Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用中当模型规模较小时可直接用~CPU~计算即可。
 随着输入模型所含有点的数量规模的增加，CPU~和~GPU~运行时间之间的差距也越来越大。
-当多面体面数增加即~$k$~的增大时，在Z
-Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所增加，而在基于乒乓技术的算法中，当点规模一定时，$k$~的变化对最后运行时间影响不明显，因此当较大的~$k$~时，这种算法更快。
+当多面体面数增加即~$k$~的增大时，在~Z Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所增加，而在基于乒乓技术的算法中，当点规模一定时，$k$~的变化对最后运行时间影响不明显，因此当较大的~$k$~时，这种算法更快。
 
 \begin{table}
 \centering
@@ -699,9 +698,9 @@ Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所�
 \label{tab:exper:shadertime}
 \begin{minipage}[t]{0.8\textwidth}
   \begin{tabular}{p{1.5cm}<{\centering}cccc cccc} %p本身占一列
-  \toprule[1.2pt]
+  \toprule[1.5pt]
   \multirow{2}{*}{$k$} & \multicolumn{4}{c}{Apple模型(8118 个点)} &
-  \multicolumn{4}{c}{~~~~~Bugatti模型(1010815个点)}\\
+  \multicolumn{4}{c}{Bugatti~模型(1010815个点)}\\
   \cmidrule(lr){2-5}\cmidrule(lr){6-9}
   ~&cpu & Z buffer  & rtt\_pp & 加速比$^{*}$ & cpu  & Z buffer& rtt\_pp& 加速比 \\
   \midrule[1pt]
@@ -719,28 +718,26 @@ Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所�
 156	 & 146	& 88	& 47 &	3.11 &	693	& 378	&202  &	3.43 \\
 186	 & 177	& 110	& 43 &	4.12 &	861	& 474	&180  &	4.78 \\
 206	 & 194	& 123	& 49 &	3.96 &	962	& 533	&209  &	4.60 \\
-  \bottomrule[1.2pt]
+  \bottomrule[1.5pt]
 \end{tabular}\\[2pt]
   \footnotesize *: 加速比=cpu/$min$(Z buffer, rtt\_pp)
 \end{minipage}
 \end{table}
 
-表~\ref{tab:exper:shadertime}~详细的展示了以上两种算法应用于Alice和Bugatti\_veron模型的构造时间及相应的加速比。
-从中可以看出，Z Buffer算法适合相对较小的~$k$~值，基于乒乓技术的算法在较大~$k$~值时能达到更大的加速比。
+表~\ref{tab:exper:shadertime}~详细的展示了基于着色器的两种算法应用于~Alice~和~Bugatti~模型的构造时间及相应的加速比。
+从中可看出，Z Buffer~算法适合相对较小的~$k$~值，而基于乒乓技术的算法在较大~$k$~值时能达到更大的加速比。
 
 笔者实现了文献~\onlinecite{karlsson2010parallel}~中的并行算法并进行对比实验，表~\ref{tab:exp:sse-time}
-~为实验统计结果(均为搜索截面耗时，二者其他步骤相同)，其中~$k$~为多面体面数，
+~为实验统计结果，表中数据均为搜索截面耗时，因为二者其他步骤均相同且从~\ref{fig:chart:exps:cputime}~可得搜索截面时间占用整体绝大部分时间，其中~$k$~为多面体面数，
 列~SSE~和列~$k$-CBP~分别为文献~\onlinecite{karlsson2010parallel}~中的算法和本文提出的基于~CUDA~算法的运行时间（单位毫秒）。
-与文献~\onlinecite{karlsson2010parallel}~中的算法相比，本文算法优势明显。点数量较小时，能够提高~3-4~倍速度，
-模型变大，加速比更大，~Bugatti~模型的提速达到~4-8~倍。
 
 \begin{table}[htbp] 
 \centering
 \caption{本文算法与文献~\onlinecite{karlsson2010parallel}~的并行算法对比}
 \begin{tabular}{p{1.5cm}<{\centering}ccc ccc} %p本身占一列
-\toprule[1.2pt]
+\toprule[1.5pt]
 \multirow{2}{*}{$k$} & \multicolumn{3}{c}{Apple模型(8118个点)} &
-\multicolumn{3}{c}{Bugatti模型(1010815个点)}\\
+\multicolumn{3}{c}{Bugatti~模型(1010815个点)}\\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 ~&SSE\cite{karlsson2010parallel} & $k$-CBP &  加速比 & SSE & $k$-CBP &  加速比\\
 \midrule[1pt]
@@ -758,20 +755,23 @@ Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所�
 156 &  7.7 & 2.17  & 3.55  & 411.3 & 81.18  & 5.07 \\
 186 &  9.3 & 2.60  & 3.58  & 479.4 & 97.39  & 4.92 \\
 206 &  10.5 & 2.85  & 3.68 & 523.0 & 106.87  & 4.89  \\  
-\bottomrule[1.2pt]
+\bottomrule[1.5pt]
 \end{tabular}
 \label{tab:exp:sse-time}
 \end{table}
 
+与文献~\onlinecite{karlsson2010parallel}~中的算法相比，本文算法优势明显。
+当用于点数量较小~Apple~模型时，能够提高~3-4~倍速度，模型变大，加速比也更大，~Bugatti~模型的提速达到~4-8~倍。
+
 \subsection{凸包围多面体紧致程度}
 \label{subsec:exper:tightness}
 
-凸包围多面体的质量用如公式~\ref{equa:judge:tightness}~衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
-文献~\onlinecite{zachmann1998rapid}~是基于~$k$-DOP~实现的层次结构的包围体，其顶层的~$k$-DOP~与本文算法生成的多面体的紧致程度对比如图~\ref{chart:exps:tightness}~所示，
-图中横坐标~$k$~为多面体面数，纵坐标为紧致程度，曲线~$k$-DOP~为文献~\onlinecite{zachmann1998rapid}~的方法，曲线~$k$-CBP~为本文方法，由图可知，对于不同模型，本文构造的凸包围多面体紧致程度均有提升，如~Alice~模型提升了12.08\%, ~Dinasour~模型提升了34.0\%.
+凸包围多面体的质量用公式~\ref{equa:judge:tightness}~衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
+文献~\onlinecite{zachmann1998rapid}~是基于~$k$-DOP~实现的层次结构的包围体，其顶层的~$k$-DOP~与本文算法生成的多面体的紧致程度对比如~\ref{chart:exps:tightness}~所示，
+图中横坐标~$k$~为凸包围多面体的面数，纵坐标为紧致程度，曲线~$k$-DOP~和~$k$-CBP~分别为文献~\onlinecite{zachmann1998rapid}~和本文的方法，由图可知，
+对于不同模型，本文构造的凸包围多面体紧致程度均有所提升，如~Alice~模型提升了12.08\%, ~Dinasour~模型提升了34.0\%.
 
 \begin{figure}[htbp] 
-\setcounter{subfigure}{0}
 \centering
 \subcaptionbox{Apple(8118个点)\label{fig:exp:apple}}
 {
@@ -795,28 +795,28 @@ Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所�
 \end{figure}
 
 
-
 \begin{table}[htbp] 
 \centering
 \caption{$k$-CBP~与~QuickHull~凸包算法比较}
 \label{tab:exp:cgal}
 \begin{tabular}{lcccccl}
-\toprule[1.2pt]
+\toprule[1.5pt]
  Model & $f$(CHull)& $f$($k$-CBP) & $\tau$ ($k$-CBP)(\%) & $t$(CHull)(ms) & $t$($k$-CBP)(ms)\\ % 后面重新跑的, KCBP加上了近似凸包及求交时间的总和, 和近似凸包的分组时间也加了.
-\midrule[1.2pt]
+\midrule[1.5pt]
   Apple	& 499 & 30 & 93.67 & 5.5 & 1.30 \\ % apple3  自己电脑跑的数据, 之前是用的chengxianyu的电脑.
   Budda	& 1608 & 46 & 92.39 & 21.3 & 2.86 \\ %  1.0+0.86+1
   Dinosaur	& 1240 & 44 & 93.34 & 22.6 & 1.99 \\  % 1.0+0.98+0.1
   Alice	& 1332 & 44 & 93.92 & 85.8 & 8.47\\ % 2+6.48
   Bugatti & 24654 & 44 & 95.06 & 688.7 & 25.41 \\
-\bottomrule[1.2pt]
+\bottomrule[1.5pt]
 \end{tabular}
 \end{table}
 
 本文算法与~CGAL~\cite{cgal}~库中利用~QuickHull~算法构造的凸包进行比较的结果如表~\ref{tab:exp:cgal}~所示，
-其中~$f$(CHull)~和~$f$($k$-CBP)~分别表示凸包面数和凸包围多面体的面数，$\tau$($k$-CBP)~为凸包围多面体的紧致程度，$t$(CHull)~和~$t$($k$-CBP)~分别表示凸包和~$k$-CBP构造所花费时间。
+其中~$f$(CHull)~和~$f$($k$-CBP)~分别表示凸包的面数和凸包围多面体的面数，$\tau$($k$-CBP)~为凸包围多面体的紧致程度，$t$(CHull)~和~$t$($k$-CBP)~分别表示凸包和~$k$-CBP~构造所花费的时间。
 相应模型的可视化结果如图~\ref{pic:exps:ch-kcbp}~所示。
-与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度，例如~Apple~模型的凸包有~499~个平面，本文算法仅用~30~个平面就能达到~93.67\%的紧致程度，而对~Bugatti~模型，仅用了其凸包平面数量的0.17\%就达到95.06\%的紧致程度，且构造速度快了~27~倍。
+与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度，例如~Apple~模型的凸包有~499~个平面，本文算法仅用~30~个平面就能达到~93.67\%的紧致程度，
+而对~Bugatti~模型，仅用了其凸包平面数量的0.17\%就达到95.06\%的紧致程度，且构造速度快了~27~倍。
 
 
 \begin{figure}[htbp] 
@@ -868,9 +868,10 @@ Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所�
 \label{pic:exps:ch-kcbp}
 \end{figure}
 
-本文算法利用近似凸包与精确凸包的相似性，从近似凸包的众多面片对应的法向中通过~$k$-means聚类算法生成~$k$~个法向。
-表~\ref{tab:exp:ach:ch:tightness}~为~Alice~模型利用近似凸包和精确凸包聚类生成法向构造~$k$-CBP~的紧致程度对比。
-可以看出，一方面，利用精确凸包构造的~$k$-CBP~并不一定比近似凸包构造的结果更紧致，但由于近似凸包与精确凸包的外观的近似性因此二者得到的结果相差并不大(5\%以内)；另一方面，近似凸包的时间复杂度为线性，而精确凸包为~$O(n\log n)$，
+本文算法利用近似凸包与精确凸包的相似性，从近似凸包的众多面片对应的法向中通过~$k$-means~聚类算法生成~$k$~个法向。
+表~\ref{tab:exp:ach:ch:tightness}~为利用~Alice~模型的近似凸包和精确凸包分别聚类生成法向构造~$k$-CBP~的紧致程度对比。
+可以看出，一方面，利用精确凸包构造的~$k$-CBP~并不一定比近似凸包构造的结果更紧致，但由于近似凸包与精确凸包的外观的近似性因此二者得到的结果相差并不大(5\%以内)；
+另一方面，因近似凸包的时间复杂度为线性，而精确凸包为~$O(n\log n)$，
 因此本文利用近似凸包聚类生成法向。示例中构造近似凸包耗费时间仅为~0.88ms~，而精确凸包为~79.31ms~。
 
 \begin{table}[htbp]   
@@ -878,7 +879,7 @@ Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所�
 \caption{用近似凸包与精确凸包构造~$k$-CBP~紧致程度比较}
 \label{tab:exp:ach:ch:tightness}
 \begin{tabular}{lccccl}
-\toprule[1.2pt]
+\toprule[1.5pt]
 $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $\tau$ (CHull)(\%) \\
 \midrule[1.0pt]
 10 &	70.44 & 	65.56     &26 &	89.93 & 	94.45 \\
@@ -889,7 +890,6 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 20 &	86.38 & 	90.36     &36 &	92.93 & 	94.68 \\
 22 &	90.27 & 	92.48     &38 &	93.41 & 	93.20 \\
 24 &	90.70 & 	93.09     &40 &	93.81 & 	94.70 \\
-\bottomrule[1.2pt]
+\bottomrule[1.5pt]
 \end{tabular}
 \end{table}
-

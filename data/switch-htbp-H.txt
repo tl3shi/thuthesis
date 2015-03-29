@@ -1,0 +1,2 @@
+sed -i 's/\[htbp\]/[H]/g' *.tex 
+sed -i 's/\[H\]/[htbp]/g' *.tex 
