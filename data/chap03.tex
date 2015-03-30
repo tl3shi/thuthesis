@@ -6,15 +6,27 @@
 
 \chapter{基于 $k$-CBP 碰撞检测算法}
 \label{cha:kcbp-collision-detection}
-算法基本概念及框架
+
+碰撞检测算法是计算机图形学、计算机动画等领域里必不可少的。本章提出了基于~$k$-CBP~的碰撞检测算法，算法首先对输入的网格模型进行预处理，构造模型的~AABB~包围体、$k$-CBP，当进行碰撞检测是，首先判断~AABB~是否相交，若相交再进行~$k$-CBP~之间的相交测试，再次相交再进行实际模型的相交测试。在凸包围~$k$~面体之间分别用~AABB~树的方式和基于~GJK~算法两种方式进行，实验结果表明本文提出的方法能够有效加速碰撞检测算法。
+
+本章后续部分的内容组织如下：第一小节介绍~$k$-CBP~之间的相交测试算法，第二小节介绍三角网格的相交测试算法，第三节介绍总体的算法流程，最后一节为实验结果的分析。
+
 
 \section{$k$-CBP 的相交测试算法}
-\label{sec:gen-normals}
+\label{sec:kcbp:cd}
+
+在所有基于包围体的碰撞检测算法中，都是利用了包围体的相交测试比直接用原始模型相交测试更简单以提升算法的整体效率，包围体的相交测试是非常重要的一个步骤。
+与其他基于包围体的碰撞检测算法一样，本文基于~$k$-CBP~的算法也是先进行~$k$-CBP~的相交测试，若~$k$-CBP~相交，再进行原始模型的相交测试。
+$k$-CBP~之间的相交测试以两种方法实现，一种是将构造的~$k$-CBP~进行空间划分，构造~$k$-CBP~的~AABB~树，再基于~AABB~树进行相交测试，详细划分原则等算法见第~\ref{subsec:kcbp:cd:aabb}~；
+另一种是基于凸多面体的相交测试算法~GJK~，详细算法见第~\ref{subsec:kcbp:cd:gjk}节。
 
 \subsection{基于 AABB 树的算法}
-\label{sec:gen-normals}
+\label{subsec:kcbp:cd:aabb}
+
+
 \subsection{基于 GJK 的算法}
-\label{sec:gen-normals}
+\label{subsec:kcbp:cd:gjk}
+
 
 \section{三角网格的相交测试算法}
 \label{sec:gen-normals}
