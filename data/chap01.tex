@@ -51,7 +51,7 @@ p_n$~为~$S$~的一个凸组合。一个点集~$P \subseteq E^2$~为凸的集合
 AABB（Asix Aligned Bounding Box）包围体是最常见最简单的包围体，俗称包围盒，其方向始终沿着坐标轴方向\cite{bergen1997efficient}。
 在平面中就是包含二维模型的矩形，如图\ref{fig:aabb-bunny}所示，为平面图形~Bunny~的~AABB~包围体（二维情况称包围矩形更合适，但为了统一，这里统称包围体，后同）。对应到三维空间中就是沿坐标轴方向包含模型的最小的长方体。
 
-\begin{figure}[htbp] % use float package if you want it here
+\begin{figure}[htbp] % use float package If you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-AABB.pdf}
   \caption{AABB 包围体}
@@ -73,7 +73,7 @@ AABB~包围体的数据结构通常有3种方式：
 ~OBB（Oriented Bounding Box）包围体是带方向的包围盒，可看作是~AABB~包围体沿任意方向转动一定角度后构成的包围体，因此通常情况下，~OBB~较~AABB~而言可以更紧致地贴近原始模型。
 如图\ref{fig:obb-bunny}所示为平面图形~Bunny~的~OBB~包围体。
 
-\begin{figure}[htbp] % use float package if you want it here
+\begin{figure}[htbp] % use float package If you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-OBB.pdf}
   \caption{OBB 包围体}
@@ -97,7 +97,7 @@ AABB~包围体的数据结构通常有3种方式：
 球形（Sphere）包围体，也称包围球（二维情况下即为包围圆，下同），即用一个半径尽量小的球包住给定所有点，该问题的求解是计算几何中的经典问题最小包围球的变种。
 如图\ref{fig:sphere-bunny}所示为平面图形~Bunny~的~Sphere~包围体。
 
-\begin{figure}[htbp] % use float package if you want it here
+\begin{figure}[htbp] % use float package If you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-Sphere.pdf}
   \caption{Sphere 包围体}
@@ -117,7 +117,7 @@ $k$-DOP（Discrete Orientation Polytope）包围体是一个由$k$个固定方�
 Directions Hull）\cite{weiyingmei2001}。
 在二维（三维）平面上，~k-DOP~就是一个由$k/2$对平行的固定方向的边（面）围成的凸多边形（多面体），其中$k\in\mathbb{N}$，$k\geq4$（$k\geq6$）。如图\ref{fig:8dop-bunny}所示，为平面图形~Bunny~的$8$-DOP。
 
-\begin{figure}[htbp] % use float package if you want it here
+\begin{figure}[htbp] % use float package If you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-8DOP.pdf}
   \caption{$k$-DOP 包围体（$k=8$）}
@@ -144,14 +144,14 @@ Directions Hull）\cite{weiyingmei2001}。
 
 图\ref{fig:convexhull-bunny}为二维凸包的示例。
 
-\begin{figure}[htbp] % use float package if you want it here
+\begin{figure}[htbp] % use float package If you want it here
   \centering
   \includegraphics[width=1.5in]{bunny-2d-Convexhull.pdf}
   \caption{Convex hull 包围体}
   \label{fig:convexhull-bunny}
 \end{figure}
 
-常用的凸包构造算法有~Gift wrapping~\cite{Chand1970An}，复杂度最坏情况下为$O(n^2)$，构造凸包的算法时间复杂度下限为$O(n\log n)$，如~Preparata~提出的分治算法\cite{Preparata1977}。
+常用的凸包构造算法有~GIft wrapping~\cite{Chand1970An}，复杂度最坏情况下为$O(n^2)$，构造凸包的算法时间复杂度下限为$O(n\log n)$，如~Preparata~提出的分治算法\cite{Preparata1977}。
 当模型点集较大时，包围体涉及到的面片数量太多，做相交测试等相关计算时耗费时间较久，同时也耗费较多存储空间。因此~Convex hull~包围体不太适用于大模型。
 为此有学者在一些应用中用到近似凸包，
 近似凸包可分为三类：近似外凸包、近似内凸包和近似凸包\cite{hossain2013constructing}，近似内凸包完全在精确凸包内部，近似外凸包完全包含精确凸包，近似凸包即与精确凸包有相交的地方。
@@ -247,7 +247,7 @@ Decompositions~）仅得到98个组成部分，同时保持了原始模型的大
 随着计算机软件技术和硬件的发展，有不少并行算法来计算包围体。
 文献\cite{karlsson2010parallel}利用~Intel~单指令多数据流（Single Instruction
 Multiple Data~，简称SIMD）~SSE~指令集和~OpenMP~实现了对~AABB~，~OBB~和~$k$-DOP~的计算。
-文献\cite{lauterbach2009fast}提出了在~统一计算设备架构（Compute Unified Device
+文献\cite{lauterbach2009fast}提出了在~统一计算设备架构（Compute UnIfied Device
 Architecture，简称CUDA，后同）~平台上基于~GPU~构造~AABB~包围体树的方法并应用于光线追踪。
 
 \section{碰撞检测算法}
@@ -308,36 +308,40 @@ Processing）碰撞检测，刚体和柔性模型的碰撞检测以及静态和�
 \label{lbl:bvh-example}
 \end{figure}
 
-在碰撞检测算法中，一般会对模型进行预处理建立起各自的~BVH~树，当两个模型进行相交检测时，自顶向下遍历两棵~BVH~树，若父节点没有相交，则没有必要进行子节点的相交测试，自顶向下的遍历算法如算法~\ref{alg:traverse-bvh-tree}~所示。
+在碰撞检测算法中，一般会对模型进行预处理建立起各自的~BVH~树，当两个模型进行相交检测时，自顶向下遍历两棵~BVH~树，若父节点没有相交，则没有必要进行子节点的相交测试，自顶向下的层次遍历算法如算法~\ref{alg:traverse-bvh-tree}~所示。
+
 
 \begin{algorithm}
-\algsetup{linenosize=\tiny}
+%\algsetup{linenosize=\tiny}
 \small
-\caption{$TraverseBVHTree(node_1, node_2)$}
+\caption{自顶向下层次遍历~BVH~}
 \label{alg:traverse-bvh-tree}
 \begin{algorithmic}[1]
-\REQUIRE
+\Require
 $node_1$，$node_2$：BVH~树中的节点1、节点2
-\ENSURE
+\Ensure
 是否相交
-\IF{$node_1.bv \cap node_2.bv = \emptyset$} 
-    \RETURN \FALSE \COMMENT{包围体重合测试, 包围体不相交直接返回}
-\ELSE
-    \IF {$node_1.children = \emptyset$}
-         \IF {$node_2.children = \emptyset$}
-            \RETURN {$CheckIntersection(node_1.primitives, node_2.primitives)$}
-            \COMMENT{最底层叶子节点原生几何相交测试}
-         \ELSE
-            \FORALL {$child \in node_2.children$}
-                \STATE $TraverseBVHTree(node_1, child)$ \COMMENT{递归调用}
-            \ENDFOR
-         \ENDIF
-    \ELSE
-         \FORALL {$child \in node_1.children$}
-            \STATE $TraverseBVHTree(child, node_2)$  \COMMENT{递归调用}
-         \ENDFOR
-    \ENDIF
-\ENDIF
+\Function {TraverseBVHTree}{$node_1, node_2$}
+  \If{$node_1.bv \cap node_2.bv = \emptyset$} 
+    \State \Return{\texttt{False}} 
+    \Comment{包围体重合测试, 包围体不相交直接返回}
+  \Else
+      \If {$node_1.children = \emptyset$}
+           \If {$node_2.children = \emptyset$}
+              \State \Return {$CheckIntersection(node_1.primitives, node_2.primitives)$}
+              \State \Comment{最底层叶子节点原生几何相交测试}
+           \Else
+              \ForAll {$child \in node_2.children$}
+              \State \Call{TraverseBVHTree}{$node_1, child$} \Comment{递归调用}
+              \EndFor
+           \EndIf
+      \Else
+           \ForAll {$child \in node_1.children$}
+           \State \Call{TraverseBVHTree}{$child, node_2$}  \Comment{递归调用}
+           \EndFor
+      \EndIf
+  \EndIf
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -357,17 +361,17 @@ C_u$，要提高碰撞检测的性能，就得想办法减小$T_{cost}$的值。
 \begin{table}[htbp]
 \centering
 \caption{碰撞检测中常用凸包围体比较}
-\begin{tabular*}{13cm}{ccccc}
-\toprule[1.2pt]
+\begin{tabular}{ccccc}
+\toprule[1.5pt]
 凸包围体 & 构造代价 & 相交测试简单性 & 紧致性 & 更新代价\\
-\midrule[1pt]
+\midrule[1.0pt]
 AABB   & 1 & 2 & 4 & 3\\
 OBB    & 4 & 4 & 3 & 2\\
 Sphere & 2 & 1 & 5 & 1\\
 k-DOP  & 3 & 3 & 2 & 4\\
 Convex hull & 5 & 5 & 1 & 5 \\
-\bottomrule[1.2pt]
-\end{tabular*}
+\bottomrule[1.5pt]
+\end{tabular}
 \label{lbl:table:bv-comp}
 \end{table}
 

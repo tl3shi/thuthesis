@@ -126,29 +126,30 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 另外，亦可使用如文献\onlinecite{wong1997sampling}中的数学统计方法在球面上生成若干个点使其满足均匀分布。
 
 \begin{algorithm}[htbp]
-\algsetup{linenosize=\tiny}
 \small
 \caption{初始法向的生成}
 \label{alg:get_init_normals_by_area}
 \begin{algorithmic}[1]
-\REQUIRE
-初始法向数量：$k$
-\ENSURE
-~$k$~个法向：Normal
-\STATE $i \gets 0$； $area \leftarrow 4\pi / k$
-\STATE $m\_v \gets round(\pi/\sqrt{area})$
-\STATE $d\_v \gets \pi/m\_v$
-\STATE $d\_phi \gets area/d\_v$
-\FOR {$m=0$ \TO $m\_v-1$}
-    \STATE $v \gets \pi m/m\_v$
-    \STATE $m\_phi \gets round(2\pi\sin{v}/d\_phi)$
-    \FOR {$n=0$ \TO $m\_phi-1$}
-        \STATE $\phi \gets 2\pi n/m\_phi$
-        \STATE $Normal_i \gets vec3(\sin{v}\cos{\phi},\sin{v}\sin{\phi},\cos{v})$
-        \STATE $i \gets i+1$
-    \ENDFOR
-\ENDFOR
-\RETURN $Normal$
+\Require
+初始法向数量$k$
+\Ensure
+~$k$~个法向 $Normals$
+
+\Function{GenerateInitNormal}{$k$}
+  \State $area \leftarrow 4\pi / k$
+  \State $m\_v \gets round(\pi/\sqrt{area})$
+  \State $d\_v \gets \pi/m\_v$
+  \State $d\_phi \gets area/d\_v$
+  \For {$m=0 \to m\_v-1$}
+      \State $v \gets \pi m/m\_v$
+      \State $m\_phi \gets round(2\pi\sin{v}/d\_phi)$
+      \For {$n=0 \to m\_phi-1$}
+          \State $\phi \gets 2\pi n/m\_phi$
+          \State $Normals_i \gets vec3(\sin{v}\cos{\phi},\sin{v}\sin{\phi},\cos{v})$
+      \EndFor
+  \EndFor
+  \State \Return $Normals$
+  \EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -168,33 +169,33 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 为第~$i$~类的中心点，$\omega_i$~为法向~$\bm{n_i}$~所在面片对应的面积，这样使得生成的法向尽量靠近原始近似凸包面积较大的面片的方向。完整的算法如算法~\ref{alg:kmeans-determine-normals}所示。
 
 \begin{algorithm}
-\algsetup{linenosize=\tiny}
 \small
 \caption{$k$-means确定法向}
 \label{alg:kmeans-determine-normals}
 \begin{algorithmic}[1]
-\REQUIRE
+\Require
 初始中心点 $init$, 聚类数量 $k$, 聚类样本法向集 $points$
-\ENSURE
+\Ensure
 ~$k$~个聚类后的法向 $result$
-
-\FORALL {$p \in points$}
-    %\STATE $tmp \gets -\infty $
-    \FORALL {$c \in init$}
-        \STATE $\phi \gets c \cdot p$ \COMMENT{计算余弦距离, 并记录每个聚类变量属于哪一类}
-        %\STATE $tmp \gets max(tmp, \phi)$ \COMMENT{记录每个聚类变量属于哪一类}
-    \ENDFOR
-    \FORALL {$c \in init$}
-        \STATE $result \gets update(c)$ \COMMENT{按照公式\ref{equ:kmeans-update-center}更新中心点}
-    \IF{$chk\_state(result, init, iter)$}
-        \RETURN {$result$}
-        \COMMENT{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
-    \ELSE
-        \STATE $init \gets result $
-        \STATE $iter \gets iter+1 $
-    \ENDIF
-    \ENDFOR
-\ENDFOR
+\Function{kmeansCluster}{}
+  \ForAll {$p \in points$}
+    %\State $tmp \gets -\infty $
+    \ForAll {$c \in init$}
+        \State $\phi \gets c \cdot p$ \Comment{计算余弦距离, 并记录每个聚类变量属于哪一类}
+        %\State $tmp \gets max(tmp, \phi)$ \Comment{记录每个聚类变量属于哪一类}
+    \EndFor
+    \ForAll {$c \in init$}
+        \State $result \gets update(c)$ \Comment{按照公式\ref{equ:kmeans-update-center}更新中心点}
+    \If{$chk\_state(result, init, iter)$}
+        \State \Return {$result$}
+        \State \Comment{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
+    \Else
+        \State $init \gets result $
+        \State $iter \gets iter+1 $
+    \EndIf
+    \EndFor
+  \EndFor
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -224,28 +225,28 @@ n)$， 其中~$k$~为法向数量， $n$~为模型所含点数。
 
 
 \begin{algorithm}[htbp]
-\algsetup{linenosize=\tiny}
 \small
 \caption{搜索截面串行算法}
 \label{alg:search-plans-cpu}
 \begin{algorithmic}[1]
-\REQUIRE
-截面法向 $normal$
+\Require
+截面法向 $normals$
 模型点集 $points$
-\ENSURE
+\Ensure
 多面体截面 $planes$
-
-\FORALL {$\bm{n} \in normals$}
-    \FORALL {$\bm{p} \in points$}
-        \STATE $proj \gets  \bm{p} \cdot \bm{n}$ \COMMENT{计算投影值}
-        \STATE $max\_proj \gets max(proj, max\_proj)$ \COMMENT{更新最大投影值}
-    \ENDFOR
-\ENDFOR
-\FORALL {$\bm{n} \in normals$}
-    \STATE $max\_point \gets \bm{n} \cdot max\_proj$ \COMMENT{切点}
-    \STATE $planes\gets planes \cap plane(\bm{n}, max\_point)$ \COMMENT{构造平面}
-\ENDFOR
-\RETURN $planes$
+\Function{SearchCuttingPlanes}{$normals, points$}
+  \ForAll {$\bm{n} \in normals$}
+      \ForAll {$\bm{p} \in points$}
+          \State $proj \gets  \bm{p} \cdot \bm{n}$ \Comment{计算投影值}
+          \State $max\_proj \gets max(proj, max\_proj)$ \Comment{更新最大投影值}
+      \EndFor
+  \EndFor
+  \ForAll {$\bm{n} \in normals$}
+      \State $max\_point \gets \bm{n} \cdot max\_proj$ \Comment{切点}
+      \State $planes\gets planes \cup plane(\bm{n}, max\_point)$ \Comment{构造平面}
+  \EndFor
+  \State \Return $planes$
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -548,39 +549,39 @@ $， 则有：
 
 
 \begin{algorithm}[htbp]
-\algsetup{linenosize=\tiny}
 \small
 \caption{枚举算法}
 \label{alg:enum_algortihm}
 \begin{algorithmic}[1]
-\REQUIRE
+\Require
 平面：$planes$
-\ENSURE
+\Ensure
 凸包围多面体：$k$-CBP
-
-\FORALL {$p_1 \in planes$}
-  \STATE $Intersection \gets \emptyset $
-  \FORALL {$p_2 \in planes$}
-        \FORALL {$p_3 \in planes$}
-            %\IF{$ (p_1 = p_2 || p_1 = p_3 || p_2 = p_3) = \FALSE $}
-            \IF{$ p_1 \nparallel p_2 \nparallel p_3$}
-                \IF{$|A| \not= 0$}
-                    \STATE $P = (x_1, x_2, x_3)$
-                    \COMMENT{按照公式~\ref{equa:solution:three-planes}~计算得到交点坐标值} 
-                    \IF{$validate(P)$}
-                      \STATE $Intersection \gets Intersection \cup P$
-                      \COMMENT{验证交点P是否都在半空间负方向上}
-                    \ENDIF
-                \ENDIF
-            \ENDIF
-        \ENDFOR
-   \ENDFOR
-   \IF {$Intersection.size \geq 3$}
-   \STATE {$k\textrm{-CBP} \gets k\textrm{-CBP} \cup poly(p_1, Intersection)$}
-   \COMMENT{满足条件，加入到结果集}
-   \ENDIF
-\ENDFOR
-\RETURN {$k$-CBP}
+\Function{ConstructKCBP}{$planes$}
+  \ForAll {$p_1 \in planes$}
+    \State $Intersection \gets \emptyset $
+    \ForAll {$p_2 \in planes$}
+          \ForAll {$p_3 \in planes$}
+              %\If{$ (p_1 = p_2 || p_1 = p_3 || p_2 = p_3) = \FALSE $}
+              \If{$ p_1 \nparallel p_2 \nparallel p_3$}
+                  \If{$|A| \not= 0$}
+                      \State $P = (x_1, x_2, x_3)$
+                      \Comment{按照公式~\ref{equa:solution:three-planes}~计算得到交点坐标值} 
+                      \If{$validate(P)$}
+                        \State \Comment{验证交点P是否都在半空间负方向上}
+                        \State $Intersection \gets Intersection \cup P$
+                      \EndIf
+                  \EndIf
+              \EndIf
+          \EndFor
+     \EndFor
+     \If {$Intersection.size \geq 3$}
+     \State {$k\textrm{-CBP} \gets k\textrm{-CBP} \cup polygon(p_1, Intersection)$}
+     \Comment{满足条件，加入到结果集}
+     \EndIf
+  \EndFor
+  \State \Return {$k$-CBP}
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
