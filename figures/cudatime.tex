@@ -1,0 +1,125 @@
+﻿\documentclass[a4paper]{article}
+\usepackage{pgfplots}
+%\usepackage{ctex}
+
+\usepgfplotslibrary{colormaps}
+\pgfplotsset{compat=newest}
+\usepackage[graphics,tightpage,active]{preview}
+\usepackage{filecontents}
+
+\setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
+
+\begin{document}
+
+%\begin{tikzpicture}
+%\begin{axis}[title=$120 \times 120$ Smooth Surface, xlabel=$x$, ylabel=$y$]
+%  \addplot3[surf,samples=120,shader=interp,domain=0:1] {
+%    sin(deg(8*pi*x))* exp(-20*(y-0.5)^2) + exp(-(x-0.5)^2*30-
+%    (y-0.25)^2 - (x-0.5)*(y-0.25))
+%  };
+%\end{axis}
+%\end{tikzpicture}
+
+
+%\pgfplotsset{footnotesize}
+\begin{tikzpicture}
+%\selectcolormodel{gray}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=time(ms),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {apple.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {apple.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {apple.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {apple.cpu.csv};
+\end{axis}
+\end{tikzpicture}
+
+
+\begin{tikzpicture}
+%\selectcolormodel{gray}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=time(ms),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {budda.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {budda.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {budda.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {budda.cpu.csv};
+\end{axis}
+\end{tikzpicture}
+
+
+
+\begin{tikzpicture}
+%\selectcolormodel{gray}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=time(ms),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {dinosaur.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {dinosaur.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {dinosaur.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {dinosaur.cpu.csv};
+\end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+%\selectcolormodel{gray}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=time(ms),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {alice.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {alice.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {alice.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {alice.cpu.csv};
+\end{axis}
+\end{tikzpicture}
+
+
+\begin{tikzpicture}
+%\selectcolormodel{gray}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=time(ms),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {Bugatti.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {Bugatti.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {Bugatti.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {Bugatti.cpu.csv};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
+
+
+
+
+
+

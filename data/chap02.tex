@@ -11,7 +11,7 @@
 本文提出一种构造凸包围多面体的方法，该方法首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向。
 然后根据输入点集沿各法向搜索切点构成截面， 最后由这些截面通过对偶映射的方式求交构成凸包围多面体。
 该方法的主要优势是：
-\begin{inparaenum}[1)]
+\begin{inparaenum}[(1)]
 \item 对给定点集可构造紧致的包围体；
 \item 利用~GPU~加速，能够快速构造包围体；
 \item 通过参数~$k$~调节凸包围多面体的简单性和紧致性，可适用于不同的应用场景。
@@ -32,7 +32,7 @@
 $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
 如图\ref{fig:bunny}所示是~Bunny~模型的凸包围~34~面体（34-CBP）。
 
-\begin{figure}[H] 
+\begin{figure}[htbp] 
 \centering
   \includegraphics[width=1.3in]{bunny-34.png}
   \caption{~Bunny~模型的~34-CBP }
@@ -43,9 +43,9 @@ $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
 所示，首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向，然后根据输入点集在~GPU~中沿各法向搜索切点构成截面，
 最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面需要多次扫描输入点集，在~CPU~中计算较耗时，因此用~GPU~加速使得算法整体性能得以提升，其他步骤在~CPU~计算即可。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[height=0.7in]{kcbp-flowchart-x-aix.pdf}
+    \includegraphics[width=5.0in]{kcbp-flowchart-x-aix.eps}
     \caption{算法流程图}
     \label{lbl:kcbp-algorithm-flowchart}
 \end{figure}
@@ -54,7 +54,7 @@ $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
 从左至右分别显示了~Bunny~模型的~26-CBP、精确凸包和近似内凸包。近似凸包是精确凸包的一种近似，与精确凸包外观相似但其构造复杂度降低，不少研究者利用该性质解决计算机图形学中很多问题
 \cite{hossain2013constructing}。本文就是利用近似内凸包与精确凸包的相似性，从众多近似凸包面片的法向中通过聚类算法生成凸包围多面体的~$k$~个法向。
 %由图可知, 近似内凸包的三角面片大致反映了精确凸包三角面片的分布情况,近似内凸包相应位置面积较大的三角面片对应到精确凸包的三角面片面积也较大, 因此该三角面片所在平面需尽量保留.
-\begin{figure}[H] % use [h] to fix the position
+\begin{figure}[htbp] % use [htbp] to fix the position
 \centering
 \includegraphics[width=5.0in]{26-bunny-ach-ch-kcbp.png}
 \caption{~Bunny~模型的~26-CBP、凸包和近似内凸包}
@@ -74,27 +74,31 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \label{subsec:ach-gen-normals}
 
 下面以平面点集的近似内凸包为例说明初始法向集的生成。
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \subcaptionbox{Place points in bin\label{lbl:subfig-split-groups}}{
-    \includegraphics[width=1.7in]{approximate-convexhull-step1.png}} \hspace{0.5cm}
-  \subcaptionbox{Find extremes in bins \label{lbl:subfig-find-extrems}}{%
-    \includegraphics[width=1.7in]{approximate-convexhull-step2.png}} \hspace{0.5cm}
-  \subcaptionbox{Choose extremes to build approximate hull\label{lbl:subfig-connect-extremes}}{%
-    \includegraphics[width=1.7in]{approximate-convexhull-step3.png}} \hspace{0.5cm}
+  \subcaptionbox{分组\label{lbl:subfig-split-groups}}{
+    \includegraphics[width=2.0in]{approximate-convexhull-step1.png}} \hspace{0.5cm}
+  \linebreak
+  \subcaptionbox{选极值点\label{lbl:subfig-find-extrems}}{%
+    \includegraphics[width=2.0in]{approximate-convexhull-step2.png}} \hspace{0.5cm}
+  \hspace{2em}
+  \subcaptionbox{连线\label{lbl:subfig-connect-extremes}}{%
+    \includegraphics[width=2.0in]{approximate-convexhull-step3.png}} \hspace{0.5cm}
   \caption{二维近似内凸包的构造\cite{bentley1982approximation}}
 \label{lbl:ach-2d}
 \end{figure}
 
-如图\ref{lbl:ach-2d}所示，整个算法分为3个步骤：
-\begin{inparaenum}[(1)]
-\item \textbf{分组。}
+如图\ref{lbl:ach-2d}所示，整个算法分为如下3个步骤：
+%\begin{inparaenum}[(1)]
+\begin{enumerate}[(1)]
+\item \textbf{分组：}
 首先根据~$x$~轴将输入点均分~$\xi$~组，如图\ref{lbl:subfig-split-groups}所示，$\xi$值可以根据输入点集数量以及希望得到的近似凸包的近似程度进行选取，图示中分成了6组。
-\item \textbf{选极值点。}
+\item \textbf{选极值点：}
 然后在每组中找出沿~$y$~轴的最大最小值，得到每组的极值点，如图\ref{lbl:subfig-find-extrems}所示，在边界上的点可直接当作极值点。
-\item \textbf{连线。}
+\item \textbf{连线：}
 最后按条件连接每组的最值构成近似内凸包，如图\ref{lbl:subfig-connect-extremes}所示。//TODO，可更详细
-\end{inparaenum}
+%\end{inparaenum}
+\end{enumerate}
 此算法复杂度为~$O(n+\xi)$。  
 得到近似凸包后，因较长的边（图中的粗边）对最后凸包围多边形影响较大， 因此可以保留较长的$a$条边（2D 为例）， 其他$n-a$（n为近似内凸包边数）进行聚类得到$k-a$ 类， 最后得到边对应的垂直向外的方向作为法向。
 在三维空间里， 可按照~$x,y$~轴最多划分成 $(\xi+2)\times (\xi+2)$个网格， 每个网格取~$z$~的最大最小值， 因此所有网格含最多有~$2(\xi+2)^2$~个极值点， 其凸包可以在$O(\xi^2\log \xi^2) = O(\xi^2\log \xi)$ 内找出， 因此整个算法时间复杂度为$O(n+\xi^2\log\xi)$， 
@@ -111,7 +115,7 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 聚类算法是数据挖掘领域里的研究热点之一，$k$-means~是最流行和最简单的基于划分的聚类算法\cite{Jain2010}。其中，$k$-means
 算法最初的步骤就是初始聚类中心的选择。本文算法将采取如下的策略生成：给定一个单位球，将其按照等面积划分成$k$份即$k$-means中的参数$k$，连接球心到每份中心点构成的方向作为法向，其效果如图\ref{lbl:kmeans-init-normals-26}所示（$k=26$）。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
     \centering
     \includegraphics[height=1.7in]{kmeans-init-normals-26.png}
     \caption{初始聚类法向的生成}
@@ -121,30 +125,31 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 初始点生成算法具体如算法~\ref{alg:get_init_normals_by_area}~所示\footnote{http://www.cmu.edu/biolphys/deserno/pdf/sphere\_equi.pdf}。
 另外，亦可使用如文献\onlinecite{wong1997sampling}中的数学统计方法在球面上生成若干个点使其满足均匀分布。
 
-\begin{algorithm}[H]
-\algsetup{linenosize=\tiny}
+\begin{algorithm}[htbp]
 \small
 \caption{初始法向的生成}
 \label{alg:get_init_normals_by_area}
 \begin{algorithmic}[1]
-\REQUIRE
-初始法向数量：$k$
-\ENSURE
-~$k$~个法向：Normal
-\STATE $i \gets 0$； $area \leftarrow 4\pi / k$
-\STATE $m\_v \gets round(\pi/\sqrt{area})$
-\STATE $d\_v \gets \pi/m\_v$
-\STATE $d\_phi \gets area/d\_v$
-\FOR {$m=0$ \TO $m\_v-1$}
-    \STATE $v \gets \pi m/m\_v$
-    \STATE $m\_phi \gets round(2\pi\sin{v}/d\_phi)$
-    \FOR {$n=0$ \TO $m\_phi-1$}
-        \STATE $\phi \gets 2\pi n/m\_phi$
-        \STATE $Normal_i \gets vec3(\sin{v}\cos{\phi},\sin{v}\sin{\phi},\cos{v})$
-        \STATE $i \gets i+1$
-    \ENDFOR
-\ENDFOR
-\RETURN $Normal$
+\Require
+初始法向数量$k$
+\Ensure
+~$k$~个法向 $Normals$
+
+\Function{GenerateInitNormal}{$k$}
+  \State $area \leftarrow 4\pi / k$
+  \State $m\_v \gets \Call{round}{\pi/\sqrt{area}}$
+  \State $d\_v \gets \pi/m\_v$
+  \State $d\_phi \gets area/d\_v$
+  \For {$m=0 \to m\_v-1$}
+      \State $v \gets \pi m/m\_v$
+      \State $m\_phi \gets \Call{round}{2\pi\sin{v}/d\_phi}$
+      \For {$n=0 \to m\_phi-1$}
+          \State $\phi \gets 2\pi n/m\_phi$
+          \State $Normals_i \gets \Call{vec3}{\sin{v}\cos{\phi},\sin{v}\sin{\phi},\cos{v}}$
+      \EndFor
+  \EndFor
+  \State \Return $Normals$
+  \EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -164,33 +169,34 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 为第~$i$~类的中心点，$\omega_i$~为法向~$\bm{n_i}$~所在面片对应的面积，这样使得生成的法向尽量靠近原始近似凸包面积较大的面片的方向。完整的算法如算法~\ref{alg:kmeans-determine-normals}所示。
 
 \begin{algorithm}
-\algsetup{linenosize=\tiny}
 \small
 \caption{$k$-means确定法向}
 \label{alg:kmeans-determine-normals}
 \begin{algorithmic}[1]
-\REQUIRE
+\Require
 初始中心点 $init$, 聚类数量 $k$, 聚类样本法向集 $points$
-\ENSURE
+\Ensure
 ~$k$~个聚类后的法向 $result$
-
-\FORALL {$p \in points$}
-    %\STATE $tmp \gets -\infty $
-    \FORALL {$c \in init$}
-        \STATE $\phi \gets c \cdot p$ \COMMENT{计算余弦距离, 并记录每个聚类变量属于哪一类}
-        %\STATE $tmp \gets max(tmp, \phi)$ \COMMENT{记录每个聚类变量属于哪一类}
-    \ENDFOR
-    \FORALL {$c \in init$}
-        \STATE $result \gets update(c)$ \COMMENT{按照公式\ref{equ:kmeans-update-center}更新中心点}
-    \IF{$chk\_state(result, init, iter)$}
-        \RETURN {$result$}
-        \COMMENT{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
-    \ELSE
-        \STATE $init \gets result $
-        \STATE $iter \gets iter+1 $
-    \ENDIF
-    \ENDFOR
-\ENDFOR
+\Function{kmeansCluster}{$init, k, points$}
+  \ForAll {$p \in points$}
+    %\State $tmp \gets -\infty $
+    \ForAll {$c \in init$}
+        \State $\phi \gets c \cdot p$ \Comment{计算余弦距离, 并记录每个聚类变量属于哪一类}
+        %\State $tmp \gets max(tmp, \phi)$ \Comment{记录每个聚类变量属于哪一类}
+    \EndFor
+    \ForAll {$c \in init$}
+    \State $result \gets \Call{update}{c}$ 
+        \Comment{按照公式\ref{equ:kmeans-update-center}更新中心点}
+        \If{$ \Call{checkState}{result, init, iter}$}
+        \State \Return {$result$}
+        \State \Comment{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
+    \Else
+        \State $init \gets result $
+        \State $iter \gets iter+1 $
+    \EndIf
+    \EndFor
+  \EndFor
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -199,7 +205,7 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 其中图~\ref{lbl:fixed-kcbp-bunny}~为按照初始方向为~Bunny~模型生成的凸包围多面体($k=26$)，
 聚类后其法向及其生成的凸包围多面体如图~\ref{lbl:kmeans-kcbp-bunny}~所示, 后者的紧致程度比前者高~14.98\%.
 
-\begin{figure}[H]
+\begin{figure}[htbp]
 \setcounter{subfigure}{0}
   \centering
   \subcaptionbox{初始法向生成$k$-CBP\label{lbl:fixed-kcbp-bunny}}{%
@@ -211,7 +217,7 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \end{figure}
 
 \section{搜索截面}
-\label{sec:search-planes}
+\label{sec:search:planes}
 
 在确定构成~$k$-CBP~的法向后，只需要搜索空间上的一个点即可确定
 ~$k$-CBP~的截面，搜索截面等效于寻找沿着法向上的最大投影值，即对每个法向~$\bm{n_i}$，从输入模型的所有点中寻找最大投影值的点作为切点进而确定~$\bm{n_i}$~对应的截面。
@@ -219,29 +225,29 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 n)$， 其中~$k$~为法向数量， $n$~为模型所含点数。
 
 
-\begin{algorithm}[H]
-\algsetup{linenosize=\tiny}
+\begin{algorithm}[htbp]
 \small
 \caption{搜索截面串行算法}
 \label{alg:search-plans-cpu}
 \begin{algorithmic}[1]
-\REQUIRE
-截面法向 $normal$
+\Require
+截面法向 $normals$
 模型点集 $points$
-\ENSURE
+\Ensure
 多面体截面 $planes$
-
-\FORALL {$\bm{n} \in normals$}
-    \FORALL {$\bm{p} \in points$}
-        \STATE $proj \gets  \bm{p} \cdot \bm{n}$ \COMMENT{计算投影值}
-        \STATE $max\_proj \gets max(proj, max\_proj)$ \COMMENT{更新最大投影值}
-    \ENDFOR
-\ENDFOR
-\FORALL {$\bm{n} \in normals$}
-    \STATE $max\_point \gets \bm{n} \cdot max\_proj$ \COMMENT{切点}
-    \STATE $planes\gets planes \cap plane(\bm{n}, max\_point)$ \COMMENT{构造平面}
-\ENDFOR
-\RETURN $planes$
+\Function{SearchCuttingPlanes}{$normals, points$}
+  \ForAll {$\bm{n} \in normals$}
+      \ForAll {$\bm{p} \in points$}
+          \State $proj \gets  \bm{p} \cdot \bm{n}$ \Comment{计算投影值}
+          \State $max\_proj \gets \Call{max}{proj, max\_proj}$ \Comment{更新最大投影值}
+      \EndFor
+  \EndFor
+  \ForAll {$\bm{n} \in normals$}
+      \State $max\_point \gets \bm{n} \cdot max\_proj$ \Comment{切点}
+      \State $planes\gets planes \cup \Call{plane}{\bm{n}, max\_point}$ \Comment{构造平面}
+  \EndFor
+  \State \Return $planes$
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
@@ -258,7 +264,14 @@ Purpose Graphic Process Unit)中也发挥着重要作用。下面将分别介绍
 	
 在~OpenGL~中，当渲染~3D~模型时，深度测试是在片段着色器工作后的一个重要测试操作，当两个片段在相同的位置时，深度测试的目的是决定哪个片段将要保留下来，默认情况下，最前面即有较小（或较大，可设置）的~$z$~坐标值的片段将通过测试被保留下来。
 每个片段的深度信息保存在深度缓冲中，当新的片段通过测试后将更新缓冲中的值。
-我们充分利用了~OpenGL~的这种机制，算法每走一遍渲染流程将找出一个方向的切点，在顶点着色器中，将所有点的~$x,y$~坐标值设为一样，并将该点在法向上的投影作为~$z$~值即深度值，所有点经过深度测试后将只有~$z$~值最大的点被保留下来，该点就是沿着这个法向的切点。
+我们充分利用了~OpenGL~的这种机制，算法流程图如~\ref{fig:flowchart:zbuffer}~所示，算法每走一遍渲染流程将找出一个方向的切点，在顶点着色器中，将所有点的~$x,y$~坐标值设为一样，并将该点在法向上的投影作为~$z$~值即深度值，所有点经过深度测试后将只有~$z$~值最大的点被保留下来，该点就是沿着这个法向的切点。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=3.6in]{shader-z_buffer.eps}
+  \caption{基于~Z Buffer~算法流程图}
+  \label{fig:flowchart:zbuffer}
+\end{figure}
 
 在实际实现过程中需要注意默认情况下~OpenGL~处理$x$和$y$坐标值的范围是$[-1,1]$，而深度值需要映射到$[0,1]$。我们利用一张$k \times 1$ 大小的纹理保存结果，将第$i$个法向的切点保存在纹理的$(i,0)$坐标处，这样做的好处是每绘制一遍不用清除深度缓冲，最后可以一次性读取这个$k \times 1$大小的纹理得到结果。
 如附件~\ref{app-sec:shader-z-buffer}~的着色器代码所示，~OpenGL~中利用齐次坐标处理渲染流程，因此我们利用前三个分量保存法向的$x,y,z$坐标值，第4个分量$w$保存法向的索引，在片段着色器中，只需要简单地输出切点的在输入点数组的索引即可。
@@ -269,14 +282,14 @@ Purpose Graphic Process Unit)中也发挥着重要作用。下面将分别介绍
 渲染到纹理是一个非常重要的图形可视化技术，它能够帮助快速地渲染很多漂亮的结果，同时也是GPGPU重要组成部分。在基于OpenGL的GPGPU中，通常要将参与计算的数据通过CPU传送至GPU的特定大小的纹理中，通过绘制一个跟保存数据同样大小的四边形来调用着色器中的算法\cite{gpgpuqiu}，将结果输出到纹理中，绘制同样大小的四边形是为了避免纹理插值对输入数据的影响。
 算法一般是在片段着色器（Fragment Shader）中完成，有些时候通过一遍的绘制得不到最终结果还希望把前一次运算结果传递给下一个运算用来作为后继运算的输入，此时可以利用乒乓技术来解决。
 
-图~\ref{fig:shader-rrt-pingpong-flowchart}~为基于乒乓技术的算法的流程图，算法将所有法向保存在纹理$read$中并利用纹理$write$缓存中间结果，第$m$次渲染进行计算时，纹理$read$作为输入，将渲染即计算的结果缓存在纹理$write$中，在第$m+1$次渲染时将读取缓存在纹理$write$中的数据作为输入，而此时纹理$read$又作为输出，如此进行交替，每步交换只更换沿着每个法向的局部最大值。
+图~\ref{fig:shader-rtt-pingpong-flowchart}~为基于乒乓技术的算法的流程图，算法将所有法向保存在纹理$read$中并利用纹理$write$缓存中间结果，第$m$次渲染进行计算时，纹理$read$作为输入，将渲染即计算的结果缓存在纹理$write$中，在第$m+1$次渲染时将读取缓存在纹理$write$中的数据作为输入，而此时纹理$read$又作为输出，如此进行交替，每步交换只更换沿着每个法向的局部最大值。
 如附件\ref{app-sec:shader-rtt-pingpong}~片段着色器代码所示，用一个像素值保存法向的xyz坐标值和沿着该法向投影得到最大值，另外用一个像素的第四个分量保存该最大值点在输入点数组中的索引。算法将输入点分成x份，每次只处理一份，在当前渲染过程中，找出在该批点中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复x次，当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过CPU一次性从帧缓冲中读取所有法向的切点。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=4.0in]{shader-rtt-pingpong.eps}
+  \includegraphics[width=4.0in]{shader-rtt_pp.eps}
   \caption{基于乒乓技术算法流程图}
-  \label{fig:shader-rrt-pingpong-flowchart}
+  \label{fig:shader-rtt-pingpong-flowchart}
 \end{figure}
 
 与Z Buffer算法相比，基于乒乓技术的算法在进行一次绘制操作能够得到沿着k个法向的局部(所有处理过的点集)最大值。为了充分利用GPU的并行计算能力，将每次处理点的数量设置为GPU硬件所支持的OpenGL中统一块（uniform
@@ -286,7 +299,7 @@ block）所能容纳数据的大小，即需要反复绘制次数$x=n/b$，其�
 \label{subsec:determ-normals-by-cuda}
 
 ~CUDA~是显卡公司~NVIDIA~推出的通用的并行计算架构平台，能够利用GPU解决并行计算问题，并提供了多种语言的编程接口。
-\begin{figure}[H] % use [h] to fix the position
+\begin{figure}[htbp] % use [htbp] to fix the position
 \centering
 \includegraphics[width=4.0in]{gpureduction.pdf}
 \caption{并行规约求最大投影值}
@@ -315,20 +328,19 @@ Programming）问题，文献\onlinecite{dengcg}~详细介绍了在二维线性�
 亦或交于3条交线，如图~\ref{lbl:intersection-center-3}~；
 最后一种情况是三个平面相交于1点的情况，如图~\ref{lbl:intersection-center-4}~所示。一个凸多面体的每一个顶点都可看作是至少3个平面的交点。现在只需要枚举出所有3个平面相交于1点的所有情况即可得到$k$-CBP~的顶点，值得注意的是，并非所有交点都是多面体的顶点，交点在某个半空间的正方向上即在半空间相交区域的外部须排除。
 
-\begin{figure}[H]
-\setcounter{subfigure}{0}
+\begin{figure}[htbp]
   \centering
   \subcaptionbox{没有交点\label{lbl:intersection-center-0}}{%
-    \includegraphics[width=1.5in]{intersection-center-0.png}}\hspace{1em}%
+    \includegraphics[width=1.8in]{intersection-center-0.png}}\hspace{1em}%
   \subcaptionbox{交于~1~条线\label{lbl:intersection-center-1}}{%
-    \includegraphics[width=1.5in]{intersection-center-1.png}}\hspace{1em}%
+    \includegraphics[width=1.8in]{intersection-center-1.png}}\hspace{1em}%
   \subcaptionbox{交于~2~条线\label{lbl:intersection-center-2}}{%
-    \includegraphics[width=1.5in]{intersection-center-2.png}}%
+    \includegraphics[width=1.8in]{intersection-center-2.png}}%
   \\
   \subcaptionbox{交于~3~条线\label{lbl:intersection-center-3}}{%
-    \includegraphics[width=2.0in]{intersection-center-3.png}}%
+    \includegraphics[width=2.3in]{intersection-center-3.png}}%
   \subcaptionbox{交于~1~个点\label{lbl:intersection-center-4}}{%
-    \includegraphics[width=1.7in]{intersection-center-4.png}}%
+    \includegraphics[width=2.0in]{intersection-center-4.png}}%
   \caption{空间中~3~个平面的相交情况}
   \label{fig:three-planes-intersection}
 \end{figure}
@@ -380,7 +392,7 @@ $\bm{n_i} = (a_{i1}, a_{i2}, a_{i3}), i=\{1,2,3\}$，则有：
 \end{equation*}
 根据克莱姆法则（Crammer's Rule），上述方程有唯一解，则
 $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
-\{1,2,3\}$，其中$\bm{A_i}|$是矩阵A中将第i列替换成$\bm{y}^T$之后的行列式，在计算$\bm{A_i}$和$|\bm{A}|$时为了避免一些重复计算，将其展开有：
+\{1,2,3\}$，其中$|\bm{A}_i|$是矩阵A中将第i列替换成$\bm{y}^T$之后的行列式，在计算$\bm{A}_i$和$|\bm{A}|$时为了避免一些重复计算，将其展开有：
 
 \begin{equation*}
  \left\{
@@ -537,50 +549,352 @@ $， 则有：
 \end{equation}其中，$|\bm{A}| \not= 0$。
 
 
-\begin{algorithm}[H]
-\algsetup{linenosize=\tiny}
+\begin{algorithm}[htbp]
 \small
 \caption{枚举算法}
 \label{alg:enum_algortihm}
 \begin{algorithmic}[1]
-\REQUIRE
+\Require
 平面：$planes$
-\ENSURE
+\Ensure
 凸包围多面体：$k$-CBP
-
-\FORALL {$p_1 \in planes$}
-  \STATE $Intersection \gets \emptyset $
-  \FORALL {$p_2 \in planes$}
-        \FORALL {$p_3 \in planes$}
-            %\IF{$ (p_1 = p_2 || p_1 = p_3 || p_2 = p_3) = \FALSE $}
-            \IF{$ p_1 \nparallel p_2 \nparallel p_3$}
-                \IF{$|A| \not= 0$}
-                    \STATE $P = (x_1, x_2, x_3)$
-                    \COMMENT{按照公式~\ref{equa:solution:three-planes}~计算得到交点坐标值} 
-                    \IF{$validate(P)$}
-                      \STATE $Intersection \gets Intersection \cup P$
-                      \COMMENT{验证交点P是否都在半空间负方向上}
-                    \ENDIF
-                \ENDIF
-            \ENDIF
-        \ENDFOR
-   \ENDFOR
-   \IF {$Intersection.size \geq 3$}
-   \STATE {$k\textrm{-CBP} \gets k\textrm{-CBP} \cup poly(p_1, Intersection)$}
-   \COMMENT{满足条件，加入到结果集}
-   \ENDIF
-\ENDFOR
-\RETURN {$k$-CBP}
+\Function{ConstructKCBP}{$planes$}
+  \ForAll {$p_1 \in planes$}
+    \State $Intersection \gets \emptyset $
+    \ForAll {$p_2 \in planes$}
+          \ForAll {$p_3 \in planes$}
+              %\If{$ (p_1 = p_2 || p_1 = p_3 || p_2 = p_3) = \FALSE $}
+              \If{$ p_1 \nparallel p_2 \nparallel p_3$}
+                  \If{$|A| \not= 0$}
+                      \State $P = \Call{vec3}{x_1, x_2, x_3}$
+                      \Comment{按照公式~\ref{equa:solution:three-planes}~计算得到交点坐标值} 
+                      \If{\Call{validate}{P}}
+                        \State \Comment{验证交点P是否都在半空间负方向上}
+                        \State $Intersection \gets Intersection \cup P$
+                      \EndIf
+                  \EndIf
+              \EndIf
+          \EndFor
+     \EndFor
+     \If {$Intersection.size \geq 3$}
+     \State {$k\textrm{-CBP} \gets k\textrm{-CBP} \cup \Call{polygon}{p_1, Intersection}$}
+     \Comment{满足条件，加入到结果集}
+     \EndIf
+  \EndFor
+  \State \Return {$k$-CBP}
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
-完整的算法如算法~\ref{alg:enum_algortihm}~所示，枚举遍历所有平面的组合，搜索出三个平面交于1点的情况，排除在半空间外部的交点即可得到~$k$-CBP~的顶点，算法复杂度为~$O(n^3)$。
+完整的算法如算法~\ref{alg:enum_algortihm}~所示，枚举遍历所有平面的组合，搜索出三个平面交于一点的情况，排除在半空间外部的交点即可得到~$k$-CBP~的顶点，算法复杂度为~$O(n^3)$。
 
 \subsection{对偶映射算法}
-\label{subsec:intersection-dual-mappint}
+\label{subsec:intersection-dual-mapping}
 
-确定截面后对其进行对偶映射求凸包, 该凸包面映射的点即为原始截面的交点即凸包围多面体的顶点, 方法如下：每个平面经对偶映射成一个三维点, 例如平面由法向~$\bm{n}(a,b,c)$~及平面上一点~$\bm{p}(x_0,y_0,z_0)$~确定, 转化为平面方程~$ax + by + cz = ax_0 + by_0 + cz_0=d$, $d \neq 0$.
-对偶映射后的点为~$\bm{p'}(a/d, b/d, c/d)$, 然后通过对这~$k$~个映射点求凸包, 最后将凸包的每个平面转换即可得到原始平面的交点, 此算法的时间复杂度为$O(k\log k$), 在利用对偶映射求交点时要注意原始模型需包含原点.
+正如~$k$-CBP~的定义所知，$k$-CBP~可看作是多个半空间的交集，一个半空间可由法向$\bm{n}(a,b,c)$及离原点距离~$d$~确定，转换为线性不等式即为
+\begin{equation}
+  \label{equa:halfspace:defition}
+  a_ix+b_iy+c_iz \leq d_i, \quad i=1,2,\cdots,k
+\end{equation}
+其中$a_i,b_i,c_i,d_i$是不同时为0的实数。
+
+求解~$k$-CBP~可将问题转换为求~$k$~个线性不等式的解。利用对偶映射的方式可在~$O(k \log k)$~的方式解决，
+具体方法分为三个步骤\cite{Preparata1985Introduction}：
+%\begin{inparaenum}[(1)]
+\begin{enumerate}[(1)]
+\item   
+将上述线性不等式偶映射成一个欧式空间上的三维点，
+$a_ix+b_iy+c_iz=d_i \rightarrow \bm{p}(-a_i/d_i, -b_i/d_i,-c_i/d_i),d_i \neq 0$，其中~$(a_i,b_i,c_i)$~为第~\ref{sec:search:planes}~节中得到的
+截面法向~$\bm{n}$，$d_i=\bm{n} \cdot
+max\_point$~为截面法向与截面上的投影点~$max\_point$~的点积，此步骤的算法复杂度为~$O(k)$；
+\item
+  对对偶映射得到的欧式空间~$k$~个点求凸包，此步骤的算法复杂度为~$O(k\log k)$~，可用第~\ref{subsec:convexhull}~节中的分治算法；
+\item
+  得到凸包后，再利用相同的对偶变换将凸包平面方程映射回欧式空间三维点，这些点即为原始半空间的交点，此步骤的算法复杂度仍为~$O(k)$。
+%\end{inparaenum}
+\end{enumerate}
+
+因此该方法总体复杂度为~$O(k\log k)$~。
+在利用这种对偶变化时需要注意约束条件即上述不等式中的~$d_i>0$，此时原点~$O(0,0,0)$~始终满足不等式~\ref{equa:halfspace:defition}，体现在算法输入上即原始模型需要包含原点。当原始模型不包含原点时，可用另外的对偶变换进行求解，文献\onlinecite{Preparata1979Intersection}对此问题进行了详述的阐述。
 
 \section{实验结果}
 \label{sec:exper-kcbp}
+
+本文将针对不同点集规模的模型进行测试\footnote{运行时环境为：Intel(R) Core(TM)
+i5-2320 CPU @ 3.2GHz 8G RAM NVIDIA GeForce GTX
+650。}，从两个角度对生成的~$k$-CBP~进行实验对比，
+一方面对生成~$k$-CBP~的速度进行效率上的对比，主要对比了串行算法、基于着色器和~CUDA~环境的并行算法和文献\onlinecite{karlsson2010parallel}的并行算法，其详细结果如~\ref{subsec:exper:efficiency}~节所示；
+另一个方面对生成~$k$-CBP~的质量即紧致性上进行了对比实验，主要围绕着凸包、文献\onlinecite{zachmann1998rapid}~中实现的~$k$-DOP~进行对比，详细结果见第~\ref{subsec:exper:efficiency}~节。
+
+\subsection{凸包围多面体生成效率}
+\label{subsec:exper:efficiency}
+
+如图~\ref{fig:chart:exps:cputime}~所示为本文算法（CUDA）与传统的~CPU~算法对比结果，图中横纵坐标分别代表多面体面数和运行时间，其中虚线代表搜索截面的过程，实线为构造凸包围多面体总体耗时。
+当模型点数量较大时，搜索截面的过程占据了算法绝大多数时间，且随着凸包围多面体的面数~$k$~值增加而线性增长，这与搜索截面时间复杂度($O(k\cdot
+n)$)一致，截面求交过程利用第\ref{subsec:intersection-dual-mapping}~节中的对偶映射法，其时间复杂度为$O(k\log k)$，
+当点数量极大时，如图~\ref{fig:exp:cpu:buggatti}~所示，实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略
+%，因此后文的时间对比无特别强调均为搜索截面的耗时
+。
+当输入模型的点数量越大，本文算法的优势越明显。如~Budda~模型点数量~31k~左右，加速比约为~3-6~倍，而含有~224k~个点的~Alice~模型和~1010k~个点的~Bugatti~模型，能够加速~7-9~倍。
+
+\begin{figure}[htbp] % use [htbp] to fix the position
+\centering
+%\subfloat[Apple(8118 points)]
+%{
+%    \label{fig:exp:cpu:apple}
+%    \includegraphics[width=\fourgraphicswidth\textwidth,page=1]{cputime.pdf}
+%}
+%\vspace{-10mm}
+\subcaptionbox{Budda模型(31232个点)\label{fig:exp:cpu:budda}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth,page=2]{cudatime.pdf}
+}
+\subcaptionbox{Dinosaur模型(40277个点)\label{fig:exp:cpu:Dinasour}}
+{  
+    \includegraphics[width=\fourgraphicswidth\textwidth, page=3]{cudatime.pdf}
+}\linebreak %强制换行
+\subcaptionbox{Alice模型(224291个点)\label{fig:exp:cpu:alice}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{cudatime.pdf}
+}
+\subcaptionbox{Bugatti模型(1010815个点)\label{fig:exp:cpu:buggatti}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=5]{cudatime.pdf}
+}
+\caption{基于~CUDA~并行算法运行时间}
+\label{fig:chart:exps:cputime}
+\end{figure}
+
+图~\ref{fig:chart:exps:shadertime}为着色器算法根据不同模型构造不同面的包围体所耗费的时间对比，横坐标表示多面体面数~$k$，纵坐标为运行时间（毫秒），曲线cpu、zbuffer和rtt\_pp分别表示基于CPU、深度缓冲和基于乒乓技术的算法的运行时间。
+
+\begin{figure}[htbp] % use [htbp] to fix the position
+\centering
+\subcaptionbox{Apple模型(8118个点)\label{fig:exp:shader:apple}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth,page=1]{shadertime.pdf}
+}
+\subcaptionbox{Buddha模型(31232个点)\label{fig:exp:shader:buddha}}
+{  
+    \includegraphics[width=\fourgraphicswidth\textwidth, page=2]{shadertime.pdf}
+}\linebreak %强制换行
+\subcaptionbox{Alice模型(224291个点)\label{fig:exp:shader:alice}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=3]{shadertime.pdf}
+}
+\subcaptionbox{Bugatti模型(1010815个点)\label{fig:exp:shader:buggatti}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{shadertime.pdf}
+}
+\caption{基于着色器的并行算法运行时间}
+\label{fig:chart:exps:shadertime}
+\end{figure}
+
+从实验结果可以看出，当模型规模不大时，如图~\ref{fig:exp:shader:apple}~所示的含有8千多个点的~Apple~模型，
+Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用中当模型规模较小时可直接用~CPU~计算即可。
+随着输入模型所含有点的数量规模的增加，CPU~和~GPU~运行时间之间的差距也越来越大。
+当多面体面数增加即~$k$~的增大时，在~Z Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所增加，而在基于乒乓技术的算法中，当点规模一定时，$k$~的变化对最后运行时间影响不明显，因此当较大的~$k$~时，这种算法更快。
+
+\begin{table}
+\centering
+\caption{基于着手器并行算法加速比}
+\label{tab:exper:shadertime}
+\begin{minipage}[t]{0.8\textwidth}
+  \begin{tabular}{p{1.5cm}<{\centering}cccc cccc} %p本身占一列
+  \toprule[1.5pt]
+  \multirow{2}{*}{$k$} & \multicolumn{4}{c}{Apple模型(8118 个点)} &
+  \multicolumn{4}{c}{Bugatti~模型(1010815个点)}\\
+  \cmidrule(lr){2-5}\cmidrule(lr){6-9}
+  ~&cpu & Z buffer  & rtt\_pp & 加速比$^{*}$ & cpu  & Z buffer& rtt\_pp& 加速比 \\
+  \midrule[1pt]
+ 6	 & 6 	& 5 	& 41 &	1.20 &	26	& 17	&178  &	1.53 \\
+16	 & 16	& 13	& 43 &	1.23 &	70	& 48	&181  &	1.46 \\
+26	 & 25	& 17	& 43 &	1.47 &	114	& 68	&183  &	1.68 \\
+36	 & 34	& 17	& 45 &	2.00 &	153	& 70	&178  &	2.19 \\
+46	 & 44	& 24	& 42 &	1.83 &	203	& 102	&176  &	1.99 \\
+56	 & 53	& 31	& 43 &	1.71 &	241	& 131	&177  &	1.84 \\
+66	 & 62	& 39	& 43 &	1.59 &	285	& 162	&179  &	1.76 \\
+76	 & 73	& 46	& 46 &	1.59 &	331	& 196	&189  &	1.75 \\
+86	 & 82	& 52	& 45 &	1.82 &	373	& 225	&192  &	1.94 \\
+106	 & 100	& 59	& 45 &	2.22 &	464	& 257	&191  &	2.43 \\
+136	 & 127	& 81	& 42 &	3.02 &	604	& 349	&180  &	3.36 \\
+156	 & 146	& 88	& 47 &	3.11 &	693	& 378	&202  &	3.43 \\
+186	 & 177	& 110	& 43 &	4.12 &	861	& 474	&180  &	4.78 \\
+206	 & 194	& 123	& 49 &	3.96 &	962	& 533	&209  &	4.60 \\
+  \bottomrule[1.5pt]
+\end{tabular}\\[2pt]
+  \footnotesize *: 加速比=cpu/$min$(Z buffer, rtt\_pp)
+\end{minipage}
+\end{table}
+
+表~\ref{tab:exper:shadertime}~详细的展示了基于着色器的两种算法应用于~Alice~和~Bugatti~模型的构造时间及相应的加速比。
+从中可看出，Z Buffer~算法适合相对较小的~$k$~值，而基于乒乓技术的算法在较大~$k$~值时能达到更大的加速比。
+
+笔者实现了文献~\onlinecite{karlsson2010parallel}~中的并行算法并进行对比实验，表~\ref{tab:exp:sse-time}
+~为实验统计结果，表中数据均为搜索截面耗时，因为二者其他步骤均相同且从~\ref{fig:chart:exps:cputime}~可得搜索截面时间占用整体绝大部分时间，其中~$k$~为多面体面数，
+列~SSE~和列~$k$-CBP~分别为文献~\onlinecite{karlsson2010parallel}~中的算法和本文提出的基于~CUDA~算法的运行时间（单位毫秒）。
+
+\begin{table}[htbp] 
+\centering
+\caption{本文算法与文献~\onlinecite{karlsson2010parallel}~的并行算法对比}
+\begin{tabular}{p{1.5cm}<{\centering}ccc ccc} %p本身占一列
+\toprule[1.5pt]
+\multirow{2}{*}{$k$} & \multicolumn{3}{c}{Apple模型(8118个点)} &
+\multicolumn{3}{c}{Bugatti~模型(1010815个点)}\\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+~&SSE\cite{karlsson2010parallel} & $k$-CBP &  加速比 & SSE & $k$-CBP &  加速比\\
+\midrule[1pt]
+6 & 0.4 & 0.12  & 3.20     & 24.2 & 3.20  & 7.56 \\
+16 & 0.9 & 0.26  & 3.43    & 44.5 & 8.44  & 5.27 \\
+26 & 1.4 & 0.41  & 3.38    & 66.5 & 13.65  & 4.87 \\
+36 & 1.9 & 0.52  & 3.65    & 91.1 & 18.34  & 4.97 \\
+46 & 2.5 & 0.67  & 3.74    & 119.5 & 24.13  & 4.95 \\
+56 & 2.9 & 0.79  & 3.66    & 138.4 & 28.86  & 4.80 \\
+66 & 3.5 & 0.95  & 3.69    & 170.6 & 34.10  & 5.00 \\
+76 & 4.0 & 1.08  & 3.70    & 197.1 & 39.85  & 4.95 \\
+86 & 4.5 & 1.22  & 3.69    & 219.8 & 45.08  & 4.88 \\
+106 & 5.4 & 1.49  & 3.62   & 267.8 & 55.52  & 4.82 \\
+136 &  6.8 & 1.92  & 3.54  & 342.9 & 71.24  & 4.81 \\
+156 &  7.7 & 2.17  & 3.55  & 411.3 & 81.18  & 5.07 \\
+186 &  9.3 & 2.60  & 3.58  & 479.4 & 97.39  & 4.92 \\
+206 &  10.5 & 2.85  & 3.68 & 523.0 & 106.87  & 4.89  \\  
+\bottomrule[1.5pt]
+\end{tabular}
+\label{tab:exp:sse-time}
+\end{table}
+
+与文献~\onlinecite{karlsson2010parallel}~中的算法相比，本文算法优势明显。
+当用于点数量较小~Apple~模型时，能够提高~3-4~倍速度，模型变大，加速比也更大，~Bugatti~模型的提速达到~4-8~倍。
+
+\subsection{凸包围多面体紧致程度}
+\label{subsec:exper:tightness}
+
+凸包围多面体的质量用公式~\ref{equa:judge:tightness}~衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
+文献~\onlinecite{zachmann1998rapid}~是基于~$k$-DOP~实现的层次结构的包围体，其顶层的~$k$-DOP~与本文算法生成的多面体的紧致程度对比如~\ref{chart:exps:tightness}~所示，
+图中横坐标~$k$~为凸包围多面体的面数，纵坐标为紧致程度，曲线~$k$-DOP~和~$k$-CBP~分别为文献~\onlinecite{zachmann1998rapid}~和本文的方法，由图可知，
+对于不同模型，本文构造的凸包围多面体紧致程度均有所提升，如~Alice~模型提升了12.08\%, ~Dinasour~模型提升了34.0\%.
+
+\begin{figure}[htbp] 
+\centering
+\subcaptionbox{Apple(8118个点)\label{fig:exp:apple}}
+{
+    \includegraphics[width=\fourgraphicswidth\textwidth,page=1]{tightness.pdf}
+}
+\subcaptionbox{Budda(31232个点)\label{fig:exp:budda}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth,page=2]{tightness.pdf}
+}
+\linebreak
+\subcaptionbox{Dinosaur(40277个点)\label{fig:exp:Dinasour}}
+{  
+    \includegraphics[width=\fourgraphicswidth\textwidth, page=3]{tightness.pdf}
+}
+\subcaptionbox{Alice(224291个点)\label{fig:exp:alice}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{tightness.pdf}
+}
+\caption{紧致程度对比：$k$-DOP~为文献~\onlinecite{zachmann1998rapid}~的算法, $k$-CBP~为本文算法}
+\label{chart:exps:tightness}
+\end{figure}
+
+TODO 加几个UI 和 k-DOP 和 k-CBP的效果图.
+
+本文算法利用近似凸包与精确凸包的相似性，从近似凸包的众多面片对应的法向中通过~$k$-means~聚类算法生成~$k$~个法向。
+表~\ref{tab:exp:ach:ch:tightness}~为利用~Alice~模型的近似凸包和精确凸包分别聚类生成法向构造~$k$-CBP~的紧致程度对比。
+可以看出，一方面，利用精确凸包构造的~$k$-CBP~并不一定比近似凸包构造的结果更紧致，但由于近似凸包与精确凸包的外观的近似性因此二者得到的结果相差并不大(5\%以内)；
+另一方面，因近似凸包的时间复杂度为线性，而精确凸包为~$O(n\log n)$，
+因此本文利用近似凸包聚类生成法向。示例中构造近似凸包耗费时间仅为~0.88ms~，而精确凸包为~79.31ms~。
+
+\begin{table}[htbp]   
+\centering
+\caption{用近似凸包与精确凸包构造~$k$-CBP~紧致程度比较}
+\label{tab:exp:ach:ch:tightness}
+\begin{tabular}{lccccl}
+\toprule[1.5pt]
+$k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $\tau$ (CHull)(\%) \\
+\midrule[1.0pt]
+10 &	70.44 & 	65.56     &26 &	89.93 & 	94.45 \\
+12 &	74.56 & 	75.63     &28 &	88.61 & 	92.24 \\
+14 &	79.50 & 	82.49     &30 &	91.58 & 	92.35 \\
+16 &	84.79 & 	85.20     &32 &	92.78 & 	93.78 \\
+18 &	85.75 & 	90.09     &34 &	91.28 & 	93.22 \\
+20 &	86.38 & 	90.36     &36 &	92.93 & 	94.68 \\
+22 &	90.27 & 	92.48     &38 &	93.41 & 	93.20 \\
+24 &	90.70 & 	93.09     &40 &	93.81 & 	94.70 \\
+\bottomrule[1.5pt]
+\end{tabular}
+\end{table}
+
+
+\begin{table}[htbp] 
+\centering
+\caption{$k$-CBP~与~QuickHull~凸包算法比较}
+\label{tab:exp:cgal}
+\begin{tabular}{lcccccl}
+\toprule[1.5pt]
+ Model & $f$(CHull)& $f$($k$-CBP) & $\tau$ ($k$-CBP)(\%) & $t$(CHull)(ms) & $t$($k$-CBP)(ms)\\ % 后面重新跑的, KCBP加上了近似凸包及求交时间的总和, 和近似凸包的分组时间也加了.
+\midrule[1.0pt]
+  Apple	& 499 & 30 & 93.67 & 5.5 & 1.30 \\ % apple3  自己电脑跑的数据, 之前是用的chengxianyu的电脑.
+  Budda	& 1608 & 46 & 92.39 & 21.3 & 2.86 \\ %  1.0+0.86+1
+  Dinosaur	& 1240 & 44 & 93.34 & 22.6 & 1.99 \\  % 1.0+0.98+0.1
+  Alice	& 1332 & 44 & 93.92 & 85.8 & 8.47\\ % 2+6.48
+  Bugatti & 24654 & 44 & 95.06 & 688.7 & 25.41 \\
+\bottomrule[1.5pt]
+\end{tabular}
+\end{table}
+
+本文算法与~CGAL~\cite{cgal}~库中利用~QuickHull~算法构造的凸包进行比较的结果如表~\ref{tab:exp:cgal}~所示，
+其中~$f$(CHull)~和~$f$($k$-CBP)~分别表示凸包的面数和凸包围多面体的面数，$\tau$($k$-CBP)~为凸包围多面体的紧致程度，$t$(CHull)~和~$t$($k$-CBP)~分别表示凸包和~$k$-CBP~构造所花费的时间。
+相应模型的可视化结果如图~\ref{pic:exps:ch-kcbp}~所示。
+与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度，例如~Apple~模型的凸包有~499~个平面，本文算法仅用~30~个平面就能达到~93.67\%的紧致程度，
+而对~Bugatti~模型，仅用了其凸包平面数量的0.17\%就达到95.06\%的紧致程度，且构造速度快了~27~倍。
+
+\begin{figure}[htbp] 
+\centering
+\subcaptionbox{Dinasour(44-CBP)\label{fig:exp:dinosaur}}
+{
+    \rotatebox{0}{\includegraphics[width=0.38\textwidth]{dinosaur-44-w-n.png}}
+}
+\subcaptionbox{Dinosaur(CHull)\label{fig:exp:ch:dinosaur}}
+{  
+    \rotatebox{0}{\includegraphics[width=0.40\textwidth]{dinosaur-convexhull.png}}
+}
+\linebreak
+\subcaptionbox{Bugatti(44-CBP)\label{fig:exp:buggati}}
+{  
+   \includegraphics[width=0.40\textwidth]{buggati-44-w-n.png}
+}
+\subcaptionbox{Bugatti(CHull)\label{fig:exp:ch:buggati}}
+{  
+   \includegraphics[width=0.40\textwidth]{bugatti-convexhull.png}
+}
+\linebreak
+\subcaptionbox{Alice(44-CBP)\label{fig:exp:alice}}
+{  
+   \includegraphics[width=0.25\textwidth]{alice-44-w-n.png}
+}
+\subcaptionbox{Apple(30-KCBP)\label{fig:exp:apple}}
+{
+    \includegraphics[width=0.35\textwidth]{apple-30-w-n.png}
+}
+\subcaptionbox{Budda(46-CBP)\label{fig:exp:budda}}
+{  
+   \includegraphics[width=0.25\textwidth]{budda-46-w-n.png}
+}
+\linebreak
+\subcaptionbox{Alice(CHull)\label{fig:exp:ch:alice}}
+{  
+   \includegraphics[width=0.25\textwidth]{alice-convexhull.png}
+}
+\subcaptionbox{Apple(CHull)\label{fig:exp:ch:apple}}
+{
+    \includegraphics[width=0.34\textwidth]{apple-convexhull.png}
+}
+\subcaptionbox{Budda(CHull)\label{fig:exp:ch:budda}}
+{  
+   \includegraphics[width=0.25\textwidth]{budda-convexhull.png}
+}
+\caption{~$k$-CBP~与凸包对比}
+\label{pic:exps:ch-kcbp}
+\end{figure}
+
+

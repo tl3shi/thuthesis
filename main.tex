@@ -23,13 +23,16 @@
 \usepackage{footmisc}
 \usepackage{pdfpages}
 \usepackage{bm}
+\usepackage{lscape}
 
 \usepackage{algorithm} %%format of the algorithm
-\usepackage{algorithmic} %%format of the algorithm
-\renewcommand{\algorithmicrequire}{{输入:}} %%Use Input in the format of Algorithm
-\renewcommand{\algorithmicensure}{{输出:}} %%UseOutput in the format of Algorithm
+\usepackage{algorithmicx} %%format of the algorithm
+\usepackage{algpseudocode}
 \floatname{algorithm}{算法}
-
+\renewcommand{\algorithmicrequire}{\textbf{输入:}} %%Use Input in the format of Algorithm
+\renewcommand{\algorithmicensure}{\textbf{输出:}} %%UseOutput in the format of Algorithm
+%\algrenewcommand{\algorithmiccomment}[1]{\hskip3em $\rightarrow$ #1}
+\algrenewcommand{\algorithmiccomment}[1]{ $//$ #1}
 
 \usepackage{listings}
 \renewcommand\lstlistingname{代码}
@@ -44,6 +47,7 @@
         xleftmargin=1.8em, numbers=none,fontadjust=true}
 \lstdefinelanguage{shader}{morekeywords={uniform, layout, uniform, vec2, vec3, vec4, in, out, gl_Position, dot, flat, int ,float, gl_VertexID, xyz, w, x, y, z, location, version, sampler2DRect},morecomment=[l]{//}}
 
+\def\fourgraphicswidth{0.45} %0.3\textwidth
 
 % 你可以在这里修改配置文件中的定义，导言区可以使用中文。
 \def\myname{唐磊}
