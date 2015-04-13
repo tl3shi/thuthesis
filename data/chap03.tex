@@ -104,7 +104,7 @@ AABB~树的根节点 $root$
 是否相交
 
 \Function{TraverseDetective}{$rootA, rootB$}
-  \State $p \gets \Call{initStack}{}, q \gets \Call{initStack}{}$  \Comment{初始化两个栈，用于记录待判断的~AABB~节点对}
+  \State $p \gets \Call{initStack()}{}, q \gets \Call{initStack()}{}$  \Comment{初始化两个栈，用于记录待判断的~AABB~节点对}
   \State $p.\Call{Push}{rootA}, q.\Call{Push}{rootB}$  
   
   \While {$! p.\Call{empty()}{} ~~\textbf{and}~~ !q.\Call{empty()}{}$}
@@ -112,7 +112,7 @@ AABB~树的根节点 $root$
       \State $nodeB \gets q.\Call{Pop()}{}$
       \State $c \gets \Call{Intersect}{nodeA.box, nodeB.box}$ \Comment {判断两个节点的~AABB~包围体是否相交}
       \If {$c = \textbf{False}$}
-          \State \textbf{Continue} /Comment{节点~AABB~不相交，则过滤到这两个节点及其孩子节点}
+          \State \textbf{Continue} \Comment{节点~AABB~不相交，则过滤到这两个节点及其孩子节点}
       \EndIf
       \If {$nodeA.\Call{isLeaf()}{}$}
           \If {$nodeB.\Call{isLeaf()}{}$}
@@ -196,28 +196,47 @@ AABB~树的根节点 $root$
 
 当运动场景中的模型进行碰撞检测时，需要更新
 
-模型围绕任意轴~$\bm{n}(x, y, z)$~旋转任意角度~$\theta$~的变换矩阵如公式~\ref{equa:rotate:matrix}~所示，其中$\phi = 1-\cos\theta$
+模型围绕任意过原点的轴~$\bm{n}(x, y,
+z)$~旋转任意角度~$\theta$~的变换矩阵如公式~\ref{equa:rotate:matrix}~所示，其中$\lambda
+= 1-\cos\theta$，
 详细的推导过程可以参考文献~\onlinecite{dunn20023d}。
 
 \begin{equation}
-
-  
-\bm{R}(\bm{n},\theta)= \\\\
-%\left\{
-\begin{pmatrix}
-  %\begin{array}{ccc}
-    %\cos\theta+(1-\cos\theta)\cdot\bm{n}_x^2 & (1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_y + \sin\theta\cdot\bm{n}_z & (1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_z-\sin\theta\cdot\bm{n}_y \\
-    %(1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_y-\sin\theta\cdot\bm{n}_z & \cos\theta+(1-\cos\theta)\cdot\bm{n}_y^2 & (1-\cos\theta)\cdot\bm{n}_y\cdot\bm{n}_z+\sin\theta\cdot\bm{n}_x \\
-    %(1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_z + \sin\theta\cdot\bm{n}_y & (1-\cos\theta)\cdot\bm{n}_y\cdot\bm{n}_z - \sin\theta\cdot\bm{n}_x &  \cos\theta+(1-\cos\theta)\cdot\bm{n}_z^2 
-    \cos\theta+\bm{n}_x^2\phi & \bm{n}_x\bm{n}_y\phi + \bm{n}_z\sin\theta & \bm{n}_x\bm{n}_z\phi-\bm{n}_y\sin\theta \\
-    \bm{n}_x\bm{n}_y\phi - \bm{n}_z\sin\theta & \cos\theta+\phi\bm{n}_y^2 & \bm{n}_y\bm{n}_z\phi+\bm{n}_x\sin\theta \\
-    \bm{n}_x\bm{n}_z\phi + \bm{n}_y\sin\theta & \bm{n}_y\bm{n}_z\phi - \bm{n}_x\sin\theta &  \cos\theta+\bm{n}_z^2\phi 
-  %\end{array}
-%\right\}
-\end{pmatrix}
-
+\left\{
+    \begin{array}{ll}
+    \bm{R}(\bm{n},\theta) 
+    &= 
+          \cos\theta \begin{pmatrix}
+                      1 & 0 & 0 \\
+                      0 & 1 & 0 \\
+                      0 & 0 & 1
+                     \end{pmatrix}
+          + \lambda \begin{pmatrix}
+                    \bm{n}_x^2 & \bm{n}_x\bm{n}_y & \bm{n}_x\bm{n}_z \\
+                    \bm{n}_x\bm{n}_y & \bm{n}_y^2 & \bm{n}_y\bm{n}_z \\
+                    \bm{n}_x\bm{n}_z & \bm{n}_y\bm{n}_z & \bm{n}_z^2 
+                    \end{pmatrix}
+          + \sin\theta \begin{pmatrix}
+                      0 & \bm{n}_z & -\bm{n}_y \\
+                      -\bm{n}_z & 0 & \bm{n}_x \\
+                      \bm{n}_y & -\bm{n}_x & 0
+                      \end{pmatrix}
+          \\
+    ~&=  
+        \begin{pmatrix}
+            %\begin{array}{ccc}
+              %\cos\theta+(1-\cos\theta)\cdot\bm{n}_x^2 & (1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_y + \sin\theta\cdot\bm{n}_z & (1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_z-\sin\theta\cdot\bm{n}_y \\
+              %(1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_y-\sin\theta\cdot\bm{n}_z & \cos\theta+(1-\cos\theta)\cdot\bm{n}_y^2 & (1-\cos\theta)\cdot\bm{n}_y\cdot\bm{n}_z+\sin\theta\cdot\bm{n}_x \\
+              %(1-\cos\theta)\cdot\bm{n}_x\cdot\bm{n}_z + \sin\theta\cdot\bm{n}_y & (1-\cos\theta)\cdot\bm{n}_y\cdot\bm{n}_z - \sin\theta\cdot\bm{n}_x &  \cos\theta+(1-\cos\theta)\cdot\bm{n}_z^2 
+              \cos\theta+\bm{n}_x^2\lambda & \bm{n}_x\bm{n}_y\lambda + \bm{n}_z\sin\theta & \bm{n}_x\bm{n}_z\lambda-\bm{n}_y\sin\theta \\
+              \bm{n}_x\bm{n}_y\lambda - \bm{n}_z\sin\theta & \cos\theta+\lambda\bm{n}_y^2 & \bm{n}_y\bm{n}_z\lambda+\bm{n}_x\sin\theta \\
+              \bm{n}_x\bm{n}_z\lambda + \bm{n}_y\sin\theta & \bm{n}_y\bm{n}_z\lambda - \bm{n}_x\sin\theta &  \cos\theta+\bm{n}_z^2\lambda 
+          \end{pmatrix} \\
+  \end{array}
+\right.
 \label{equa:rotate:matrix}
 \end{equation}
+公式正确的
 
 \section{实验结果}
 \label{sec:exper-cd}
