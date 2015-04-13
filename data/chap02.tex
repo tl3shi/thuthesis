@@ -137,15 +137,15 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 
 \Function{GenerateInitNormal}{$k$}
   \State $area \leftarrow 4\pi / k$
-  \State $m\_v \gets round(\pi/\sqrt{area})$
+  \State $m\_v \gets \Call{round}{\pi/\sqrt{area}}$
   \State $d\_v \gets \pi/m\_v$
   \State $d\_phi \gets area/d\_v$
   \For {$m=0 \to m\_v-1$}
       \State $v \gets \pi m/m\_v$
-      \State $m\_phi \gets round(2\pi\sin{v}/d\_phi)$
+      \State $m\_phi \gets \Call{round}{2\pi\sin{v}/d\_phi}$
       \For {$n=0 \to m\_phi-1$}
           \State $\phi \gets 2\pi n/m\_phi$
-          \State $Normals_i \gets vec3(\sin{v}\cos{\phi},\sin{v}\sin{\phi},\cos{v})$
+          \State $Normals_i \gets \Call{vec3}{\sin{v}\cos{\phi},\sin{v}\sin{\phi},\cos{v}}$
       \EndFor
   \EndFor
   \State \Return $Normals$
@@ -177,7 +177,7 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 初始中心点 $init$, 聚类数量 $k$, 聚类样本法向集 $points$
 \Ensure
 ~$k$~个聚类后的法向 $result$
-\Function{kmeansCluster}{}
+\Function{kmeansCluster}{$init, k, points$}
   \ForAll {$p \in points$}
     %\State $tmp \gets -\infty $
     \ForAll {$c \in init$}
@@ -185,8 +185,9 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
         %\State $tmp \gets max(tmp, \phi)$ \Comment{记录每个聚类变量属于哪一类}
     \EndFor
     \ForAll {$c \in init$}
-        \State $result \gets update(c)$ \Comment{按照公式\ref{equ:kmeans-update-center}更新中心点}
-    \If{$chk\_state(result, init, iter)$}
+    \State $result \gets \Call{update}{c}$ 
+        \Comment{按照公式\ref{equ:kmeans-update-center}更新中心点}
+        \If{$ \Call{checkState}{result, init, iter}$}
         \State \Return {$result$}
         \State \Comment{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
     \Else
@@ -238,12 +239,12 @@ n)$， 其中~$k$~为法向数量， $n$~为模型所含点数。
   \ForAll {$\bm{n} \in normals$}
       \ForAll {$\bm{p} \in points$}
           \State $proj \gets  \bm{p} \cdot \bm{n}$ \Comment{计算投影值}
-          \State $max\_proj \gets max(proj, max\_proj)$ \Comment{更新最大投影值}
+          \State $max\_proj \gets \Call{max}{proj, max\_proj}$ \Comment{更新最大投影值}
       \EndFor
   \EndFor
   \ForAll {$\bm{n} \in normals$}
       \State $max\_point \gets \bm{n} \cdot max\_proj$ \Comment{切点}
-      \State $planes\gets planes \cup plane(\bm{n}, max\_point)$ \Comment{构造平面}
+      \State $planes\gets planes \cup \Call{plane}{\bm{n}, max\_point}$ \Comment{构造平面}
   \EndFor
   \State \Return $planes$
 \EndFunction
@@ -565,9 +566,9 @@ $， 则有：
               %\If{$ (p_1 = p_2 || p_1 = p_3 || p_2 = p_3) = \FALSE $}
               \If{$ p_1 \nparallel p_2 \nparallel p_3$}
                   \If{$|A| \not= 0$}
-                      \State $P = (x_1, x_2, x_3)$
+                      \State $P = \Call{vec3}{x_1, x_2, x_3}$
                       \Comment{按照公式~\ref{equa:solution:three-planes}~计算得到交点坐标值} 
-                      \If{$validate(P)$}
+                      \If{\Call{validate}{P}}
                         \State \Comment{验证交点P是否都在半空间负方向上}
                         \State $Intersection \gets Intersection \cup P$
                       \EndIf
@@ -576,7 +577,7 @@ $， 则有：
           \EndFor
      \EndFor
      \If {$Intersection.size \geq 3$}
-     \State {$k\textrm{-CBP} \gets k\textrm{-CBP} \cup polygon(p_1, Intersection)$}
+     \State {$k\textrm{-CBP} \gets k\textrm{-CBP} \cup \Call{polygon}{p_1, Intersection}$}
      \Comment{满足条件，加入到结果集}
      \EndIf
   \EndFor
@@ -795,6 +796,8 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \label{chart:exps:tightness}
 \end{figure}
 
+TODO 加几个UI 和 k-DOP 和 k-CBP的效果图.
+
 本文算法利用近似凸包与精确凸包的相似性，从近似凸包的众多面片对应的法向中通过~$k$-means~聚类算法生成~$k$~个法向。
 表~\ref{tab:exp:ach:ch:tightness}~为利用~Alice~模型的近似凸包和精确凸包分别聚类生成法向构造~$k$-CBP~的紧致程度对比。
 可以看出，一方面，利用精确凸包构造的~$k$-CBP~并不一定比近似凸包构造的结果更紧致，但由于近似凸包与精确凸包的外观的近似性因此二者得到的结果相差并不大(5\%以内)；
@@ -829,7 +832,7 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 \begin{tabular}{lcccccl}
 \toprule[1.5pt]
  Model & $f$(CHull)& $f$($k$-CBP) & $\tau$ ($k$-CBP)(\%) & $t$(CHull)(ms) & $t$($k$-CBP)(ms)\\ % 后面重新跑的, KCBP加上了近似凸包及求交时间的总和, 和近似凸包的分组时间也加了.
-\midrule[1.5pt]
+\midrule[1.0pt]
   Apple	& 499 & 30 & 93.67 & 5.5 & 1.30 \\ % apple3  自己电脑跑的数据, 之前是用的chengxianyu的电脑.
   Budda	& 1608 & 46 & 92.39 & 21.3 & 2.86 \\ %  1.0+0.86+1
   Dinosaur	& 1240 & 44 & 93.34 & 22.6 & 1.99 \\  % 1.0+0.98+0.1

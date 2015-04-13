@@ -310,7 +310,6 @@ Processing）碰撞检测，刚体和柔性模型的碰撞检测以及静态和�
 
 在碰撞检测算法中，一般会对模型进行预处理建立起各自的~BVH~树，当两个模型进行相交检测时，自顶向下遍历两棵~BVH~树，若父节点没有相交，则没有必要进行子节点的相交测试，自顶向下的层次遍历算法如算法~\ref{alg:traverse-bvh-tree}~所示。
 
-
 \begin{algorithm}
 %\algsetup{linenosize=\tiny}
 \small
@@ -323,13 +322,12 @@ $node_1$，$node_2$：BVH~树中的节点1、节点2
 是否相交
 \Function {TraverseBVHTree}{$node_1, node_2$}
   \If{$node_1.bv \cap node_2.bv = \emptyset$} 
-    \State \Return{\texttt{False}} 
+    \State \Return{\textbf{False}} 
     \Comment{包围体重合测试, 包围体不相交直接返回}
   \Else
       \If {$node_1.children = \emptyset$}
            \If {$node_2.children = \emptyset$}
-              \State \Return {$CheckIntersection(node_1.primitives, node_2.primitives)$}
-              \State \Comment{最底层叶子节点原生几何相交测试}
+              \State {$\Return \Call{CheckIntersection}{node_1.primitives, node_2.primitives}$} \Comment{最底层叶子节点原生几何相交测试}
            \Else
               \ForAll {$child \in node_2.children$}
               \State \Call{TraverseBVHTree}{$node_1, child$} \Comment{递归调用}
@@ -345,12 +343,21 @@ $node_1$，$node_2$：BVH~树中的节点1、节点2
 \end{algorithmic}
 \end{algorithm}
 
-从算法~\ref{alg:traverse-bvh-tree}~可以看出，基于~BVH~的碰撞检测算法性能的好坏关键在于两个操作，一是分别来自两个~BVH~内部节点包围体之间的相交测试，二是~BVH~最底层叶子节点内的原生几何相交测试，常常利用~$T_{cost}
-= n_v * C_v + n_p * C_p$ 来衡量单个相交测试的所付出的代价，其中$n_v$
+从算法~\ref{alg:traverse-bvh-tree}~可以看出，基于~BVH~的碰撞检测算法性能的好坏关键在于两个操作，一是分别来自两个~BVH~内部节点包围体之间的相交测试，二是~BVH~最底层叶子节点内的原生几何相交测试，
+常常利用公式~\ref{equa:evaluate:static:bv}~来衡量单个相交测试的所付出的代价
+\begin{equation}
+T_{cost} = n_v * C_v + n_p * C_p,
+\label{equa:evaluate:static:bv}
+\end{equation}
+其中$n_v$
 和$n_p$分别表示参与包围体节点相交测试的数量和参与原始几何相交测试的数量，$C_v$和$C_p$则表示相应的平均测试耗费的代价\cite{klosowski1998efficient}。
-当运动场景或连续碰撞的模型之间的碰撞检测时，往往还需要考虑到因物体模型旋转平移等变换产生的包围体的更新所付出的代价，即上述代价函数变成$T_{cost}
-= n_v * C_v + n_p * C_p + n_u *
-C_u$，要提高碰撞检测的性能，就得想办法减小$T_{cost}$的值。本文的算法主要关注于静态场景。
+当运动场景或连续碰撞的模型之间的碰撞检测时，往往还需要考虑到因物体模型旋转平移等变换产生的包围体的更新所付出的代价，即上述代价函数变成
+\begin{equation}
+T_{cost} = n_v * C_v + n_p * C_p + n_u * C_u
+  \label{equa:evaluate:dynamic:bv}
+\end{equation}
+其中~$n_u$~和~$C_n$~就是模型旋转或者运动后包围体更新的数量和更新的代价。要提高碰撞检测的性能，就得想办法减小$T_{cost}$的值。
+本文的算法主要关注于静态场景。 TODO 运动场景实验也做了。
 
 不同的包围体，上述代价函数各个值不同，对于不同的应用场景，可能需要选择不同的包围体进行加速碰撞检测。
 文献\onlinecite{zhigang2010efficient}从包围体的构造难度，包围体的紧致性，包围体之间相交测试复杂性及包围体在运动过程中的更新代价几个方面对五种常见的包围体进行了比较，如表\ref{lbl:table:bv-comp}所示。
