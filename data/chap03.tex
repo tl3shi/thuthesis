@@ -91,7 +91,8 @@ AABB~树的根节点 $root$
 \end{equation}
 公式~\ref{equa:aabbtree:build}~中~$O(n \log n)$~为算法中根据某坐标轴排序的耗费，根据主定理得此构造包围体树的整体算法时间复杂度~$T(n)=O(n\log^2n)$~，文献~\onlinecite{ericson2005real}~中提到可以用一种~$O(n)$~的算法替代其中的排序操作，使得整体复杂度为~$O(n\log n)$。
 
-生成两个~$k$-CBP~的~AABB~包围体树后，当进行碰撞检测时，将采用如下的迭代算法进行判断。从顶层~AABB~节点开始，若两个节点的~AABB~包围体相交，则进行深度优先遍历其孩纸节点，当到达叶子节点时，再进行原生几何（本文中的~$k$-CBP~多边形网格，为了方便转化成与输入模型一致的三角网格）进行相交测试的判断，$k$-CBP~相交后，进行真实模型的相交测试也通过此方法进行。
+生成两个~$k$-CBP~的~AABB~包围体树后，当进行碰撞检测时，将采用算法~\ref{alg:aabbtree:traverse:iterator}~的迭代算法进行遍历判断。
+从顶层~AABB~节点开始，若两个节点的~AABB~包围体相交，则进行深度优先遍历其孩子节点，当到达叶子节点时，再进行原生几何（本文中的~$k$-CBP~多边形网格，为了统一转化成与输入模型一致的三角网格）进行相交测试的判断，$k$-CBP~相交后，进行真实模型的相交测试也通过此方法进行。
 
 \begin{algorithm}[htbp]
 \small
@@ -103,7 +104,7 @@ AABB~树的根节点 $root$
 \Ensure
 是否相交
 
-\Function{TraverseDetective}{$rootA, rootB$}
+\Function{TraverseDetection}{$rootA, rootB$}
   \State $p \gets \Call{initStack()}{}, q \gets \Call{initStack()}{}$  \Comment{初始化两个栈，用于记录待判断的~AABB~节点对}
   \State $p.\Call{Push}{rootA}, q.\Call{Push}{rootB}$  
   
@@ -158,6 +159,9 @@ AABB~树的根节点 $root$
 
 
 
+
+
+
 \section{三角网格的相交测试算法}
 \label{sec:intersection:triangles}
 
@@ -171,6 +175,9 @@ AABB~树的根节点 $root$
 为利用~Bunny~模型进行碰撞检测的示例, 图中模型~1~与~2、2~与~3~的包围盒分别相交, 而其~$16$-CBP~仅~1~与~2~相交, 实际模型仅~1~与~2~相交.
 用~$16$-CBP~可排除模型~2~与~3~之间的碰撞检测, 而仅用包围盒算法则无法排除, 显然检测模型~2~与~3~的~$16$-CBP~是否相交比直接通过检测模型~2~与~3~是否相交更省时间.
 %在碰撞检测算法中, 在进行真实模型的相交检测前一般会用包围球、包围盒等包围体进行预先排除$^{[17]}$.
+
+\subsection{静止场景中的碰撞检测算法}
+\label{subsec:static:cd}
 
 \begin{figure}[htbp] 
 \centering
@@ -190,11 +197,25 @@ AABB~树的根节点 $root$
   \label{fig:bunny:aabb:bvh:toplayer4}
 \end{figure}
 
+整体的碰撞检测算法流程图如图~\ref{fig:flowchart:cd}所示，首先扫描所有输入模型点集，对每个模型计算其包围盒，然后计算要参与碰撞检测的模型的包围盒对进行相交测试，
+假设要计算参与碰撞检测的模型的包围盒相交的对数为~$n_1$，再对这~$n_1$~对模型计算其~$k$-CBP~并进行初始化，如构造~AABB~树、初始化~GJK~算法，并计算~$k$-CBP
+是否相交，此步骤后剩余模型对数为~$n_2$，最后再对这~$n_2$~对模型进行构造~AABB~树进而进行相交测试，真实模型相交对数为~$n_3$。整个流程中，包围盒的命中率为$n_1 / n_3$，$k$-CBP~的命中率为~$n_2/n_3$。
 
 
-动态场景
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=\textwidth]{collision-detection-flowchart.pdf}
+  \caption{碰撞检测算法流程图}
+  \label{fig:flowchart:cd}
+\end{figure}
 
-当运动场景中的模型进行碰撞检测时，需要更新
+\subsection{运动场景中的碰撞检测算法}
+\label{subsec:moving:cd}
+
+当在运动场景中的模型进行碰撞检测时，模型中的点坐标会更新，一种方法是重新计算模型中的所有点再对模型做碰撞检测，但当模型点数量较大时，此方法不可取；
+另外一种算法是仍然利用静态场景中的~AABB~树形结构，仅重新计算将要碰撞的节点的坐标值，进而进行相交检测。
+节点包围盒坐标在运动过程中发生变化，精确的包围盒是重新计算该节点包含原始模型的点在变化后的点坐标值的包围盒，本文利用一种近似算法即仅对包围盒的~8~个顶点进行转换
+然后计算这8个顶点的包围盒，用这个近似包围盒进行遍历剪枝，当到叶子节点后，再重新计算网格模型的点的新坐标值用同样的方法进行相交检测。
 
 模型围绕任意过原点的轴~$\bm{n}(x, y,
 z)$~旋转任意角度~$\theta$~的变换矩阵如公式~\ref{equa:rotate:matrix}~所示，其中$\lambda
@@ -202,6 +223,7 @@ z)$~旋转任意角度~$\theta$~的变换矩阵如公式~\ref{equa:rotate:matrix
 详细的推导过程可以参考文献~\onlinecite{dunn20023d}。
 
 \begin{equation}
+%\small
 \left\{
     \begin{array}{ll}
     \bm{R}(\bm{n},\theta) 
@@ -236,13 +258,112 @@ z)$~旋转任意角度~$\theta$~的变换矩阵如公式~\ref{equa:rotate:matrix
 \right.
 \label{equa:rotate:matrix}
 \end{equation}
-公式正确的
+
+当模型平移时，点~$\bm{P}(x, y, z)$~平移~$\bm{t}(t_x, t_y, t_z)$~后的点坐标为~$\bm{P}'(x+t_x, y+t_y, z+t_z)$，可用~$4 \times 4$~的变换矩阵~$\bm{T}$~表示，即
+\begin{equation}
+  \bm{T}(\bm{t}) =
+  \begin{pmatrix}
+    1 & 0 & 0 & t_x \\
+    0 & 1 & 0 & t_y \\
+    0 & 0 & 1 & t_z \\
+    0 & 0 & 0 & 1 \\
+  \end{pmatrix}
+  \label{equa:translate:matrix}
+\end{equation}
+
+因此当模型平移旋转时产生的变换矩阵~$\bm{M}$~为
+\begin{equation}
+\bm{M}=\bm{R}(\bm{n}, \theta) \cdot \bm{T}(\bm{t}),
+\label{equa:transform:matrix}
+\end{equation}
+AABB~节点包围盒更新后的算法如算法~\ref{alg:transform:box}~所示，
+算法输入为平移向量$\bm{t}$及旋转方向和角度$\bm{n}, \theta$或者直接传入变化矩阵~$\bm{M}$~即可。
+
+\begin{algorithm}[htbp]
+\small
+\caption{AABB节点包围盒更新算法}
+\label{alg:transform:box}
+\begin{algorithmic}[1]
+\Require
+AABB包围盒 $box$，
+平移旋转变换矩阵$\bm{M}$
+\Ensure
+变换之后的包围盒 $box'$
+
+\Function{TransformBox}{$box, \bm{M}$}
+    \State $vertices \gets \Call{GetAABBVertices}{box}$ 
+    \State $box' \gets \emptyset$
+    \ForAll {$\bm{v} \in vertices$} \Comment{遍历~$box$~的8个顶点}
+        \State {$\bm{v'}= \bm{M} \cdot \bm{v}$} \Comment{计算变换后的点坐标}
+        \State $\Call{update}{box', \bm{v'}}$ \Comment{根据变换后的顶点~$\bm{v}$~更新$box'$}
+    \EndFor
+    \State \Return $box'$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+运动场景中模型的碰撞检测算法如算法~\ref{alg:moving:cd}~所示，假设参与碰撞检测的两个模型中第一个运动且变换矩阵为~$\bm{M}$，第二个静止，
+两个模型都运动时，可视第二个模型相对静止，将~$\bm{M}$~设置为第一个相对于第二个模型的相对变换矩阵。
+
+\begin{algorithm}[htbp]
+\small
+\caption{运动场景中基于~AABB~树碰撞检测算法}
+\label{alg:moving:cd}
+\begin{algorithmic}[1]
+\Require
+两个模型~AABB~树的根节点 $root_0, root_1$ 及
+平移旋转变换矩阵$\bm{M}$
+\Ensure
+模型是否相交 
+
+\Function{MovingTraverseDetection}{$root_0, root_1, \bm{M}$}
+    \State $mBox \gets \Call{TransformBox}{\bm{M}, root_0.box} $ \Comment{按照算法~\ref{alg:transform:box}~计算运动后的包围盒}
+    \State $c \gets \Call{Intersect}{mBox, root_1.box} $
+    \If {$c = \textbf{False}$}
+        \State \Return \textbf{False} \Comment{包围盒不相交，直接返回\textbf{False}}
+    \EndIf
+    \If {$root_0.\Call{IsLeaf}$}
+        \If {$root_1.\Call{IsLeaf}$} \Comment{两个叶子节点的原始几何进行相交测试} 
+              \ForAll {$p_1 \in root_0.primitives$}
+                  \ForAll {$p_2 \in root_1.primitives$}
+                  \State \Return {$\Call{Intersect}{\bm{M}, p_1, p_2}$} \Comment{将$\bm{p}_1$应用于变换矩阵$\bm{M}$后采用算法\ref{sec:intersection:triangles}中进行三角网格相交测试}
+                  \EndFor
+              \EndFor 
+        \Else
+            \If {$\Call{MovingTraverseDetection}{root_0, root_1.left} \hspace{0.5em} \textbf{or} \newline \hspace{4em}
+                \hspace*{5.5em} \Call{MovingTraverseDetection}{root_0, root_1.right}$} \hspace{2em}
+                \State \Return \textbf{True}
+            \EndIf
+        \EndIf
+    \Else
+        \If {$root_1.\Call{IsLeaf}$}
+            \If {$\Call{MovingTraverseDetection}{root_0.left, root_1} \hspace{0.5em} \textbf{or} \newline \hspace{4em}
+                 \hspace*{5.5em} \Call{MovingTraverseDetection}{root_0.right, root_1}$}
+            \State \Return \textbf{True}
+            \EndIf
+        \Else \Comment{两个节点都有孩子节点}
+            \If {$\Call{MovingTraverseDetection}{root_0.left, root_1.left}  \hspace{0.5em} \textbf{or} \newline \hspace{4em}
+                 \hspace*{5.5em} \Call{MovingTraverseDetection}{root_0.left, root_1.right} \hspace{0.5em} \textbf{or} \newline \hspace{4em}
+                 \hspace*{5.5em} \Call{MovingTraverseDetection}{root_0.right, root_1.left} \hspace{0.5em} \textbf{or} \newline \hspace{4em}
+                 \hspace*{5.5em} \Call{MovingTraverseDetection}{root_0.right, root_1.right}$}
+                 \State \Return \textbf{True}
+            \EndIf
+      \EndIf
+    \EndIf
+    \State \Return \textbf{False}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+算法~\ref{alg:moving:cd}~是一个递归算法，从~AABB~树的根节点起向底层进行深度优先遍历，当检测到运动后的模型的某两个叶子节点的包围盒相交时，遍历其三角网格的相交检测算法，在实际实现过程中，本文的叶子节点仅含一个三角网格。
+运动模型的三角网格应用变换矩阵得到一个新的三角网格，同样用~\ref{sec:intersection:triangles}~的算法对新的三角网格进行相交测试。
+除了用该递归算法外，也可对算法~\ref{alg:aabbtree:traverse:iterator}~进行稍许改动（只需改变包围盒检测和三角网格检测的函数）的迭代算法，此处不在赘述。
 
 \section{实验结果}
 \label{sec:exper-cd}
 
-[TODO]
-
+\subsection{与包围盒过滤算法对比}
+\label{subsec:exper:box:kcbp}
 
 本文实验通过生成不同数量的模型(模型位置和旋转角度随机生成), 碰撞检测时首先判断包围盒是否相交, 然后判断凸包围多面体是否相交, 最后再判断实际模型是否相交.
 凸包围多面体之间的碰撞检测时可采用文献~${[27]}$~中提到的方法,
@@ -279,13 +400,18 @@ z)$~旋转任意角度~$\theta$~的变换矩阵如公式~\ref{equa:rotate:matrix
 \end{table}
 %\end{landscape}
 
-
-[TODO]构造kcbp的时间 是得到一个后直接rotate顶点得到新的 总时间。且project是GPU的时间。
-
 如表~\ref{tab:exp:box:kcbp:collsiondetection}~所示,
-其中~n~表示场景中模型的数量, c(Box), c($16$-CBP)分别表示模型包围盒的构造时间和凸包围16面体的构造时间(单位ms), t(Box), t($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间,
+其中~n~表示场景中模型的数量, c(Box), c($16$-CBP)分别表示模型包围盒的构造时间和凸包围16面体的构造时间(单位ms)\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}, t(Box), t($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间,
 其中~r(Box), r($16$-CBP)分别表示包围盒、16-CBP~的命中率(即用实际模型相交的数量除以包围体检测出来相交的数量), ~n(Model)模型实际相交的数量, 显然计算模型包围盒所耗费的时间要明显少于计算凸包围多面体的时间, 但由于凸包围多面体比包围盒紧致,
-因而命中率比包围盒高, 能排除更多本不相交的模型进而节省碰撞检测总时间, 提高算法效率.
+因而命中率比包围盒高, 能排除更多本不相交的模型进而节省碰撞检测总时间, 提高算法效率。该部分工作已经发表，详细内容见参考文献~\onlinecite{tanglei2014}。
 
+\subsection{静止场景中与~$k$-DOP~算法对比}
+\label{subsec:exper:kdop:kcbp:static}
+
+为了和K-DOP进行对比，相同模型，kcbp也与kdop一样扫描点击重新构造，且都是用CPU实现的算法。
+
+
+\subsection{运动场景中与~$k$-DOP~算法对比}
+\label{subsec:exper:kdop:kcbp:dynamic}
 
 为了和K-DOP进行对比，相同模型，kcbp也与kdop一样扫描点击重新构造，且都是用CPU实现的算法。
