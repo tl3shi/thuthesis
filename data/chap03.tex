@@ -165,8 +165,105 @@ AABB~树的根节点 $root$
 \section{三角网格的相交测试算法}
 \label{sec:intersection:triangles}
 
+所有针对三角网格模型的碰撞检测算法最终都离不开三角网格的相交测试，不管模型是用何种包围体采用几何或者代数的方法都需要进行三角网格的相交测试。本文将利用一种几何代数相结合的方法进行三角网格之间的相交测试。
+具体而言，假设两个不同面的三角形所在平面交于直线~$\bm{L}$~，两个三角形位置关系分为相交或者不相交两种情况，如图~\ref{fig:two:triangle:ui}所示。
 
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=5in]{TriangleTriangleTest.pdf}
+    \caption{空间中两个非共面三角形的位置关系\cite{Moller1997}}
+  \label{fig:two:triangle:ui}
+\end{figure}
 
+图~\ref{fig:two:triangle:ui}左图中，两个三角形所在平面交于直线~$\bm{L}_1$~且与三角形公共部分为线段~$\bm{D}_1$~，另一个三角形与~$\bm{L}_1$~交于线段$\bm{D}_2$，相应的右图两个三角形分别交公共交线~$\bm{L}_2$~于~$\bm{D}_3$~和~$\bm{D}_4$~，其中~$\bm{D}_1$~和~$\bm{D}_2$~相交可以推出两个三角形相交，反之~$\bm{D}_3$~和~$\bm{D}_4$~不相交因此三角形不相交，因此只需要判断两个三角形与平面交线的线段是否相交即可\cite{Moller1997}，以下方法都基于此结论。
+
+假设两个三角形~$T_1(\bm{U}_1,\bm{U}_2,\bm{U}_3), T_2(\bm{V}_1,\bm{V}_2,\bm{V}_3)$~所在平面分别为~$\Pi_1, \Pi_2$，
+假设平面方程~
+\begin{equation}
+\Pi_1 = \bm{n}_1 \cdot \bm{x}+d_1 = (U_2 - U_1) \times (U_3-U_1)  \cdot \bm{x} + d_1,
+\label{equa:tri:tri:plane}
+\end{equation}
+其中将任意一点~$U_i, i \in \{1,2,3\}$~带入公式~\ref{equa:tri:tri:plane}~得~$d_1$，同理得到~$\Pi_2$。
+
+然后将~$T_2$~三个顶点带入方程~\ref{equa:tri:tri:plane}~得到~$T_2$~到~$\Pi_1$~的有向距离~$\bm{l}_{1i}, i \in \{1,2,3\}$，根据~$\bm{l}_{1i}$~的值共下面三种情况：
+\begin{enumerate}[(1)]
+  \item 若~$\forall i \in \{1,2,3\}, l_{1i} = 0$，即~$T_2$~的三个顶点到~$\Pi_1$~的距离都为0，则两个三角形共面；
+  \item 若~$\forall i \in \{1,2,3\}, l_{1i} > 0$ 或~$\forall i \in \{1,2,3\}, l_{1i} < 0$，即有向距离同号，则~$T_2$~在~$\Pi_1$~的同侧，可立即排除相交；
+  \item 其他情况，~$T_2$~必交~$\Pi_1$~于一条线段。
+\end{enumerate}
+
+同理可以根据~$T_1$~到~$\Pi_2$~得到类似的情况。针对情况（1），共面的两个三角形求交可以通过两个三角形中三条线段两两判定是否相交最多9次线段线段求交判定可得，或者通过我们在文献~\ref{linjianli2014}~中提出的方法进行，该方法对线段三角形的位置做了详细的分类可通过不超过~6~次线段线段求交判定；针对情况（2），计算出有向距离同号后即可排除相交立即返回；
+针对情况（3），如图~\ref{fig:two:triangle:ui2}~所示，不妨设~$T_1$~中点~$\bm{V}_1, \bm{V}_2$~在平面~$\Pi_2$的一侧，$\bm{V}_3$~在另外一侧，
+且点~$\bm{V}_1, \bm{V}_2$~在平面上投影点分别为~$\bm{K}_1,\bm{K}_2$，线段~$\bm{V}_1\bm{V}_2, \bm{V}_2\bm{V}_3$~与~$\bm{L}$~分别交于点~$\bm{I}_1,\bm{I}_2$，点~$\bm{V}_1,\bm{V}_2$~向直线~$\bm{L}$~的投影点分别为~$\bm{P}_1,\bm{P}_2$，
+三角形~$T_1$~交于直线~$\bm{L}$~与线段~$\overline{I_1I_2}$。%，现在目的是求$I_1I_2$。
+
+\begin{figure}[htbp]
+  \centering
+    \includegraphics[width=4in]{TriangleTriangleTest2.pdf}
+    \caption{求非共面三角形区间线段示意图\cite{Moller1997}}
+  \label{fig:two:triangle:ui2}
+\end{figure}
+
+已知直线~$\bm{L}$~的方向为$\bm{n}_L = \bm{n}_1 \times \bm{n}_2$，设~$\bm{O}$~为~$\bm{L}$上一点，则直线的参数方程为
+$\bm{L} = t \cdot \bm{n}_L + \bm{O}$，假设交点~$I_1 = t_1 \cdot \bm{n}_L + \bm{O}$，投影点满足
+$p_1 = \bm{n}_L \cdot(\bm{V}_1 - \bm{O}), p_2 = \bm{n}_L \cdot (\bm{V}_2 - \bm{O})$，由图~\ref{fig:two:triangle:ui2}~可知，
+$\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_1 \sim \bigtriangleup V_2K_2I_1$，可得
+
+\begin{equation}
+  \frac{t_1 - p_1}{p_2-p_1} = \frac{l_{11}}{l_{11}-l_{12}} \Rightarrow \newline
+   t_1 = (p_2-p_1)\frac{l_{11}}{l_{11}-l_{12}} + p_1
+  \label{equa:triangle:intersectionline:param}
+\end{equation}
+
+同理可得~$\bm{I}_2$~的参数~$t_2$，三角形~$T_2$~用相同的方法也能得到区间的参数，即可判断两个区间线段是否相交，进而可得该非共面的两个三角形是否相交。
+完整的算法如~\ref{alg:triangles:intersection}~所示。
+
+\begin{algorithm}[htbp]
+\small
+\caption{三角形求交算法}
+\label{alg:triangles:intersection}
+\begin{algorithmic}[1]
+\Require
+两个三角形的6个顶点 $T_1(\bm{U}_1, \bm{U}_2, \bm{U}_3), T_2(\bm{V}_1, \bm{V}_2, \bm{V}_3)$
+\Ensure
+是否相交
+
+\Function{TriangleTriangleDetection}{$\bm{U}_1, \bm{U}_2, \bm{U}_3, \bm{V}_1, \bm{V}_2, \bm{V}_3$}
+    \State {$\Pi_1 \gets \bm{n}_1 \cdot \bm{x}+d_1$} \Comment{按照公式~\ref{equa:tri:tri:plane}~计算$T_1$所在平面方程}
+    \For {$i = 1 \to 3$}
+        \State {$l_{1i} \gets \bm{n}_1 \cdot \bm{V}_i + d_1$} \Comment {计算$T_2$到$\Pi_1$的有向距离}
+    \EndFor
+    \If {$(l_{11} > 0 \textbf{~and~} l_{12} > 0 \textbf{~and~} l_{13} > 0) \textbf{or}
+          (l_{11} < 0 \textbf{~and~} l_{12} < 0 \textbf{~and~} l_{13} < 0)$}
+          \State \Return \textbf{False} \Comment{$T_2$在$\Pi_1$的同侧，排除}
+    \EndIf
+    \If {$l_{11} = 0 \textbf{~and~} l_{12} = 0 \textbf{~and~} l_{13} = 0$}
+        \State \Return \Call{EdgeEdgeTest}{$\bm{U}_1, \bm{U}_2, \bm{U}_3, \bm{V}_1, \bm{V}_2, \bm{V}_3$}
+        \State \Comment{$T_2$与$T_1$的共面，普通的边边相交测试}
+    \EndIf
+    \State {$\Pi_2 \gets \bm{n}_2 \cdot \bm{x}+d_2$} \Comment{按照公式~\ref{equa:tri:tri:plane}~计算$T_2$所在平面方程}
+    \For {$i = 1 \to 3$}
+        \State {$l_{2i} \gets \bm{n}_2 \cdot \bm{U}_i + d_2$} \Comment {计算$T_1$到$\Pi_2$的有向距离}
+    \EndFor
+    \If {$(l_{21} > 0 \textbf{~and~} l_{22} > 0 \textbf{~and~} l_{23} > 0) \textbf{or}
+          (l_{21} < 0 \textbf{~and~} l_{22} < 0 \textbf{~and~} l_{23} < 0)$}
+          \State \Return \textbf{False} \Comment{$T_1$在$\Pi_2$的同侧，排除}
+    \EndIf
+    \State {$t_1 \gets \Call{CalParam}{}, t_2 \gets \Call{CalParam}$}  
+    \Comment {按照公式~\ref{equa:triangle:intersectionline:param}~计算线段$\bm{D}_1$的参数区间} 
+    \State {$t_3 \gets \Call{CalParam}{}, t_4 \gets \Call{CalParam}$}  \Comment{类似的方法计算线段$\bm{D}_2$的参数区间} 
+    \If {$\Call{Overlap}{t_1, t_2, t_3, t_4}$}
+       \State \Return \textbf{True} \Comment{区间交叉，表明三角形相交返回\textbf{True}}
+    \Else
+       \State \Return \textbf{False}
+    \EndIf
+\EndFunction
+
+\end{algorithmic}
+\end{algorithm}
+
+算法~\ref{alg:triangles:intersection}~第~10~行在进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之相交，不需要求解出实际的交点。
+在实际实现过程中，往往需要引入容差以提高算法的稳定性。文献~\onlinecite{Moller1997}~介绍了更多的优化技巧。
 
 \section{基于 $k$-CBP 的碰撞检测算法}
 \label{sec:cd:baseon:kcbp}
@@ -181,7 +278,7 @@ AABB~树的根节点 $root$
 
 \begin{figure}[htbp] 
 \centering
-\includegraphics[width=4.5in]{bunny-box-kcbp-collsion-detection-example.png}
+\includegraphics[width=5in]{bunny-box-kcbp-collsion-detection-example.png}
 \caption{~$k-$CBP~应用于碰撞检测示例}
 \label{lbl:bunny-box-kcbp-collsion-detection-example}
 \end{figure}
