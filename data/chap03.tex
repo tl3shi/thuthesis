@@ -157,8 +157,118 @@ AABB~树的根节点 $root$
 \subsection{基于 GJK 的算法}
 \label{subsec:kcbp:cd:gjk}
 
+GJK~算法是~E.G.Gilbert，D. W. Jonhson~和S.S. Keerthi（取三位作者姓名首字母作为算法名称的缩写）~等人在1988年发表的一种用于计算三维欧式空间中两个凸集合点之间的距离\cite{gilbert1988fast}，后常用于凸体之间的碰撞检测算法\cite{bergen1999fast}。本文也利用此算法用于计算两个凸包围多面体~$k$-CBP~之间的相交测试。
 
+GJK~算法需要用到闵科夫斯基和（Minkowski Sum）如下定义：两个点集~A~和~B~，其~Minkowski~和为
+\begin{equation}
+  A + B = \{ a + b | a \in A, b \in B\},  
+  \label{}
+\end{equation}
+将相应的加号改为减号得到~Minkowski~差，即~$A - B = \{ a - b | a \in A, b \in B\}$，GJK~算法的核心基础在于若两个凸体相交，则其~Minkowski~差必包含原点，因为若~A~和~B~相交即~A~和~B~必含有公共交集，
+即至少含有一点同时属于~A~和~B~，该点的~Minkowski~差即为原点~$(0, 0)$，
+更加详细的证明过程可参考文献~\onlinecite{gilbert1988fast,bergen1999fast}。下面将以一个二维例子阐述此思想。
 
+\begin{figure}[htbp]
+\centering
+\subcaptionbox{相交\label{fig:gjk:example:intersection}}{
+  \includegraphics[width=.48\textwidth]{gjkIntersection.tikz}
+} 
+\subcaptionbox{不相交\label{fig:gjk:example:nonIntersection}}{
+  \includegraphics[width=.48\textwidth]{gjkNonIntersection.tikz}
+}
+\caption{二维~GJK~算法示例}
+\label{fig:gjk:example:2d}
+\end{figure}
+
+如图~\ref{fig:gjk:example:2d}~所示，图~\ref{fig:gjk:example:intersection}~中，四边形~$DEFG$~四个点坐标分别为$D(-4, 2), E(-2.5, 2), F(-2.5, 3.5), G(-4, 3.5)$，
+三角形~$ABC$~的坐标分别为~$A(-3, 1), B(-1,3), C(-3, 3)$~，其~Minkowski~差如式~\ref{equa:gjk:example:mink:diff}~所示，
+
+\begin{equation}
+\label{equa:gjk:example:mink:diff}
+\Box_{DEFG} - \bigtriangleup_{ABC} = \left\{ 
+  \begin{array}{l}
+    (0.5, 1),  (-1.5, 0.5),  (0.5, 2.5), (-1, 2.5), (-3, -1), (-1, -1), \\
+    (0.5, 0.5), (-1, 1), (-3, 0.5), (0.5, -1), (-1.5, -1), (-1, 0.5)
+  \end{array}
+    \right\}  
+\end{equation}
+四边形~$DEFG$~与三角形~$ABC$~相交，该~Minkowski~差构成的多边形~$H_1H_2H_3H_4H_5$包含原点~$\bm{O}$。而图~\ref{fig:gjk:example:nonIntersection}~中，
+四边形~$DEFG$~坐标不变，三角形坐标变为~$A(-3, 1), B(-1, 1), C(-1,3)$，其~Minkowski~差如式~\ref{equa:gjk:example:mink:diff2}~所示，
+
+\begin{equation}
+\label{equa:gjk:example:mink:diff2}
+\Box_{DEFG} - \bigtriangleup_{A'B'C'} = \left\{ 
+  \begin{array}{l}
+   (0.5, 1), (-1.5, 1),(0.5, 2.5)  , (-1.5, -1), (-1, 2.5),(-3, 2.5), \\ 
+   (-1.5, 2.5), (-3, 1), (-1.5, 0.5), (-3, 0.5), (-1, 1),(-3, -1) 
+  \end{array}
+  \right\}  
+\end{equation}
+四边形~$DEFG$~与三角形~$A'B'C'$~不相交，该~Minkowski~差构成的多边形~$H_1'H_2'H_3'H_4'H_5'$不包含原点~$\bm{O}$。
+
+通过该方法可将两个凸多边形或多面体是否相交转化为其~Minkowski~差是否包含原点，假设两个凸多边形或多面体分别有~$m$~和~$n$~个点，则直接计算其~Minkowski~差的时间复杂度为~$O(m \cdot n)$。
+GJK~算法并不直接计算其~Minkowski~差，而是采取一种迭代的算法计算其~Minkowski~差一步一步向逼近原点，在有限步内若包含原点则原凸多边形或凸多面体相交反之不相交，而该迭代算法能在有限步内完成。
+
+GJK~算法中定义支持映射（Support Mapping）函数为将给定的方向~$\bm{d}$~映射为凸多边形或多面体中沿着~$\bm{d}$~方向最远的点，该点称为支持点（Support Point），用符号~$Support(\bm{d})$~表示，
+该概念与本文第~\ref{sec:search:planes}节中搜索截面中的最大投影值点一致。设~$\mathbb{A}$~和~$\mathbb{B}$~的~Minkowski~差为~$\mathbb{D} = \mathbb{A}-\mathbb{B}$~，
+则~$Support_\mathbb{D}(\bm{d}) = Support_\mathbb{A}(\bm{d}) - Support_\mathbb{B}(-\bm{d})$，这样能使得
+~D~围成的区域更大并尽可能的包含原点。
+
+另四边形~$DEFG$~为~$\mathbb{A}$~
+三角形~$ABC$~为~$\mathbb{B}$~
+
+第一步 $\bm{d_1} = (1,0)$
+
+\begin{equation}
+  Support_\mathbb{D}(d_1)
+  \begin{array}{ll}
+    & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
+    & = E(-2.5, 2) - A(-3,1) \\
+    & = D_1(-0.5, 1)
+  \end{array}
+  \label{euqa:gjk:step1}
+\end{equation}
+
+\begin{figure}[htbp]
+\centering
+\subcaptionbox{第一步\label{fig:gjk:example:intersection:step1}}{
+  \includegraphics[width=.48\textwidth]{gjkExampleIntersectionStep1.tikz}
+} 
+\subcaptionbox{第二步\label{fig:gjk:example:nonIntersection:step2}}{
+  \includegraphics[width=.48\textwidth]{gjkExampleIntersectionStep2.tikz}
+}
+\subcaptionbox{第三步\label{fig:gjk:example:nonIntersection:step3}}{
+  \includegraphics[width=.48\textwidth]{gjkExampleIntersectionStep3.tikz}
+}
+\caption{二维~GJK~算法相交迭代示例}
+\label{fig:gjk:example:2d:intersection:iterator}
+\end{figure}
+
+第二步 取 $\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，
+
+\begin{equation}
+  Support_\mathbb{D}(d_2)
+  \begin{array}{ll}
+    & = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2}) \\
+    & = D(-4, 2) - B(-1, 3) \\
+    & = D_2(-3, -1)
+  \end{array}
+  \label{euqa:gjk:step2}
+\end{equation}
+
+第三步，simplex 为 $D_1, D_2$，
+取最近的点 $I(-4/13, 7/13)$所代表方向，$\bm{d}_3$
+取 $\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
+
+\begin{equation}
+  Support_\mathbb{D}(d_3)
+  \begin{array}{ll}
+    & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3}) \\
+    & = E(-2.5, 2) - C(-3, 3) \\
+    & = D_3(0.5, -1)
+  \end{array}
+  \label{euqa:gjk:step3}
+\end{equation}
 
 
 

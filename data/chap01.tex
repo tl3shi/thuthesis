@@ -266,10 +266,9 @@ Architecture，简称CUDA，后同）~平台上基于~GPU~构造~AABB~包围体�
 ，简称~BVH，也称包围体树），如在\ref{sec:convex-bv}提到的~AABB~，~OBB~等包围体树。
 包围体树跟常见的空间划分树最大的区别就是，在~BVH~中的两个或多个包围体可以包含相同的空间，而空间划分树的每个划分结构是分离的，且在~BVH~中，父节点不一定必须完整包含子节点，只需要包含子节点对应原始物体的那部分即可\cite{ericson2005real}。 
 根据参与碰撞检测的物体模型的表现形式，又可以分为凸体模型或凹体模型，多边形或者三角网格模型，CSG~（Constructive
-Solid Geometry，构造实体几何）模型，隐式方程或者参数表达曲面模型等，例如文献\onlinecite{Zeiller1995}就讨论了计算机动画系统中基于CSG模型的碰撞检测算法，GJK~算法\cite{Science1999}就是针对凸体模型之间的碰撞检测算法。
-根据碰撞检测的模拟环境划分，又可以分为成对（Pair
-Processing）碰撞检测和多体（Nbody
-Processing）碰撞检测，刚体和柔性模型的碰撞检测以及静态和动态（连续）碰撞检测\cite{lin1998collision}。
+Solid Geometry，构造实体几何）模型，隐式方程或者参数表达曲面模型等，例如文献\onlinecite{Zeiller1995}就讨论了计算机动画系统中基于CSG模型的碰撞检测算法，GJK（Gilbet Johnson Keerthi）~算法\cite{gilbert1988fast,bergen1999fast}
+是用来计算凸体模型之间的距离，因而常用于针对凸体模型之间的碰撞检测算法。
+根据碰撞检测的模拟环境划分，又可以分为成对（Pair Processing）碰撞检测和多体（Nbody Processing）碰撞检测，刚体和柔性模型的碰撞检测以及静态和动态（连续）碰撞检测\cite{lin1998collision}。
 文献\onlinecite{jimenez20013d}从碰撞检测的解决策略上做了系统的分类和总结，文中提到目前的碰撞检测都是从几何或代数的方法进行求解，其中几何方法主要利用投影、采样或者二者的结合的技术进行处理。
 
 随着~3D~扫描仪的出现，近年来也出现了一些基于点云的碰撞检测算法。Klein Jan~等人\cite{klein2004point}首次在~EuroGraphics 04~上提出了点云的碰撞检测概念，同样利用了层次结构包围体进行加速检测，并提出了一个给定容差的判断点云模型之间是否相交的算法。
