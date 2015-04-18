@@ -37,7 +37,8 @@
       \draw [thick] (D1) -- (H1);
       \coordinate [label = {left: \scriptsize{$I$}}](I) at (-4/13, 7/13);
       \draw [dashed] (O) -- (I);
-      
+      \draw [fill=gray!80] (I) circle (0.08); 
+
       \draw [thick, ->]  (0-2, 0+2) -- (1-2, -7/4+2); %normal is 13/4*(4/13, -7/13)  up 2,left 2
       \coordinate [label={right: \scriptsize{$\bm{d_3}$}}](N2) at (-3/2, -7/8+2);
       

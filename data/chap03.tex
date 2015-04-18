@@ -214,63 +214,112 @@ GJK~算法中定义支持映射（Support Mapping）函数为将给定的方向~
 则~$Support_\mathbb{D}(\bm{d}) = Support_\mathbb{A}(\bm{d}) - Support_\mathbb{B}(-\bm{d})$，这样能使得
 ~D~围成的区域更大并尽可能的包含原点。
 
-另四边形~$DEFG$~为~$\mathbb{A}$~
-三角形~$ABC$~为~$\mathbb{B}$~
+GJK~算法采用如下的流程进行迭代计算两个凸多面体~$\mathbb{A}$~和~$\mathbb{B}$~是否相交：
+%\cite{ericson2005real}
 
-第一步 $\bm{d_1} = (1,0)$
+\begin{enumerate}[(1)]
+  \item 任选方向~$\bm{d}$~计算~$Support_\mathbb{D}(\bm{d}) = Support_\mathbb{A}(\bm{d}) - Support_\mathbb{B}(-\bm{d})$，即任意从~$\mathbb{A}$~和~$\mathbb{B}$~的~Minkowski~差中选择一点，加入集合~$\bm{S}$；
+  \item 计算~$ConvxHull(S)$~中，具有最小二范数的点（离原点最近的点）~$D$； 
+  \item 如果~$D$~是原点本身或~$ConvxHull(S)$包含原点，则表明$\mathbb{A}$~和~$\mathbb{B}$~相交，停止迭代；
+  \item 规约集合~$\bm{S}$~，使得~$\bm{S}$~中是满足~$D$~属于其凸包的最小的集合；
+  \item 更新方向~$\bm{d} = -\bm{D}$~，并计算~$Support_\mathbb{D}(\bm{d}) = Support_\mathbb{A}(\bm{d}) - Support_\mathbb{B}(-\bm{d})$；
+  \item 如果有新的$Support_\mathbb{D}(\bm{d})$~产生，则添加至集合~$\bm{S}$~并从第(2)步继续迭代，否则结束迭代，且$\mathbb{A}$~和~$\mathbb{B}$~不相交。
+\end{enumerate}
 
+具体而言，仍以图~\ref{fig:gjk:example:intersection}~为例，令四边形~$DEFG$~为~$\mathbb{A}$~，三角形~$ABC$~为~$\mathbb{B}$~，
+
+第一次迭代令~$\bm{d_1} = (1,0)$，如图~\ref{fig:gjk:example:intersection:step1}~所示，
 \begin{equation}
-  Support_\mathbb{D}(d_1)
   \begin{array}{ll}
-    & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
-    & = E(-2.5, 2) - A(-3,1) \\
-    & = D_1(-0.5, 1)
+    Support_\mathbb{D}(d_1) & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
+                            & = E(-2.5, 2) - A(-3,1) \\
+                            & = D_1(-0.5, 1)
   \end{array}
   \label{euqa:gjk:step1}
 \end{equation}
 
 \begin{figure}[htbp]
 \centering
-\subcaptionbox{第一步\label{fig:gjk:example:intersection:step1}}{
+\subcaptionbox{第一次迭代\label{fig:gjk:example:intersection:step1}}{
   \includegraphics[width=.48\textwidth]{gjkExampleIntersectionStep1.tikz}
 } 
-\subcaptionbox{第二步\label{fig:gjk:example:nonIntersection:step2}}{
+\subcaptionbox{第二次迭代\label{fig:gjk:example:intersection:step2}}{
   \includegraphics[width=.48\textwidth]{gjkExampleIntersectionStep2.tikz}
 }
-\subcaptionbox{第三步\label{fig:gjk:example:nonIntersection:step3}}{
+\subcaptionbox{第三次迭代\label{fig:gjk:example:intersection:step3}}{
   \includegraphics[width=.48\textwidth]{gjkExampleIntersectionStep3.tikz}
 }
-\caption{二维~GJK~算法相交迭代示例}
+\caption{二维~GJK~算法迭代示例（相交情况）}
 \label{fig:gjk:example:2d:intersection:iterator}
 \end{figure}
 
-第二步 取 $\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，
-
+此时，$\bm{S} = \{D_1(0.5, 1)\}$，第二次迭代取~$\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，
 \begin{equation}
-  Support_\mathbb{D}(d_2)
   \begin{array}{ll}
-    & = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2}) \\
+  Support_\mathbb{D}(d_2)  & = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2}) \\
     & = D(-4, 2) - B(-1, 3) \\
     & = D_2(-3, -1)
   \end{array}
   \label{euqa:gjk:step2}
 \end{equation}
 
-第三步，simplex 为 $D_1, D_2$，
-取最近的点 $I(-4/13, 7/13)$所代表方向，$\bm{d}_3$
-取 $\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
-
+此时，$\bm{S} = \{D_1(-0.5, 1), D_2(-3, -1)\}$，第三次迭代，计算~$ConvexHull(S)$~中最小二范数的点为~$I(-4/13, 7/13)$~，
+并令~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
 \begin{equation}
-  Support_\mathbb{D}(d_3)
   \begin{array}{ll}
-    & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3}) \\
+  Support_\mathbb{D}(d_3)  & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3}) \\
     & = E(-2.5, 2) - C(-3, 3) \\
     & = D_3(0.5, -1)
   \end{array}
   \label{euqa:gjk:step3}
 \end{equation}
 
+此时$\bm{S} = \{D_1(0.5, 1), D_2(-3, -1), D_3(0.5, -1)\}$，如图~\ref{fig:gjk:example:intersection:step3}~所示，$ConvexHull(S)$~为阴影部分包含原点，结束迭代，$\mathbb{A}$~和~$\mathbb{B}$~相交。
 
+再以图~\ref{fig:gjk:example:nonIntersection}~为例，设三角形$\mathbb{B'} = A'B'C'$，该例前两次迭代与上例相同，此处省略直接从第三次迭代起，
+
+\begin{figure}[htbp]
+\centering
+\subcaptionbox{第三次迭代\label{fig:gjk:example:nonIntersection:step3}}{
+  \includegraphics[width=.48\textwidth]{gjkExampleNonIntersectionStep3.tikz}
+} 
+\subcaptionbox{第四次迭代\label{fig:gjk:example:nonIntersection:step4}}{
+  \includegraphics[width=.48\textwidth]{gjkExampleNonIntersectionStep4.tikz}
+}
+\caption{二维~GJK~算法迭代示例（不相交情况）}
+\label{fig:gjk:example:2d:intersection:iterator}
+\end{figure}
+
+第三次迭代，$\bm{S} = \{(D_1', D_2') \}$，此时~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
+\begin{equation}
+  \begin{array}{ll}
+  Support_\mathbb{D}(d_3)  & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B'}(-\bm{d_3}) \\
+    & = E(-2.5, 2) - C'(-1, 3) \\
+    & = D_3'(-1.5, -1)
+  \end{array}
+  \label{euqa:gjk:non:step3}
+\end{equation}
+
+此时$\bm{S} = \{D_1'(0.5, 1), D_2'(-3, -1), D_3(-1.5, -1)\}$，如图~\ref{fig:gjk:example:nonIntersection:step3}~所示，$ConvexHull(S)$~并不包含原点，继续迭代，
+
+计算~$\bm{S}$~中二范数最小的点为~$I_2(-1/4, 1/4)$~，并规约集合~$\bm{S}$，点~$D_2'$~可去掉，
+变为$\bm{S} = \{ (D_1'(0.5, 1), D_3'(-1.5, -1)\}$，并另$\bm{d}_4 = -I_2 = (1/4, -1/4)$，
+\begin{equation}
+  \begin{array}{ll}
+  Support_\mathbb{D}(d_4)  & = Support_\mathbb{A}(\bm{d_4}) - Support_\mathbb{B'}(-\bm{d_4}) \\
+    & = E(-2.5, 2) - C'(-1, 3) \textbf{~or~} A'(-3, 1)  \\
+    & = D_3'(-1.5, -1) \textbf{~or~} D_1'(0.5, 1)
+  \end{array}
+  \label{euqa:gjk:non:step4}
+\end{equation}
+
+此时，没有新的~$Support_\mathbb{D}(\bm{d})$~产生，结束迭代，$\mathbb{A}$~和~$\mathbb{B}$~不相交。
+
+在实际计算过程中，并不需要计算离原点最近（二范数最小）的点的坐标，只需选择垂直已有方向并指向原点的方向即可，以图~\ref{fig:gjk:example:intersection:step3}~为例，
+此时~$\overrightarrow{D_1D_2} = D_2(-3, -1) - D_1(0.5, 1) = (-3.5, -2)$，此时只需另~
+$\bm{d'} = D_1D_2 \times D_1O \times D_1D_2 = -(D_1D_2 \cdot D_1O)D_1D_2 + (D_1D_2 \cdot D_1D_2)D_1O = (-21.25,-8.75)$，
+
+G(-4, 3.5) - C(-3, 3) = (-1, 0.5) TODO
 
 \section{三角网格的相交测试算法}
 \label{sec:intersection:triangles}
