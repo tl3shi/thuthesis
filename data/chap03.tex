@@ -316,7 +316,7 @@ GJK~算法采用如下的流程进行迭代计算两个凸多面体~$\mathbb{A}$
 此时，没有新的~$Support_\mathbb{D}(\bm{d})$~产生，结束迭代，$\mathbb{A}$~和~$\mathbb{B}$~不相交。
 
 在实际计算过程中，并不需要计算离原点最近（二范数最小）的点的坐标，只需选择垂直已有方向再进行判断选择方向即可，以图~\ref{fig:gjk:example:intersection:step3}~为例，
-此时~$\overrightarrow{D_1D_2} = D_2(-3, -1) - D_1(0.5, 1) = (-3.5, -2)$，此时只需另~
+此时~$\overrightarrow{D_1D_2} = D_2(-3, -1) - D_1(0.5, 1) = (-3.5, -2)$，此时只需令~
 $\bm{d_3'} = D_1D_2 \times D_1O \times D_1D_2 = -(D_1D_2 \cdot D_1O)D_1D_2 +
 (D_1D_2 \cdot D_1D_2)D_1O = (5,-8.75)$（$\bm{a} \times \bm{b} \times \bm{c} =
 -(\bm{c}\cdot\bm{b})\bm{a}+(\bm{c}\cdot\bm{a})\bm{b})$），
@@ -327,7 +327,17 @@ $\bm{d_3'} = D_1D_2 \times D_1O \times D_1D_2 = -(D_1D_2 \cdot D_1O)D_1D_2 +
     & = D_3(0.5, -1) 
   \end{array}
 \end{equation}
-得到的~$Support_\mathbb{D}(d_3')$~仍为~$D_3(0.5,-1)$，与选择二范数最小点~$I$~所代表的方向达到相同的结果。 
+得到的~$Support_\mathbb{D}(d_3')$~仍为~$D_3(0.5,-1)$，与选择二范数最小点~$I$~所代表的方向达到相同的结果，因为选择二范数最小点的坐标代表方向与该垂直方向相同，因此结果一致。
+
+\begin{enumerate}[(1)]
+  \item 通过$\bm{d}_3'$~得到的支持点$\bm{D}_3$中，$\bm{d}_3' \cdot OD_3 = (5, -8.75) \cdot (0.5, -1) = 11.25 > 0$~表明通过~$\bm{d}_3'$~方向到支持点的方向覆盖了原点，
+即原点在线段~$D_1D_2$~线段的右下方；
+  \item $\overrightarrow{D_3D_1}$~垂直并指向阴影部分面积方向为~$\overrightarrow{P_{D3D1}}=\overrightarrow{D_3D_1} \times \overrightarrow{D_3D_2} \times \overrightarrow{D_3D_1} = (-14, 0)$，此时，$\overrightarrow{P_{D3D1}} \cdot D_3O = (-14, 0) \cdot (-0.5, 1) = 7 < 0$~表明原点~$\bm{O}$~在~$\overrightarrow{P_{D3D1}}$的正方向即线段~$D3D1$~的左边；
+  \item 同时，$\overrightarrow{D_3D_2}$~垂直并指向阴影部分面积方向为~$\overrightarrow{P_{D3D2}}=\overrightarrow{D_3D_2}
+\times \overrightarrow{D_3D_1} \times \overrightarrow{D_3D_2} = (0, 24.5)$
+且~$\overrightarrow{P_{D3D1}} \cdot D_3O = (0, 24.5) \cdot (-0.5, 1) = 24.5 > 0$~表明原点~$\bm{O}$~在~$\overrightarrow{P_{D3D2}}$的正方向即线段~$D3D2$~的上边；
+\end{enumerate}
+以上三个条件全部满足，即原点~$\bm{O}$~被阴影部分所覆盖，即~$\mathbb{A}$~和~$\mathbb{B}$~的~Minkowski~差包含原点即可确定~$\mathbb{A}$~和~$\mathbb{B}$~相交，结束迭代。
 
 相应的以图~\ref{fig:gjk:example:nonIntersection:step3}~为例，其结果仍一样。
 \begin{equation}
@@ -337,16 +347,50 @@ $\bm{d_3'} = D_1D_2 \times D_1O \times D_1D_2 = -(D_1D_2 \cdot D_1O)D_1D_2 +
     & = D_3'(-1.5, -1) 
   \end{array}
 \end{equation}
-事实上，选择二范数最小点的坐标代表方向与该垂直方向相同，因此结果一致。
-图~\ref{fig:gjk:example:nonIntersection:step4}~中，
-$\overrightarrow{D_3'D_2'}$~垂直并指向阴影部分面积方向为~$\overrightarrow{D_3'D_2'_p}=\overrightarrow{D_3'D_2'}
-\times \overrightarrow{D_3'D_1'} \times \overrightarrow{D_3'D_2'} = 
-(1.5, 0)*(-3) + 2.25*(2,2) =(0, 4.5)$
-$\overrightarrow{D_3'D_1'}$~垂直并指向阴影部分面积方向为~$\overrightarrow{D_3'D_1'}
+图~\ref{fig:gjk:example:nonIntersection:step3}~中，
+上一步通过~$\bm{d}_3'$~得到的支持点为~$D_3'(-1.5, -1)$，且$\overrightarrow{D_3'D_1'}$~垂直并指向阴影部分面积方向为~$\overrightarrow{P_{D_3'D_1'}}
 \times \overrightarrow{D_3'D_2'} \times \overrightarrow{D_3'D_1'} =
-(-2,-2)*(-3) + 8*(-1.5, 0) = (-6, 6)$
-还都看一遍这个例子 走网页那个代码。TODO
-$D_3'D_2'_p \cdot D_3'O = 4.5 > 0$且$D_3'D_1'_p \cdot D_3'O = >0$<++>
+(-2,-2)*(-3) + 8*(-1.5, 0) = (-6, 6)$，此时
+~$\overrightarrow{P_{D3'D1'}} \cdot D_3'O = (-6, 6) \cdot (1.5, 1) = -3 < 0$~表明下一次迭代方向需要以~$\overrightarrow{P_{D3'D1'}}$~的反方向开始，此时点~$D_2'$~可以规约掉，
+即~$\bm{d}_4'= (6, -6)$，以此方向得到的支持点~$D_1'(0.5, 1)$，
+此时，$\bm{d}_4' \cdot OD_1 = (6, -6) \cdot (0.5, 1) = -3 < 0 $ 表明通过~$\bm{d}_4'$~方向到支持点覆盖的区域没有包含原点，即可排除相交。
+
+具体的算法如算法~\ref{alg:gjk}~所示，文献~\onlinecite{bergen1999fast}~证明了集合~$\bm{S}$~中在三维空间最多只包含4个点，且算法最终会收敛。
+在实际实现过程中可以根据需求设定最大迭代次数，达到后或者认为没找到相交点或者采取保守态度进行下一步验证。
+
+\begin{algorithm}[htbp]
+\small
+\caption{基于~GJK~的~$k$~CBP~相交检测算法}
+\label{alg:gjk}
+\begin{algorithmic}[1]
+\Require
+$k$-CBP~ $k\texttt{-}CBP_1, k\texttt{-}CBP_2$
+\Ensure
+是否相交
+\Function{KCBPDetectionBasedOnGJK}{$k\texttt{-}CBP_1, k\texttt{-}CBP_2$}
+    \State $\bm{d} \gets \Call{initNormal}$
+    \State $\bm{D} \gets \Call{Support}{k\texttt{-}CBP_1, k\texttt{-}CBP_2, \bm{d}}$
+    \State $S \gets \{p\}$
+    \State $iter \gets 1 , \bm{d} \gets -\bm{d}$
+    \While{$inter++ < MaxIter$}
+        \State $\bm{D} \gets \Call{Support}{k\texttt{-}CBP_1, k\texttt{-}CBP_2, \bm{d}}$
+        \If {$\bm{D} \cdot \bm{d} < 0 $}
+            \State \Return \textbf{False}
+        \EndIf
+        \State $S \gets S \cup \bm{D}$
+        \State $ contains \gets \Call{CheckContainUpdate}{S, \bm{d}}$ \Comment{检测是否包含原点，对集合~$S$~进行规约，并获取下一次迭代的方向~$\bm{d}$}
+        \If {$contains$}
+            \State \Return \textbf{True} \Comment{包含原点，直接返回相交，否则继续迭代}
+        \EndIf
+    \EndWhile
+    \State \Return \textbf{False} \Comment{达到最大迭代次数，根据需求返回相交或者不相交}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+算法~\ref{alg:gjk}~第~12~行~$CheckContainUpdate$~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
+具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
+
 
 \section{三角网格的相交测试算法}
 \label{sec:intersection:triangles}
@@ -641,6 +685,10 @@ AABB包围盒 $box$，
 算法~\ref{alg:moving:cd}~是一个递归算法，从~AABB~树的根节点起向底层进行深度优先遍历，当检测到运动后的模型的某两个叶子节点的包围盒相交时，遍历其三角网格的相交检测算法，在实际实现过程中，本文的叶子节点仅含一个三角网格。
 运动模型的三角网格应用变换矩阵得到一个新的三角网格，同样用~\ref{sec:intersection:triangles}~的算法对新的三角网格进行相交测试。
 除了用该递归算法外，也可对算法~\ref{alg:aabbtree:traverse:iterator}~进行稍许改动（只需改变包围盒检测和三角网格检测的函数）的迭代算法，此处不在赘述。
+
+在基于~GJK~的~$k$-CBP~碰撞检测算法中，只需要改变算法~\ref{alg:gjk}~中~$Support$~子过程，将变换矩阵应用到原始顶点进行计算得到新的支持点即可，而在连续运动的模型碰撞检测过程中，
+利用爬山法可以将支持点的搜索优化到常数时间复杂度\cite{bergen1999fast}。
+
 
 \section{实验结果}
 \label{sec:exper-cd}
