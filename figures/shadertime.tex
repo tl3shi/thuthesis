@@ -31,7 +31,7 @@
 \pgfplotstableset{col sep = comma}
 \addplot table [x index=0, y=cpu] {experiments/appleNew.csv};
 \addplot table [x=k, y=zbuffer] {experiments/appleNew.csv};
-\addplot table [x=k, y=pingpong] {experiments/appleNew.csv};
+\addplot[mark=triangle*] table [x=k, y=pingpong] {experiments/appleNew.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -49,7 +49,7 @@
 \pgfplotstableset{col sep = comma}
 \addplot table [x index=0, y=cpu] {experiments/buddaNew.csv};
 \addplot table [x=k, y=zbuffer] {experiments/buddaNew.csv};
-\addplot table [x=k, y=pingpong] {experiments/buddaNew.csv};
+\addplot[mark=triangle*] table [x=k, y=pingpong] {experiments/buddaNew.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -66,7 +66,7 @@
 \pgfplotstableset{col sep = comma}
 \addplot table [x=k, y=cpu] {experiments/aliceNew.csv};
 \addplot table [x=k, y=zbuffer] {experiments/aliceNew.csv};
-\addplot table [x=k, y=pingpong] {experiments/aliceNew.csv};
+\addplot[mark=triangle*] table [x=k, y=pingpong] {experiments/aliceNew.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -100,7 +100,7 @@
 \pgfplotstableset{col sep = comma}
 \addplot table [x=k, y=cpu] {experiments/bugattiveronNew.csv};
 \addplot table [x=k, y=zbuffer] {experiments/bugattiveronNew.csv};
-\addplot table [x=k, y=pingpong] {experiments/bugattiveronNew.csv};
+\addplot[mark=triangle*] table [x=k, y=pingpong] {experiments/bugattiveronNew.csv};
 \end{axis}
 \end{tikzpicture}
 

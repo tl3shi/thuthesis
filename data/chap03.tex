@@ -422,7 +422,7 @@ $k$-CBP~ $k\texttt{-}CBP_1, k\texttt{-}CBP_2$
   \item 其他情况，~$T_2$~必交~$\Pi_1$~于一条线段。
 \end{enumerate}
 
-同理可以根据~$T_1$~到~$\Pi_2$~得到类似的情况。针对情况（1），共面的两个三角形求交可以通过两个三角形中三条线段两两判定是否相交最多9次线段线段求交判定可得，或者通过我们在文献~\ref{linjianli2014}~中提出的方法进行，该方法对线段三角形的位置做了详细的分类可通过不超过~6~次线段线段求交判定；针对情况（2），计算出有向距离同号后即可排除相交立即返回；
+同理可以根据~$T_1$~到~$\Pi_2$~得到类似的情况。针对情况（1），共面的两个三角形求交可以通过两个三角形中三条线段两两判定是否相交最多9次线段线段求交判定可得，或者通过我们在文献~\cite{linjianli2014}~中提出的方法进行，该方法对线段三角形的位置做了详细的分类可通过不超过~6~次线段线段求交判定；针对情况（2），计算出有向距离同号后即可排除相交立即返回；
 针对情况（3），如图~\ref{fig:two:triangle:ui2}~所示，不妨设~$T_1$~中点~$\bm{V}_1, \bm{V}_2$~在平面~$\Pi_2$的一侧，$\bm{V}_3$~在另外一侧，
 且点~$\bm{V}_1, \bm{V}_2$~在平面上投影点分别为~$\bm{K}_1,\bm{K}_2$，线段~$\bm{V}_1\bm{V}_2, \bm{V}_2\bm{V}_3$~与~$\bm{L}$~分别交于点~$\bm{I}_1,\bm{I}_2$，点~$\bm{V}_1,\bm{V}_2$~向直线~$\bm{L}$~的投影点分别为~$\bm{P}_1,\bm{P}_2$，
 三角形~$T_1$~交于直线~$\bm{L}$~与线段~$\overline{I_1I_2}$。%，现在目的是求$I_1I_2$。
@@ -706,18 +706,11 @@ AABB包围盒 $box$，
 \caption{$k$-CBP~和包围盒应用于碰撞检测结果对比}
 \label{tab:exp:box:kcbp:collsiondetection}
 \centering
-\begin{tabular}{lccccccl}
+\begin{tabular}{lccccccr}
  \toprule[1.5pt]
-  n& c(Box) & c($16$-CBP) &  t(Box) & t($16$-CBP) & r(Box) & r($k$-CBP) & n(Model) \\
+ \multirow{2}{*}{$n$} & CT(Box) & CT($16$-CBP) & DT(Box) & DT($16$-CBP) & r(Box) & r($k$-CBP) & \multirow{2}{*}{DP(Model)} \\
+                      & (ms)    & (ms)          & (ms)  & (ms)          & (\%)      & (\%)  &   \\
   \midrule[1.0pt]
-%  10 & 0.1 & 1.8 & 26.0  & 0.1 & 2 & 0 & 0\\
-%  30 & 0.2 & 2.9 & 134.0  & 70.0 & 11 & 6 & 5\\
-%  50 & 0.5 & 4.8 & 506.0  & 255.2 & 41 & 22 & 19 \\
-%  70 & 0.4 & 4.8 & 901.1  & 492.5 & 77 & 42 & 34 \\
-%  90 & 0.7 & 5.7 & 1324.0  & 734.7 & 110 & 63 & 46 \\
-%  100 & 0.7 & 7.8 & 1481.0  & 870.7 & 127 & 73 & 55 \\
-%  150 & 1.0 & 9.8 & 4153.1  & 2473.0 & 349 & 212 & 150 \\
-%  200 & 1.6 & 12.8 & 8049.3 & 4430.9 & 685 & 394 & 281 \\
    10 & 0.1 & 1.8 &    26.0  & 0.1    & 0.00  & 100.00 & 0\\
    30 & 0.2 & 2.9 &   134.0  & 70.0   & 45.45 & 83.33 & 5\\
    50 & 0.5 & 4.8 &   506.0  & 255.2  & 46.34 & 86.36 & 19 \\
@@ -732,14 +725,151 @@ AABB包围盒 $box$，
 %\end{landscape}
 
 如表~\ref{tab:exp:box:kcbp:collsiondetection}~所示,
-其中~n~表示场景中模型的数量, c(Box), c($16$-CBP)分别表示模型包围盒的构造时间和凸包围16面体的构造时间(单位ms)\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}, t(Box), t($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间,
-其中~r(Box), r($16$-CBP)分别表示包围盒、16-CBP~的命中率(即用实际模型相交的数量除以包围体检测出来相交的数量), ~n(Model)模型实际相交的数量, 显然计算模型包围盒所耗费的时间要明显少于计算凸包围多面体的时间, 但由于凸包围多面体比包围盒紧致,
+其中~n~表示场景中模型的数量, CT(Box), CT($16$-CBP)分别表示模型包围盒的构造时间（Construct Time，简称CT）和凸包围16面体的构造时间（单位ms）\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}, t(Box), t($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间,
+其中~r(Box), r($16$-CBP)分别表示包围盒、16-CBP~的命中率（即用实际模型相交的数量除以包围体检测出来相交的数量）, ~DP(Model)检测到的模型实际相交的对数（Detection Pair，简称DP），
+显然计算模型包围盒所耗费的时间要明显少于计算凸包围多面体的时间, 但由于凸包围多面体比包围盒紧致,
 因而命中率比包围盒高, 能排除更多本不相交的模型进而节省碰撞检测总时间, 提高算法效率。该部分工作已经发表，详细内容见参考文献~\onlinecite{tanglei2014}。
 
 \subsection{静止场景中与~$k$-DOP~算法对比}
 \label{subsec:exper:kdop:kcbp:static}
 
-为了和K-DOP进行对比，相同模型，kcbp也与kdop一样扫描点击重新构造，且都是用CPU实现的算法。
+CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/research/colldet/~下载得到}是~Gabriel Zachmann~等人实现的一个碰撞检测库\cite{abenchmarking2007}，内含基于~$k$-DOP~的实现，本文将从静态和动态两个角度对其进行对比实验分析，为了和~$k$-DOP~进行公平实验对比，本文在实验过程中均只通过~CPU~进行计算，并未采用~GPU~加速，
+针对碰撞检测实验环境中多个相同的实验模型，$k$-CBP~与~$k$-DOP~的构造均采用重新扫描扫描点集构造。
+
+在静态场景中的碰撞检测实验中，本文生成不同数量的模型，其位置和旋转角度随机生成（$k$-DOP~和~$k$-CBP~采用相同的随机生成的数据），图~\ref{fig:static:cd:bunny}~为~Bunny~模型在模拟碰撞检测的实验实例。
+
+\begin{figure}[htbp]
+\centering
+\subcaptionbox{n=10}{
+  \includegraphics[width=.22\textwidth]{bunny-static-10.png}
+} 
+\subcaptionbox{n=20}{
+  \includegraphics[width=.22\textwidth]{bunny-static-20.png}
+}
+\subcaptionbox{n=30}{
+  \includegraphics[width=.22\textwidth]{bunny-static-30.png}
+}
+\subcaptionbox{n=40}{
+  \includegraphics[width=.22\textwidth]{bunny-static-40.png}
+}\\ 
+\subcaptionbox{n=50}{
+  \includegraphics[width=.22\textwidth]{bunny-static-50.png}
+}
+\subcaptionbox{n=60}{
+  \includegraphics[width=.22\textwidth]{bunny-static-60.png}
+}
+\subcaptionbox{n=70}{
+  \includegraphics[width=.22\textwidth]{bunny-static-70.png}
+}
+\subcaptionbox{n=80}{
+  \includegraphics[width=.22\textwidth]{bunny-static-80.png}
+}\\
+\caption{Bunny~模型静态碰撞检测实验示例}
+\label{fig:static:cd:bunny}
+\end{figure}
+
+表~\ref{tab:exp:bunny:k24:kdop:kcbp}~为本文算法与~$k$-DOP~均采用CollDet~中默认值~$k=24$~针对~Bunny~模型的实验结果。
+其中，$n$~表示场景中模型的数量，$n$(Box)~表示通过包围盒过滤后构造碰撞检测对的有效模型数量，$n-n(\texttt{Box})$~的值表示场景中模型的包围盒不与任何其他模型包围盒相交的模型数量，CT($k$-DOP)~和~CT($k$-CBP)~分别表示初始化的时间（单位~ms）， CT($k$-DOP)~包括计算模型包围盒和计算$k$-DOP~树，CT($k$-CBP)~包括计算模型包围盒，
+$k$-CBP~以及用于实际模型碰撞检测算法的~AABB~树，DT($k$-DOP)、DT($k$-CBP)($AABB$) 和~DT($k$-CBP)($GJK$)~均表示碰撞检测所耗费的时间， 
+DT($k$-CBP)($AABB$)~为通过第~\ref{subsec:kcbp:cd:aabb}~节中介绍的~AABB~方法对~$k$-CBP~进行相交检测，而~DT($k$-CBP)($GJK$)~表示通过第~\ref{subsec:kcbp:cd:gjk}~节
+中介绍的~GJK~方法对~$k$-CBP~进行相交检测，相应的时间都包括~$k$-CBP~相交后对模型进行~AABB~相交检测时间。
+
+\begin{table}[htbp]  
+\centering
+\caption{本文算法与~$k$-DOP~结果对比（Bunny）}
+\label{tab:exp:bunny:k24:kdop:kcbp}
+\begin{tabular}{cccccccc}
+\toprule[1.5pt]
+\multirow{2}{*}{$n$} & \multirow{2}{*}{$n$(Box)} & CT($k$-DOP) &  CT($k$-CBP) & DT($k$-DOP) & DT($k$-CBP) & DT($k$-CBP) \\%& \multirow{2}{*}{DP(Model)} \\ 
+                     &                         &  (ms)        & (ms)         & (ms)        & $(AABB)$~(ms) & $(GJK)$~(ms)       \\
+\midrule[1.0pt]
+10 & 3 &	285.00 &	29.30      &0.01 &	0.01  & 	0.20  \\ %& 0  \\ 
+20 & 10&	937.20 &	77.30      &0.60 &	0.70  & 	0.50  \\ %& 2  \\ 
+30 & 24&	2233.60&	162.20     &2.00 &	2.00  & 	1.60  \\ %& 23 \\ 
+40 & 38&	3522.20&	244.70     &1.80 &	2.10  & 	1.50  \\ %& 19 \\ 
+50 & 46&	4238.20&	302.90     &2.60 &	3.10  & 	2.70  \\ %& 35 \\ 
+60 & 59&	5447.60&	375.80     &4.00 &	5.00  & 	4.80  \\ %& 49 \\ 
+70 & 68&	6271.00&	430.40     &5.20 &	5.20  & 	5.30  \\ %& 61 \\ 
+80 & 78&	7186.20&	492.10     &6.60 &	6.90  & 	6.90  \\ %& 85 \\ 
+90 & 88&	8096.20&	550.30     &8.20 &	8.70  & 	10.50 \\ %& 84 \\ 
+100& 97&	8925.80&	615.00     &14.00&	10.60 & 	14.10 \\ %& 161\\ 
+\bottomrule[1.5pt]
+\end{tabular}
+\end{table}
+
+表~\ref{tab:exp:bunny:k24:kdop:kcbp:detail}~记录了更加详细的实验结果，其中~CT($k$-CBP)~和~CT(AABB)~分别表示本文算法中构造~$k$-CBP~的时间和构造用于具体模型碰撞检测算法的~AABB~树的时间，
+DP(Box)~和~DP(Model)~表示包围盒相交的对数和实际模型碰撞的对数，这两组数据与~$k$-DOP~算法中相同，DP($k$-CBP)表示~$k$-CBP~相交的对数。
+结合二表可知，在前期初始化碰撞检测环境中，本文算法优势明显，当模型为100时，$k$-DOP~算法构造~$k$-DOP~树需要近9秒的时间，而本文算法不到1秒，
+初始化环境后，进入碰撞检测环节，本文算法较~$k$-DOP~相差不大，而本文提出的基于~AABB~树算法和基于~GJK~算法中，AABB~算法在静态环境中较~GJK~更优，
+而从后文第~\ref{subsec:exper:kdop:kcbp:dynamic}~节也可以看出基于~GJK~算法在动态碰撞检测的环境中更优。 
+
+\begin{table}[htbp]  
+\centering
+\caption{本文算法实验结果（Bunny）}
+\label{tab:exp:bunny:k24:kdop:kcbp:detail}
+\begin{tabular}{cccccc}
+\toprule[1.5pt]
+$n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
+\midrule[1.0pt]
+10 &  13.60 &	16.60      & 2   &2   & 0  \\
+20 &  23.80 &	53.40      & 10  &4   & 2  \\
+30 &  35.00 &	128.00     & 42  &31  & 23 \\
+40 &  42.40 &	199.40     & 42  &21  & 19 \\
+50 &  51.00 &	244.20     & 66  &43  & 35 \\
+60 &  58.00 &	313.40     & 121 &62  & 49 \\
+70 &  66.80 &	360.20     & 144 &77  & 61 \\
+80 &  72.20 &	412.80     & 167 &101 & 85 \\
+90 &  81.00 &	463.80     & 261 &119 & 84 \\
+100&  92.00 &	514.20     & 335 &200 & 161\\
+\bottomrule[1.5pt]
+\end{tabular}
+\end{table}
+
+
+
+\begin{figure}[htbp] 
+\centering
+\subcaptionbox{初始化时间对比\label{chart:exps:kdop:kcbp:bunny:init}}
+{
+    \includegraphics[width=0.45\textwidth,page=1]{staticcd.pdf}
+}
+\hspace{1em}
+\subcaptionbox{碰撞检测时间对比\label{chart:exps:kdop:kcbp:bunny:cd}}
+{  
+   \includegraphics[width=0.43\textwidth,page=2]{staticcd.pdf}
+}
+\caption{本文算法与~$k$-DOP~实验结果对比（Bunny）}
+\label{chart:exps:kdop:kcbp:bunny}
+\end{figure}
+
+图~\ref{chart:exps:kdop:kcbp:bunny}~为本文的两种算法和文献~\onlinecite{abenchmarking2007,zachmann1998rapid}~中基于~$k$-DOP~的实现的实验结果的曲线展示图，
+从图~\ref{chart:exps:kdop:kcbp:bunny:init}~可以看出，初始化构造~$k$-DOP~树和本文算法初始化所耗费时间与参与碰撞检测的模型的数量近线性关系，但明显本文算法所耗费时间更少，
+图~\ref{chart:exps:kdop:kcbp:bunny:cd}~为初始化碰撞检测环境后进行碰撞检测所耗费的时间，本文的两种算法和基于~$k$-DOP~的算法相比，碰撞检测所耗费的时间相差不大，总体来说针对~Bunny~模型而言，$k$-DOP~所耗费时间稍微较少，但三者相差不大，整体在~1--4~毫秒范围内。
+
+\begin{figure}[htbp] 
+\centering
+\subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:cpu:budda}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth,page=3]{staticcd.pdf}
+}
+\subcaptionbox{Apple(8040个三角网格)\label{fig:exp:cpu:Dinasour}}
+{  
+    \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{staticcd.pdf}
+}\linebreak %强制换行
+\subcaptionbox{Budda(60878个三角网格)\label{fig:exp:cpu:alice}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=5]{staticcd.pdf}
+}
+\subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:cpu:buggatti}}
+{  
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=6]{staticcd.pdf}
+}
+\caption{本文算法与~$k$-DOP~实验结果对比(k=24)}
+\label{fig:chart:exps:kdop:kcbp:k24}
+\end{figure}
+
+图~\ref{fig:chart:exps:kdop:kcbp:k24}~记录了更多模型的实验结果，其中曲线三角形和正方形记录的是碰撞检测环境中的初始化时间，另外三条曲线分别是本文的两种算法和基于$k$-DOP~的算法碰撞检测所耗费的时间，左边纵坐标刻度为初始化时间，右边纵坐标刻度为碰撞检测的时间。
+从中可得，在静态碰撞检测实验中，本文算法与基于$k$-DOP~的算法相比，在初始化环境过程中占用更少的时间，而在碰撞检测过程中针对不同的模型可能有不同的结果。从整体来看，本文算法优于基于~$k$-DOP~的算法。
 
 
 \subsection{运动场景中与~$k$-DOP~算法对比}
