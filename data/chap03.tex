@@ -725,7 +725,7 @@ AABB包围盒 $box$，
 %\end{landscape}
 
 如表~\ref{tab:exp:box:kcbp:collsiondetection}~所示,
-其中~n~表示场景中模型的数量, CT(Box), CT($16$-CBP)分别表示模型包围盒的构造时间（Construct Time，简称CT）和凸包围16面体的构造时间（单位ms）\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}, t(Box), t($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间,
+其中~n~表示场景中模型的数量, CT(Box), CT($16$-CBP)分别表示模型包围盒的构造时间（Construct Time，简称CT）和凸包围16面体的构造时间（单位ms）\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}, DT(Box), DT($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间,
 其中~r(Box), r($16$-CBP)分别表示包围盒、16-CBP~的命中率（即用实际模型相交的数量除以包围体检测出来相交的数量）, ~DP(Model)检测到的模型实际相交的对数（Detection Pair，简称DP），
 显然计算模型包围盒所耗费的时间要明显少于计算凸包围多面体的时间, 但由于凸包围多面体比包围盒紧致,
 因而命中率比包围盒高, 能排除更多本不相交的模型进而节省碰撞检测总时间, 提高算法效率。该部分工作已经发表，详细内容见参考文献~\onlinecite{tanglei2014}。
@@ -771,8 +771,8 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 表~\ref{tab:exp:bunny:k24:kdop:kcbp}~为本文算法与~$k$-DOP~均采用CollDet~中默认值~$k=24$~针对~Bunny~模型的实验结果。
 其中，$n$~表示场景中模型的数量，$n$(Box)~表示通过包围盒过滤后构造碰撞检测对的有效模型数量，$n-n(\texttt{Box})$~的值表示场景中模型的包围盒不与任何其他模型包围盒相交的模型数量，CT($k$-DOP)~和~CT($k$-CBP)~分别表示初始化的时间（单位~ms）， CT($k$-DOP)~包括计算模型包围盒和计算$k$-DOP~树，CT($k$-CBP)~包括计算模型包围盒，
 $k$-CBP~以及用于实际模型碰撞检测算法的~AABB~树，DT($k$-DOP)、DT($k$-CBP)($AABB$) 和~DT($k$-CBP)($GJK$)~均表示碰撞检测所耗费的时间， 
-DT($k$-CBP)($AABB$)~为通过第~\ref{subsec:kcbp:cd:aabb}~节中介绍的~AABB~方法对~$k$-CBP~进行相交检测，而~DT($k$-CBP)($GJK$)~表示通过第~\ref{subsec:kcbp:cd:gjk}~节
-中介绍的~GJK~方法对~$k$-CBP~进行相交检测，相应的时间都包括~$k$-CBP~相交后对模型进行~AABB~相交检测时间。
+DT($k$-CBP)($AABB$)~为通过第~\ref{subsec:kcbp:cd:aabb}~节中介绍的~AABB~方法对~$k$-CBP~进行相交检测（包括构造~$k$-CBP~的~AABB~树所耗费的时间），
+而~DT($k$-CBP)($GJK$)~表示通过第~\ref{subsec:kcbp:cd:gjk}~节中介绍的~GJK~方法对~$k$-CBP~进行相交检测，相应的时间都包括~$k$-CBP~相交后对模型进行~AABB~相交检测时间。
 
 \begin{table}[htbp]  
 \centering
@@ -848,19 +848,19 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 
 \begin{figure}[htbp] 
 \centering
-\subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:cpu:budda}}
+\subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:static:bunny}}
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth,page=3]{staticcd.pdf}
 }
-\subcaptionbox{Apple(8040个三角网格)\label{fig:exp:cpu:Dinasour}}
+\subcaptionbox{Apple(8040个三角网格)\label{fig:exp:static:apple}}
 {  
     \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{staticcd.pdf}
 }\linebreak %强制换行
-\subcaptionbox{Budda(60878个三角网格)\label{fig:exp:cpu:alice}}
+\subcaptionbox{Budda(60878个三角网格)\label{fig:exp:static:budda}}
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=5]{staticcd.pdf}
 }
-\subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:cpu:buggatti}}
+\subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:static:dinosaur}}
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=6]{staticcd.pdf}
 }
@@ -875,4 +875,38 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \subsection{运动场景中与~$k$-DOP~算法对比}
 \label{subsec:exper:kdop:kcbp:dynamic}
 
-为了和K-DOP进行对比，相同模型，kcbp也与kdop一样扫描点击重新构造，且都是用CPU实现的算法。
+对于运动场景中的碰撞检测实验，本文采取随机读入单个模型，并随机生成多个平移旋转变换构造多个模型，
+然后另其中一个模型产生随机平移旋转变换进行运动，检测该运动模型与其他所有的模型进行碰撞检测，图~\ref{fig:dynamic:cd:bunny}~为随机产生的10个模型，
+并让其中一个随机运动~7~步的示意图，示例中，对于没有和运动模型产生碰撞的模型，图中仅显示了其包围盒和~$k$-CBP。
+
+\begin{figure}[htbp]
+\centering
+\subcaptionbox{move=0}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s0.png}
+} 
+\subcaptionbox{move=1}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s1.png}
+}
+\subcaptionbox{move=2}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s2.png}
+}
+\subcaptionbox{move=3}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s3.png}
+}\\ 
+\subcaptionbox{move=4}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s4.png}
+}
+\subcaptionbox{move=5}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s5.png}
+}
+\subcaptionbox{move=6}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s6.png}
+}
+\subcaptionbox{move=7}{
+  \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s7.png}
+}\\
+\caption{Bunny~模型动态碰撞检测实验示例}
+\label{fig:dynamic:cd:bunny}
+\end{figure}
+
+
