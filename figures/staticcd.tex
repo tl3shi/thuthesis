@@ -211,6 +211,7 @@
 \addplot[red, thick, mark=square] table [x=n, y=CT(k-CBP)] {experiments/staticcd.apple.k46.csv};\label{plot:kcbp}
 \addplot[blue,thick, mark=triangle] table [x=n, y=CT(k-DOP)] {experiments/staticcd.apple.k46.csv};\label{plot:kdop}
 \end{axis}
+
 \begin{axis}
 [
     scale only axis, 
@@ -319,6 +320,69 @@
 \addlegendentry{DT($k$-DOP)}
 \addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.dinosaur.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
 \addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.dinosaur.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\end{axis}
+\end{tikzpicture}
+
+
+%k=24  k=46 对比
+
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=appleNew model(8118 points),
+    scale only axis, 
+    %axis y line*=left,
+    xlabel=$n$, ylabel=时间(ms),
+    legend pos=north west,
+    legend entries={CT($k$-CBP),CT($k$-DOP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red, mark=square] table [x=n, y=CT(k-CBP)] {experiments/staticcd.bunny.k24.csv};
+\addplot[red, dashed, mark=square] table [x=n, y=CT(k-CBP)] {experiments/staticcd.bunny.k46.csv};
+\addplot[blue,mark=triangle] table [x=n, y=CT(k-DOP)] {experiments/staticcd.bunny.k24.csv};
+\addplot[blue, dashed, mark=triangle] table [x=n, y=CT(k-DOP)] {experiments/staticcd.bunny.k24.csv};
+\end{axis}
+\end{tikzpicture}
+
+%page 12
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=appleNew model(8118 points),
+    scale only axis, 
+    %axis y line*=left,
+    xlabel=$n$, ylabel=时间(ms),
+    legend pos=north west,
+    legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-DOP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-DOP)(GJK)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k24.csv};
+\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k24.csv};
+\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k24.csv};
+\addplot[black, dashed, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k46.csv};
+\addplot[green, dashed,mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k46.csv};
+\addplot[gray, dashed,mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k46.csv};
+\end{axis}
+\end{tikzpicture}
+
+%page 13
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=appleNew model(8118 points),
+    scale only axis, 
+    %axis y line*=left,
+    xlabel=$n$, ylabel=时间(ms),
+    legend pos=north west,
+    legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-DOP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-DOP)(GJK)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k24.csv};
+\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k24.csv};
+\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k24.csv};
+\addplot[black, dashed, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k46.csv};
+\addplot[green, dashed,mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k46.csv};
+\addplot[gray, dashed,mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k46.csv};
 \end{axis}
 \end{tikzpicture}
 
