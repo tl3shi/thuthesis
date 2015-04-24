@@ -387,5 +387,99 @@
 \end{tikzpicture}
 
 
+
+%page 14
+\begin{tikzpicture}
+\begin{axis}
+[
+    scale only axis, 
+    axis y line*=left,
+    xlabel=$n$, ylabel=初始化时间(ms),
+    legend pos=north west,
+    legend entries={CT($k$-CBP),CT($k$-DOP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red, thick, mark=square] table [x=n, y=CT(k-CBP)] {experiments/staticcd.happyBuddha.k24.csv};\label{plot:kcbp}
+\addplot[blue,thick, mark=triangle] table [x=n, y=CT(k-DOP)] {experiments/staticcd.happyBuddha.k24.csv};\label{plot:kdop}
+\end{axis}
+
+\begin{axis}
+[
+    scale only axis, 
+    axis x line = none,
+    axis y line* = right, %avoid arrow 
+    ylabel=碰撞检测时间(ms),
+    legend pos=north west,
+]
+\addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
+\addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
+\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\end{axis}
+\end{tikzpicture}
+
+
+%page 15
+\begin{tikzpicture}
+\begin{axis}
+[
+    scale only axis, 
+    axis y line*=left,
+    xlabel=$n$, ylabel=初始化时间(ms),
+    legend pos=north west,
+    legend entries={CT($k$-CBP),CT($k$-DOP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red, thick, mark=square] table [x=n, y=CT(k-CBP)] {experiments/staticcd.happyBuddha.k46.csv};\label{plot:kcbp}
+\addplot[blue,thick, mark=triangle] table [x=n, y=CT(k-DOP)] {experiments/staticcd.happyBuddha.k46.csv};\label{plot:kdop}
+\end{axis}
+\begin{axis}
+[
+    scale only axis, 
+    axis x line = none,
+    axis y line* = right, %avoid arrow 
+    ylabel=碰撞检测时间(ms),
+    legend pos=north west,
+]
+\addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
+\addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
+\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\end{axis}
+\end{tikzpicture}
+
+
+%page 16
+\begin{tikzpicture}
+\begin{axis}
+[
+    scale only axis, 
+    axis y line*=left,
+    xlabel=$n$, ylabel=初始化时间(ms),
+    legend pos=north west,
+    legend entries={CT($k$-CBP),CT($k$-DOP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red, thick, mark=square] table [x=n, y=CT(k-CBP)] {experiments/staticcd.hand.k24.csv};\label{plot:kcbp}
+\addplot[blue,thick, mark=triangle] table [x=n, y=CT(k-DOP)] {experiments/staticcd.hand.k24.csv};\label{plot:kdop}
+\end{axis}
+
+\begin{axis}
+[
+    scale only axis, 
+    axis x line = none,
+    axis y line* = right, %avoid arrow 
+    ylabel=碰撞检测时间(ms),
+    legend pos=north west,
+]
+\addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
+\addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
+\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\end{axis}
+\end{tikzpicture}
 \end{document}
 

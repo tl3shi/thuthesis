@@ -734,7 +734,7 @@ AABB包围盒 $box$，
 \label{subsec:exper:kdop:kcbp:static}
 
 CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/research/colldet/~下载得到}是~Gabriel Zachmann~等人实现的一个碰撞检测库\cite{abenchmarking2007}，内含基于~$k$-DOP~的实现，本文将从静态和动态两个角度对其进行对比实验分析，为了和~$k$-DOP~进行公平实验对比，本文在实验过程中均只通过~CPU~进行计算，并未采用~GPU~加速，
-针对碰撞检测实验环境中多个相同的实验模型，$k$-CBP~与~$k$-DOP~的构造均采用重新扫描扫描点集构造。
+针对碰撞检测实验环境中多个相同的实验模型\footnote{后文实验中用到的~HappyBuddha~模型和后文的~Hand~模型可从~http://cgvr.cs.uni-bremen.de/research/colldet\_benchmark/ 下载。}，$k$-CBP~与~$k$-DOP~的构造均采用重新扫描扫描点集构造。
 
 在静态场景中的碰撞检测实验中，本文生成不同数量的模型，其位置和旋转角度随机生成（$k$-DOP~和~$k$-CBP~采用相同的随机生成的数据），图~\ref{fig:static:cd:bunny}~为~Bunny~模型在模拟碰撞检测的实验实例。
 
@@ -854,9 +854,9 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
     \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{staticcd.pdf}
 }\linebreak %强制换行
-\subcaptionbox{Budda(60878个三角网格)\label{fig:exp:static:budda}}
+\subcaptionbox{HappyBuddha(50000个三角网格)\label{fig:exp:static:happyBuddha}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth, page=5]{staticcd.pdf}
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=14]{staticcd.pdf}
 }
 \subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:static:dinosaur}}
 {  
@@ -869,8 +869,6 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 图~\ref{fig:chart:exps:kdop:kcbp:k24}~记录了更多模型的实验结果，其中曲线三角形和正方形记录的是碰撞检测环境中的初始化时间，另外三条曲线分别是本文的两种算法和基于$k$-DOP~的算法碰撞检测所耗费的时间，左边纵坐标刻度为初始化时间，右边纵坐标刻度为碰撞检测的时间。
 从中可得，在静态碰撞检测实验中，本文算法与基于$k$-DOP~的算法相比，在初始化环境过程中占用更少的时间，而在碰撞检测过程中针对不同的模型可能有不同的结果。从整体来看，本文算法优于基于~$k$-DOP~的算法。
 
-对于更大的~$k$~值，构造层次结构的$k$-DOP~树时会耗费更多的时间和存储空间，在模型较大且模型数量较多时，例如当对~70~个~Dinosaur~模型进行构造~$k$-DOP~树时，32位程序已经会报内存不足的异常，且构造时间也更久，图~\ref{fig:chart:exps:kdop:kcbp:k46}~为~$k$-DOP~实现中的最大值~$k=46$~的实验结果。
-
 \begin{figure}[htbp] 
 \centering
 \subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:static:k46:bunny}}
@@ -881,9 +879,9 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
     \includegraphics[width=\fourgraphicswidth\textwidth, page=8]{staticcd.pdf}
 }\linebreak %强制换行
-\subcaptionbox{Budda(60878个三角网格)\label{fig:exp:static:k46:budda}}
+\subcaptionbox{HappyBuddha(50000个三角网格)\label{fig:exp:static:k46:happyBuddha}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth, page=9]{staticcd.pdf}
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=15]{staticcd.pdf}
 }
 \subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:static:k46:dinosaur}}
 {  
@@ -893,9 +891,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \label{fig:chart:exps:kdop:kcbp:k46}
 \end{figure}
 
-更大的~$k$~值不一定能够使碰撞检测的效率提高，这与具体的碰撞检测环境有关，以~Bunny~模型和~Apple~模型为例，如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46}~为~$k=24$~和~$k=46$~的结果对比，
-其中，虚线的结果为~$k=46$~的结果，实现为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
-选择不同的~$k$~值。
+对于更大的~$k$~值，构造层次结构的$k$-DOP~树时会耗费更多的时间和存储空间，在模型较大且模型数量较多时，以文献~\onlinecite{abenchmarking2007,zachmann1998rapid}~中最大的~$k$值为46~为例，对例如当对~70~个~Dinosaur~模型进行构造~$k$-DOP~树时，32位程序已经会报内存不足的异常，且构造时间也更久，图~\ref{fig:chart:exps:kdop:kcbp:k46}~为~$k$-DOP~实现中的最大值~$k=46$~的实验结果。
 
 \begin{figure}[htbp] 
 \centering
@@ -911,13 +907,15 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \label{fig:chart:exp:kdop:kcbp:k24:k46}
 \end{figure}
 
-
+更大的~$k$~值不一定能够使碰撞检测的效率提高，这与具体的碰撞检测环境有关，以~Bunny~模型和~Apple~模型为例，如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46}~为~$k=24$~和~$k=46$~的结果对比，
+其中，虚线的结果为~$k=46$~的结果，实现为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
+选择不同的~$k$~值。
 
 \subsection{运动场景中与~$k$-DOP~算法对比}
 \label{subsec:exper:kdop:kcbp:dynamic}
 
 对于运动场景中的碰撞检测实验，本文采取随机读入单个模型，并随机生成多个平移旋转变换构造多个模型，
-然后另其中一个模型产生随机平移旋转变换进行运动，检测该运动模型与其他所有的模型进行碰撞检测，图~\ref{fig:dynamic:cd:bunny}~为随机产生的10个模型，
+然后令其中一个模型产生随机平移旋转变换进行运动，检测该运动模型与其他所有的模型进行碰撞检测，图~\ref{fig:dynamic:cd:bunny}~为随机产生的10个模型，
 并让其中一个随机运动~7~步的示意图，示例中，对于没有和运动模型产生碰撞的模型，图中仅显示了其包围盒和~$k$-CBP。
 
 \begin{figure}[htbp]
@@ -966,8 +964,9 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \midrule[1pt]
 Bunny    &17.63  &189.78   &116.59 	  &926.10   	 \\
 Apple    &30.87  &749.48   &226.20 	  &3732.43  	 \\
-Budda    &193.91 &3134.78  &1713.13	  &15677.02 	 \\
+HappyBuddha	&160.58 	&2557.27 	&1361.57 	&12663.13  \\
 Dinosaur &250.55 &4281.15  &2230.88	  &21493.08 	 \\
+Hand	&506.98 &	7926.88 &	4478.18 &	39538.70 \\ 
 \bottomrule[1.5pt]
 \end{tabular}
 \end{table}
@@ -985,14 +984,19 @@ Dinosaur &250.55 &4281.15  &2230.88	  &21493.08 	 \\
 {  
     \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{dynamiccd.pdf}
 }\linebreak %强制换行
-\subcaptionbox{Budda(60878个三角网格)\label{fig:exp:dynamic:budda}}
+\subcaptionbox{HappyBuddha(50000个三角网格)\label{fig:exp:dynamic:happyBuddha}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth, page=5]{dynamiccd.pdf}
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=13]{dynamiccd.pdf}
 }
-\subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:dynamic:dinosaur}}
+%\subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:dynamic:dinosaur}}
+%{  
+%   \includegraphics[width=\fourgraphicswidth\textwidth, page=6]{dynamiccd.pdf}
+%}
+\subcaptionbox{Hand(128314个三角网格)\label{fig:exp:dynamic:hand}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth, page=6]{dynamiccd.pdf}
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=15]{dynamiccd.pdf}
 }
+
 \caption{运动场境下本文算法与~$k$-DOP~实验结果对比($k=24,n=2$)}
 \label{fig:chart:exps:kdop:kcbp:k24:dynamic}
 \end{figure}
@@ -1024,8 +1028,10 @@ $moves$ & DT($k$-CBP)(AABB) &DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(M
 \end{tabular}
 \end{table}
 
-随着三角网格增多，三种算法所耗费时间均有所增加，总体而言，基于~$k$-DOP~的算法比较稳定，而本文算法随着模型不同波动较大。如图~\ref{fig:exp:dynamic:budda}~所示的~Budda~模型，本文的两种算法耗时较一致，因为两种算法在~$k$-CBP~相交后均依赖于模型基于~AABB~树的碰撞检测算法。实际上，最终碰撞检测耗时与在运动过程中相交的次数有关，且同时也与相交位置有关。
-图~\ref{fig:exp:dynamic:budda}~所示的~Budda~模型在~$moves=700$~时，均耗时200多毫秒，因为此时$k$-CBP~相交对数为~DP($k$-CBP)$=10$，且实际模型相交对数为5，且在这5次模型真实相交过程中，调用单独包围盒和旋转包围盒碰撞检测算法最大达46044次，且三角网格相交测试数量也达到8040次，因此总体耗时很久，深究原因发现~Budda~模型的底部包含有很多极小的共面三角形，导致很多这些极小的共面三角形与其他三角形发生多次碰撞检测，这表明本文算法存在一定鲁棒性问题。
+随着三角网格增多，三种算法所耗费时间均有所增加，总体而言，基于~$k$-DOP~的算法比较稳定，而本文算法随着模型不同波动较大。
+
+%如图~\ref{fig:exp:dynamic:budda}~所示的~Budda~模型，本文的两种算法耗时较一致，因为两种算法在~$k$-CBP~相交后均依赖于模型基于~AABB~树的碰撞检测算法。实际上，最终碰撞检测耗时与在运动过程中相交的次数有关，且同时也与相交位置有关。
+%图~\ref{fig:exp:dynamic:budda}~所示的~Budda~模型在~$moves=700$~时，均耗时200多毫秒，因为此时$k$-CBP~相交对数为~DP($k$-CBP)$=10$，且实际模型相交对数为5，且在这5次模型真实相交过程中，调用单独包围盒和旋转包围盒碰撞检测算法最大达46044次，且三角网格相交测试数量也达到8040次，因此总体耗时很久，深究原因发现~Budda~模型的底部包含有很多极小的共面三角形，导致很多这些极小的共面三角形与其他三角形发生多次碰撞检测，这表明本文算法存在一定鲁棒性问题。
 %原因是共面的三角形很多，budda-long-time-ui2.png 三角形包围盒都相交但三角形不相交。
 
 \begin{figure}[htbp] 
@@ -1038,35 +1044,42 @@ $moves$ & DT($k$-CBP)(AABB) &DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(M
 {  
     \includegraphics[width=\fourgraphicswidth\textwidth, page=8]{dynamiccd.pdf}
 }\linebreak %强制换行
-\subcaptionbox{Budda(60878个三角网格)\label{fig:exp:dynamic:m10:budda}}
+\subcaptionbox{HappyBuddha(50000个三角网格)\label{fig:exp:dynamic:m10:happyBuddha}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth, page=9]{dynamiccd.pdf}
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=14]{dynamiccd.pdf}
 }
-\subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:dynamic:m10:dinosaur}}
+%\subcaptionbox{Dinosaur(64546个三角网格)\label{fig:exp:dynamic:m10:dinosaur}}
+%{  
+%   \includegraphics[width=\fourgraphicswidth\textwidth, page=10]{dynamiccd.pdf}
+%}
+\subcaptionbox{Hand(128314个三角网格)\label{fig:exp:dynamic:m10:hand}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth, page=10]{dynamiccd.pdf}
+   \includegraphics[width=\fourgraphicswidth\textwidth, page=16]{dynamiccd.pdf}
 }
 \caption{运动场境下本文算法与~$k$-DOP~实验结果对比($k=24,n=10$)}
 \label{fig:chart:exps:kdop:kcbp:k24:m10:dynamic}
 \end{figure}
 
-当模型数量~$n$~的值增大时，三种算法整体趋势仍能保持一致，如图~\ref{fig:chart:exps:kdop:kcbp:k24:m10:dynamic}~所示为相同~$k$~值，相同运动路径（包括平移距离旋转角度以及运动步数）下10个模型下的碰撞检测结果。对于~Budda~模型，本文算法仍耗时较久，原因与~$n=2$~时一致，即~$k$-CBP~相交，用~AABB~树进行模型的碰撞检测时，树形结构遍历较多且到叶子节点三角网格测试的次数也较多。整体来看，本文基于$k$-CBP~结合~GJK~的算法在一定程度上有一定优势，而基于$k$-DOP~算法相对较稳定，但其初始化时间很长。
-
-
-与在静态场景的碰撞检测环境一样，在运动场景的碰撞检测环境中，更大的~$k$~值也不一定能够使碰撞检测的效率提高，仍以~Bunny~模型和~Apple~模型为例（模型数量~$n=10$），如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}~为~$k=24$~和~$k=46$~的结果对比，其中，虚线的结果为~$k=46$~的结果，实现为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
-选择不同的~$k$~值。
+当模型数量~$n$~的值增大时，三种算法整体趋势仍能保持一致，如图~\ref{fig:chart:exps:kdop:kcbp:k24:m10:dynamic}~所示为相同~$k$~值，相同运动路径（包括平移距离旋转角度以及运动步数）下~10~个模型下的碰撞检测结果。
+%对于~Budda~模型，本文算法仍耗时较久，原因与~$n=2$~时一致，即~$k$-CBP~相交，用~AABB~树进行模型的碰撞检测时，树形结构遍历较多且到叶子节点三角网格测试的次数也较多。
+本文基于~$k$-CBP~的两种碰撞检测算法步调一致，如~Hand~模型在~$moves=700$~时都耗时较久，因为两种算法在~$k$-CBP~相交后，都是利用~AABB~树进行对真实模型的碰撞检测，且此时~AABB~包围盒节点相交检测较多，达到~5~万多次，因此耗时较久。
+整体来看，在运动场景的碰撞检测环境中，本文基于$k$-CBP~结合~GJK~的算法在一定程度上有一定优势，而基于$k$-DOP~算法相对较稳定，但其初始化时间很长。
 
 \begin{figure}[htbp] 
 \centering
 \subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:static:k24:k46:bunny:dynamic}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth,page=12]{dynamiccd.pdf}
+   \includegraphics[width=\fourgraphicswidth\textwidth,page=11]{dynamiccd.pdf}
 }
 \subcaptionbox{Apple(8040个三角网格)\label{fig:exp:static:k24:k46:apple:dynamic}}
 {  
-    \includegraphics[width=\fourgraphicswidth\textwidth, page=13]{dynamiccd.pdf}
+    \includegraphics[width=\fourgraphicswidth\textwidth, page=12]{dynamiccd.pdf}
 }
 \caption{运动场景下不同~$k$~值实验结果对比}
 \label{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}
 \end{figure}
+
+与在静态场景的碰撞检测环境一样，在运动场景的碰撞检测环境中，更大的~$k$~值也不一定能够使碰撞检测的效率提高，仍以~Bunny~模型和~Apple~模型为例（模型数量~$n=10$），
+如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}~为~$k=24$~和~$k=46$~的结果对比，其中，虚线的结果为~$k=46$~的结果，实线为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
+选择不同的~$k$~值。
 
