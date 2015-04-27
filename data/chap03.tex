@@ -949,7 +949,8 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \end{figure}
 
 表~\ref{tab:exper:kcbp:kdop:init:k24}~为本文算法和~$k$-DOP~算法均采用~$k$-DOP~实现中~$k=24$~默认值的初始化时间对比，init($k$-CBP)~所代表的时间表示构造~$k$-CBP~及模型
-的~AABB~树所耗费的时间，init($k$-DOP)~为构造~$k$-DOP~所耗费的时间，$n$~的数量为动态碰撞检测场景中模型的总数量。
+的~AABB~树所耗费的时间，init($k$-DOP)~为构造~$k$-DOP~所耗费的时间，$n$~的数量为动态碰撞检测场景中模型的总数量，从中可知本文在初始化时间上至少快~8~倍以上，同是对~10~个~Hand~模型进行初始化，
+$k$-DOP~算法需要近~40~秒的时间，而本文算法仅需~4.5~秒。
 
 \begin{table}[htbp]
 \centering
@@ -1002,7 +1003,7 @@ Hand	&506.98 &	7926.88 &	4478.18 &	39538.70 \\
 \end{figure}
 
 在~Bunny~模型中，本文基于~GJK~算法耗时最少，基于~$k$-DOP~算法耗时最久，本文基于~AABB~算法居中，总体趋势为~$moves$~越大，耗时也越久，表~\ref{tab:exp:bunny:k24:kdop:kcbp:detail:dynamic}~
-为~2~个~Bunny~模型在随机运动~$moves$~步和~$k$-DOP~算法的比较结果，当真实模型相交数量较多时，三种算法所耗费的时间也更多。
+为~2~个~Bunny~模型在随机运动~$moves$~步和~$k$-DOP~算法的比较结果，当真实模型相交数量较多时，三种算法所耗费的时间也更多，总体来看本文算法是基于~$k$-DOP~耗时的~0.8--3.75~倍。
 
 \begin{table}[htbp]  
 \centering

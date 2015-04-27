@@ -1,0 +1,111 @@
+\documentclass[a4paper]{article}
+\usepackage{pgfplots}
+\usepackage{ctex}
+\usepgfplotslibrary{colormaps}
+\pgfplotsset{compat=newest}
+\usepackage[graphics,tightpage,active]{preview}
+\usepackage{filecontents}
+
+\setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
+%use xelatex compile
+
+\begin{document}
+
+%\begin{tikzpicture}
+%\begin{axis}[title=$120 \times 120$ Smooth Surface, xlabel=$x$, ylabel=$y$]
+%  \addplot3[surf,samples=120,shader=interp,domain=0:1] {
+%    sin(deg(8*pi*x))* exp(-20*(y-0.5)^2) + exp(-(x-0.5)^2*30-
+%    (y-0.25)^2 - (x-0.5)*(y-0.25))
+%  };
+%\end{axis}
+%\end{tikzpicture}
+
+
+%\pgfplotsset{footnotesize}
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={$k$-DOP,$k$-CBP}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x=k, y=CollDet] {apple.volume.csv};
+\addplot table [x=k, y=k-CBP] {apple.volume.csv};
+\end{axis}
+\end{tikzpicture}
+
+
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={$k$-DOP,$k$-CBP}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x=k, y=CollDet] {budda.volume.csv};
+\addplot table [x=k, y=k-CBP] {budda.volume.csv};
+\end{axis}
+\end{tikzpicture}
+
+
+
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={$k$-DOP,$k$-CBP}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x=k, y=CollDet] {dinasour.volume.csv};
+\addplot table [x=k, y=k-CBP] {dinasour.volume.csv};
+\end{axis}
+\end{tikzpicture}
+
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={$k$-DOP,$k$-CBP}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x=k, y=CollDet] {alice.volume.csv};
+\addplot table [x=k, y=k-CBP] {alice.volume.csv};
+\end{axis}
+\end{tikzpicture}
+
+
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+%    legend style={anchor=north east},
+    legend pos=north west,
+    legend entries={$k$-DOP,$k$-CBP}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x=k, y=CollDet] {Bugatti_veron.volume.csv};
+\addplot table [x=k, y=k-CBP] {Bugatti_veron.volume.csv};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
+
+
+
+
+
+
+\end{document}

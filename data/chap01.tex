@@ -10,9 +10,6 @@
 本章将介绍本文的相关背景，常用的凸包围体种类及应用，常见的碰撞检测算法及本文的结构安排。
 
 
-TODO 图表用中文表示
-
-
 \section{相关背景}
 
 随着计算机软硬件技术的不断升级和发展，人们的衣食住行都越来越离不开计算机。
@@ -126,7 +123,32 @@ Directions Hull）\cite{weiyingmei2001}。
 
 对于$k$-DOP~中的每一个方向，可以由相应边（面）的法向决定，其数据结构一般用$k/2$个半平面的法向，再加上模型在各个方向上的投影的极值即可。因为$k$-DOP~的方向固定，$k$值确定后，相应的法向也随即确定，所以只需要存储各个方向的极值即可。当$k$-DOP~用于碰撞检测或可视化时，一般还需存储包围体的各个顶点。
 
-与其他几种包围盒相比较而言，$k$-DOP~是取包围体存储计算和相交测试耗费时间的一个折衷，且可以通过修改$k$的值来提高包围体的灵活性。
+~$k$-DOP~之间的相交测试将采用如算法~\ref{algo:kdop:overlaptest}~进行，即针对平行于~$k/2$~的每个方向去检测是否在指定的区间内。
+
+\begin{algorithm}
+\caption{$k$-DOP~相交测试算法}
+\small
+\label{algo:kdop:overlaptest}
+\begin{algorithmic}[1]
+\Require
+$dop_1, dop_2, k$ 
+\Ensure
+两个~$k$-DOP~是否相交
+\Function {CheckIntersection}{$dop_1, dop_2, k$}
+  \For {$i = 0 \to k/2$}
+      \If {$dop_1.min[i] >  dop_2.max[i] \textbf{~or~} dop_1.max[i] < dop_2.min[i]$}
+          \State \Return \textbf{False} 
+      \EndIf
+  \EndFor
+  \State \Return \textbf{True} \Comment{所有的区间都有重叠，$k$-DOP~一定相交}
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+与其他几种包围盒相比较而言，$k$-DOP~是取包围体存储计算和相交测试耗费时间的一个折衷，且可以通过修改$k$的值来提高包围体的灵活性。在不同的碰撞检测环境中可能选择不同的~$k$~值能达到更优的结果，
+文献~\onlinecite{klosowski1998efficient}~中综合对比了~$k \in \{6,14,18,26\}$~，得出~$k=18$~时能达到效率最好的结果，而文献~\onlinecite{zachmann1998rapid}~经过实验发现在~$k \in \{6,8,14\}$~中，$k=6$~时能达到更好的结果，
+事实上对于不同的碰撞检测测试环境，不同的模型而言，达到最优的结果选取的~$k$~值可能不都相同，文献~\onlinecite{abenchmarking2007}~在综合测试比较后有得出~$k=24$~时更容易得到更优的结果。
+
 
 \subsection{Convex hull 包围体}
 \label{subsec:convexhull}
@@ -151,7 +173,7 @@ Directions Hull）\cite{weiyingmei2001}。
   \label{fig:convexhull-bunny}
 \end{figure}
 
-常用的凸包构造算法有~GIft wrapping~\cite{Chand1970An}，复杂度最坏情况下为$O(n^2)$，构造凸包的算法时间复杂度下限为$O(n\log n)$，如~Preparata~提出的分治算法\cite{Preparata1977}。
+常用的凸包构造算法有~Gift Wrapping~\cite{Chand1970An}，复杂度最坏情况下为$O(n^2)$，构造凸包的算法时间复杂度下限为$O(n\log n)$，如~Preparata~提出的分治算法\cite{Preparata1977}。
 当模型点集较大时，包围体涉及到的面片数量太多，做相交测试等相关计算时耗费时间较久，同时也耗费较多存储空间。因此~Convex hull~包围体不太适用于大模型。
 为此有学者在一些应用中用到近似凸包，
 近似凸包可分为三类：近似外凸包、近似内凸包和近似凸包\cite{hossain2013constructing}，近似内凸包完全在精确凸包内部，近似外凸包完全包含精确凸包，近似凸包即与精确凸包有相交的地方。
@@ -356,7 +378,7 @@ T_{cost} = n_v * C_v + n_p * C_p + n_u * C_u
   \label{equa:evaluate:dynamic:bv}
 \end{equation}
 其中~$n_u$~和~$C_n$~就是模型旋转或者运动后包围体更新的数量和更新的代价。要提高碰撞检测的性能，就得想办法减小$T_{cost}$的值。
-本文的算法主要关注于静态场景。 TODO 运动场景实验也做了。
+%本文的算法主要关注于静态场景。
 
 不同的包围体，上述代价函数各个值不同，对于不同的应用场景，可能需要选择不同的包围体进行加速碰撞检测。
 文献\onlinecite{zhigang2010efficient}从包围体的构造难度，包围体的紧致性，包围体之间相交测试复杂性及包围体在运动过程中的更新代价几个方面对五种常见的包围体进行了比较，如表\ref{lbl:table:bv-comp}所示。

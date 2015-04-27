@@ -17,7 +17,7 @@
 \item 通过参数~$k$~调节凸包围多面体的简单性和紧致性，可适用于不同的应用场景。
 \end{inparaenum}
 
-由~$k$~个截面构成的凸包围多面体称为凸包围~$k$~面体($k$-Convex Bounding Polytope, 简称~$k$-CBP), 可通过~$k$~个半空间定义：
+由~$k$~个截面构成的凸包围多面体称为凸包围~$k$~面体($k$-Convex Bounding Polyhedron, 简称~$k$-CBP), 可通过~$k$~个半空间定义：
 \begin{equation}
 \label{equ:kcbp_definition}
 \left\{
@@ -77,13 +77,13 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \begin{figure}[htbp]
   \centering
   \subcaptionbox{分组\label{lbl:subfig-split-groups}}{
-    \includegraphics[width=2.0in]{approximate-convexhull-step1.png}} \hspace{0.5cm}
+    \includegraphics[width=2.2in]{approximate-convexhull-step1.pdf}} \hspace{0.5cm}
   \linebreak
   \subcaptionbox{选极值点\label{lbl:subfig-find-extrems}}{%
-    \includegraphics[width=2.0in]{approximate-convexhull-step2.png}} \hspace{0.5cm}
+    \includegraphics[width=2.2in]{approximate-convexhull-step2.pdf}} \hspace{0.5cm}
   \hspace{2em}
   \subcaptionbox{连线\label{lbl:subfig-connect-extremes}}{%
-    \includegraphics[width=2.0in]{approximate-convexhull-step3.png}} \hspace{0.5cm}
+    \includegraphics[width=2.2in]{approximate-convexhull-step3.pdf}} \hspace{0.5cm}
   \caption{二维近似内凸包的构造\cite{bentley1982approximation}}
 \label{lbl:ach-2d}
 \end{figure}
@@ -96,7 +96,8 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \item \textbf{选极值点：}
 然后在每组中找出沿~$y$~轴的最大最小值，得到每组的极值点，如图\ref{lbl:subfig-find-extrems}所示，在边界上的点可直接当作极值点。
 \item \textbf{连线：}
-最后按条件连接每组的最值构成近似内凸包，如图\ref{lbl:subfig-connect-extremes}所示。//TODO，可更详细
+最后按条件连接每组的最值构成近似内凸包，如图~\ref{lbl:subfig-connect-extremes}所示，以下半圈为例，在选定的极值点中先选定最左边的点~1，下一个候选点~2，连接~13~发现候选点~2~在~13~的左边，丢弃点候选点~2~直接连接~13，同理连接~35，
+当查看候选点~6~时，发现点~6~在~57~连线的右边，因此候选点~6~保留，依次类推可得整个下半圈为凸包，上半圈同理可得。
 %\end{inparaenum}
 \end{enumerate}
 此算法复杂度为~$O(n+\xi)$。  
@@ -274,16 +275,22 @@ Purpose Graphic Process Unit)中也发挥着重要作用。下面将分别介绍
 \end{figure}
 
 在实际实现过程中需要注意默认情况下~OpenGL~处理$x$和$y$坐标值的范围是$[-1,1]$，而深度值需要映射到$[0,1]$。我们利用一张$k \times 1$ 大小的纹理保存结果，将第$i$个法向的切点保存在纹理的$(i,0)$坐标处，这样做的好处是每绘制一遍不用清除深度缓冲，最后可以一次性读取这个$k \times 1$大小的纹理得到结果。
-如附件~\ref{app-sec:shader-z-buffer}~的着色器代码所示，~OpenGL~中利用齐次坐标处理渲染流程，因此我们利用前三个分量保存法向的$x,y,z$坐标值，第4个分量$w$保存法向的索引，在片段着色器中，只需要简单地输出切点的在输入点数组的索引即可。
+如代码~\ref{shader:zbuffer}~的着色器代码所示，~OpenGL~中利用齐次坐标处理渲染流程，因此我们利用前三个分量保存法向的$x,y,z$坐标值，第4个分量$w$保存法向的索引，在片段着色器中，只需要简单地输出切点的在输入点数组的索引即可。
 通过绘制$k$遍，我们从大小为$k \times 1$的纹理中读出点索引以此就能确定$k$切平面，每绘制一遍得到1个切平面，当$k$值较大时，这个过程仍然比较耗时，从实验结果也能看出，这种算法适用于$k$值相对较小的情况。
-	
+
+%\lstinputlisting[language={shader}, caption={Vertex shader(Z buffer algorithm)}, label=vertex_shader_zbuffer]{shader_zbuffer.vert}
+\lstinputlisting[language={shader}, caption={基于~Z Buffer~算法着色器代码}, label=shader:zbuffer]{shader_zbuffer.vert}
+
+%\lstinputlisting[language={shader}]{shader_zbuffer.frag}
+
+
 \subsubsection{基于乒乓技术的算法}
 
 渲染到纹理是一个非常重要的图形可视化技术，它能够帮助快速地渲染很多漂亮的结果，同时也是GPGPU重要组成部分。在基于OpenGL的GPGPU中，通常要将参与计算的数据通过CPU传送至GPU的特定大小的纹理中，通过绘制一个跟保存数据同样大小的四边形来调用着色器中的算法\cite{gpgpuqiu}，将结果输出到纹理中，绘制同样大小的四边形是为了避免纹理插值对输入数据的影响。
 算法一般是在片段着色器（Fragment Shader）中完成，有些时候通过一遍的绘制得不到最终结果还希望把前一次运算结果传递给下一个运算用来作为后继运算的输入，此时可以利用乒乓技术来解决。
 
 图~\ref{fig:shader-rtt-pingpong-flowchart}~为基于乒乓技术的算法的流程图，算法将所有法向保存在纹理$read$中并利用纹理$write$缓存中间结果，第$m$次渲染进行计算时，纹理$read$作为输入，将渲染即计算的结果缓存在纹理$write$中，在第$m+1$次渲染时将读取缓存在纹理$write$中的数据作为输入，而此时纹理$read$又作为输出，如此进行交替，每步交换只更换沿着每个法向的局部最大值。
-如附件\ref{app-sec:shader-rtt-pingpong}~片段着色器代码所示，用一个像素值保存法向的xyz坐标值和沿着该法向投影得到最大值，另外用一个像素的第四个分量保存该最大值点在输入点数组中的索引。算法将输入点分成x份，每次只处理一份，在当前渲染过程中，找出在该批点中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复x次，当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过CPU一次性从帧缓冲中读取所有法向的切点。
+如附件~\ref{shader:pingpong}~片段着色器代码所示，用一个像素值保存法向的xyz坐标值和沿着该法向投影得到最大值，另外用一个像素的第四个分量保存该最大值点在输入点数组中的索引。算法将输入点分成x份，每次只处理一份，在当前渲染过程中，找出在该批点中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复x次，当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过CPU一次性从帧缓冲中读取所有法向的切点。
 
 \begin{figure}[htbp]
   \centering
@@ -291,6 +298,8 @@ Purpose Graphic Process Unit)中也发挥着重要作用。下面将分别介绍
   \caption{基于乒乓技术算法流程图}
   \label{fig:shader-rtt-pingpong-flowchart}
 \end{figure}
+
+\lstinputlisting[language={shader}, caption={基于乒乓技术算法着色器代码}, label=shader:pingpong]{shader_rrt_pingpong.frag}
 
 与Z Buffer算法相比，基于乒乓技术的算法在进行一次绘制操作能够得到沿着k个法向的局部(所有处理过的点集)最大值。为了充分利用GPU的并行计算能力，将每次处理点的数量设置为GPU硬件所支持的OpenGL中统一块（uniform
 block）所能容纳数据的大小，即需要反复绘制次数$x=n/b$，其中n为点集大小，b为统一块能容纳点的数量，值与显卡具体型号有关。 

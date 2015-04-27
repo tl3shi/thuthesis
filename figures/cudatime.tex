@@ -1,7 +1,6 @@
-锘縗documentclass[a4paper]{article}
+\documentclass[a4paper]{article}
+\usepackage{ctex}
 \usepackage{pgfplots}
-%\usepackage{ctex}
-
 \usepgfplotslibrary{colormaps}
 \pgfplotsset{compat=newest}
 \usepackage[graphics,tightpage,active]{preview}
@@ -10,6 +9,10 @@
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 
 \begin{document}
+
+\pgfplotsset{
+  legend style={font=\footnotesize}
+}
 
 %\begin{tikzpicture}
 %\begin{axis}[title=$120 \times 120$ Smooth Surface, xlabel=$x$, ylabel=$y$]
@@ -27,7 +30,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=time(ms),
+    xlabel=$k$, ylabel=时间(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
@@ -46,7 +49,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=time(ms),
+    xlabel=$k$, ylabel=时间(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
@@ -66,7 +69,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=time(ms),
+    xlabel=$k$, ylabel=时间(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
@@ -84,7 +87,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=time(ms),
+    xlabel=$k$, ylabel=时间(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
@@ -103,7 +106,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=time(ms),
+    xlabel=$k$, ylabel=时间(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU',$k$-CBP,$k$-CBP'}
