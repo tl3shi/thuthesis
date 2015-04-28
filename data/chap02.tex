@@ -942,7 +942,7 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 \end{tabular}
 \end{table}
 
-本文算法与~CGAL~\cite{cgal}~库中利用~QuickHull~算法构造的凸包进行比较的结果如表~\ref{tab:exp:cgal}~所示，
+本文算法与~CGAL~库中利用~QuickHull~算法构造的凸包进行比较的结果如表~\ref{tab:exp:cgal}~所示，
 其中~$f$(CHull)~和~$f$($k$-CBP)~分别表示凸包的面数和凸包围多面体的面数，$\tau$($k$-CBP)~为凸包围多面体的紧致程度，$t$(CHull)~和~$t$($k$-CBP)~分别表示凸包和~$k$-CBP~构造所花费的时间。
 相应模型的可视化结果如图~\ref{pic:exps:ch-kcbp}~所示。
 与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度，例如~Apple~模型的凸包有~499~个平面，本文算法仅用~30~个平面就能达到~93.67\%的紧致程度，
