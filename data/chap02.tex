@@ -6,11 +6,11 @@
 
 \chapter{凸包围体生成算法}
 \label{cha:kcbp-construction}
-从\ref{sec:convex-bv}可以看出包围体的紧致程度直接影响算法的效率，对于不规则形体， 常见的包围体往往不够紧致，凸包紧致但往往包含过多的面片数而增加算法的复杂性。
+从第~\ref{sec:convex-bv}~节可以看出包围体的紧致程度直接影响相应算法的效率，对于不规则形体， 常见的包围体往往不够紧致，凸包紧致但往往包含过多的面片数而增加算法的复杂性。
 
 本文提出一种构造凸包围多面体的方法，该方法首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向。
-然后根据输入点集沿各法向搜索切点构成截面， 最后由这些截面通过对偶映射的方式求交构成凸包围多面体。
-该方法的主要优势是：
+然后根据输入点集沿各法向搜索切点构成截面， 最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面过程中，各个法向的搜索过程相互独立互不影响，因此可以方便利用~GPU~进行加速。
+本文方法的主要优势是：
 \begin{inparaenum}[(1)]
 \item 对给定点集可构造紧致的包围体；
 \item 利用~GPU~加速，能够快速构造包围体；
@@ -27,10 +27,9 @@
 \end{array}
 \right.
 \end{equation}
-
 其中，$\bm{n_i}$~是半空间~$\bm{H_i}$~的法向，方向指向包围体外部，
 $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
-如图\ref{fig:bunny}所示是~Bunny~模型的凸包围~34~面体（34-CBP）。
+如图~\ref{fig:bunny}~所示是~Bunny~模型的凸包围~34~面体（34-CBP）。
 
 \begin{figure}[htbp] 
 \centering
@@ -39,10 +38,6 @@ $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
   \label{fig:bunny}
 \end{figure}
 
-本文提出的算法主要流程如图~\ref{lbl:kcbp-algorithm-flowchart}~
-所示，首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向，然后根据输入点集在~GPU~中沿各法向搜索切点构成截面，
-最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面需要多次扫描输入点集，在~CPU~中计算较耗时，因此用~GPU~加速使得算法整体性能得以提升，其他步骤在~CPU~计算即可。
-
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=5.0in]{kcbp-flowchart-x-aix.eps}
@@ -50,23 +45,29 @@ $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
     \label{lbl:kcbp-algorithm-flowchart}
 \end{figure}
 
-图\ref{lbl:bunny-26-cbp-ch-ach}~
-从左至右分别显示了~Bunny~模型的~26-CBP、精确凸包和近似内凸包。近似凸包是精确凸包的一种近似，与精确凸包外观相似但其构造复杂度降低，不少研究者利用该性质解决计算机图形学中很多问题
-\cite{hossain2013constructing}。本文就是利用近似内凸包与精确凸包的相似性，从众多近似凸包面片的法向中通过聚类算法生成凸包围多面体的~$k$~个法向。
+本文算法的主要流程如图~\ref{lbl:kcbp-algorithm-flowchart}~
+所示，首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向，然后根据输入点集在~GPU~中沿各法向搜索切点构成截面，
+最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面需要多次扫描输入点集，在~CPU~中计算较耗时，因此用~GPU~加速使得算法整体性能得以提升，其他步骤在~CPU~计算即可。
+
+图~\ref{lbl:bunny-26-cbp-ch-ach}~从左至右分别显示了~Bunny~模型的~26-CBP、精确凸包和近似内凸包。
+近似凸包是精确凸包的一种近似，与精确凸包外观相似但其构造复杂度降低，不少研究者利用该性质解决计算机图形学中很多问题
+\cite{hossain2013constructing}。
+本文就是利用近似内凸包与精确凸包的相似性，从众多近似凸包面片的法向中通过聚类算法生成凸包围多面体的~$k$~个法向。
+本章将按步骤详细介绍算法的实现。
 %由图可知, 近似内凸包的三角面片大致反映了精确凸包三角面片的分布情况,近似内凸包相应位置面积较大的三角面片对应到精确凸包的三角面片面积也较大, 因此该三角面片所在平面需尽量保留.
+
 \begin{figure}[htbp] % use [htbp] to fix the position
 \centering
 \includegraphics[width=5.0in]{26-bunny-ach-ch-kcbp.png}
 \caption{~Bunny~模型的~26-CBP、凸包和近似内凸包}
 \label{lbl:bunny-26-cbp-ch-ach}
 \end{figure}
-本章将按步骤详细介绍算法的实现。
 
 \section{截面法向的生成}
 \label{sec:gen-normals}
 
 截面法向的选定与多面体的紧致程度密切相关。
-$k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数几个，导致其生成的多面体不能自适应模型，对于不规则形体不够紧致。相比本文$k$值取值更灵活，因此可以根据不同需求不同应用场景更加灵活地计算出凸包围体。
+$k$-DOP~预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数几个，导致其生成的多面体不能自适应模型，对于不规则形体不够紧致。与~$k$-DOP~相比本文算法~$k$~值取值更灵活，因此可以根据不同需求不同应用场景更加灵活地计算出凸包围体。
 根据经验，为了使凸包围多面体尽可能逼近凸包，在多面体数量一定的情况下需尽量保留凸包中面积较大的面。 
 本文算法先通过一种线性算法\cite{bentley1982approximation}构造近似内凸包，然后从近似内凸包里选取面积最大的~$a$~个面的法向，最后用聚类算法从剩下的面中生成~$k-a$~个法向。
 
@@ -74,6 +75,7 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \label{subsec:ach-gen-normals}
 
 下面以平面点集的近似内凸包为例说明初始法向集的生成。
+
 \begin{figure}[htbp]
   \centering
   \subcaptionbox{分组\label{lbl:subfig-split-groups}}{
@@ -88,33 +90,33 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \label{lbl:ach-2d}
 \end{figure}
 
-如图\ref{lbl:ach-2d}所示，整个算法分为如下3个步骤：
+如图~\ref{lbl:ach-2d}~所示，整个算法分为如下3个步骤：
+
 %\begin{inparaenum}[(1)]
 \begin{enumerate}[(1)]
 \item \textbf{分组：}
-首先根据~$x$~轴将输入点均分~$\xi$~组，如图\ref{lbl:subfig-split-groups}所示，$\xi$值可以根据输入点集数量以及希望得到的近似凸包的近似程度进行选取，图示中分成了6组。
+首先根据~$x$~轴将输入点均分~$\xi$~组，如图~\ref{lbl:subfig-split-groups}所示，$\xi$值可以根据输入点集数量以及希望得到的近似凸包的近似程度进行选取，图示中分成了~6~组。
 \item \textbf{选极值点：}
-然后在每组中找出沿~$y$~轴的最大最小值，得到每组的极值点，如图\ref{lbl:subfig-find-extrems}所示，在边界上的点可直接当作极值点。
+然后在每组中找出沿~$y$~轴的最大最小值，得到每组的极值点，如图~\ref{lbl:subfig-find-extrems}~所示，在边界上的点可直接当作极值点。
 \item \textbf{连线：}
-最后按条件连接每组的最值构成近似内凸包，如图~\ref{lbl:subfig-connect-extremes}所示，以下半圈为例，在选定的极值点中先选定最左边的点~1，下一个候选点~2，连接~13~发现候选点~2~在~13~的左边，丢弃点候选点~2~直接连接~13，同理连接~35，
-当查看候选点~6~时，发现点~6~在~57~连线的右边，因此候选点~6~保留，依次类推可得整个下半圈为凸包，上半圈同理可得。
+最后按条件连接每组的最值构成近似内凸包，如图~\ref{lbl:subfig-find-extrems}所示，以下半圈为例，在选定的极值点中先选定最左边的点~1，下一个候选点~2，连接~13~发现候选点~2~在~13~的左边，丢弃点候选点~2~直接连接~13，同理连接~35，
+当查看候选点~6~时，发现点~6~在~57~连线的右边，因此候选点~6~保留，依次类推可得整个下半圈为凸包，上半圈同理可得。最后合并上下半圈得到如图~\ref{lbl:subfig-connect-extremes}所示的结果。
 %\end{inparaenum}
 \end{enumerate}
 此算法复杂度为~$O(n+\xi)$。  
-得到近似凸包后，因较长的边（图中的粗边）对最后凸包围多边形影响较大， 因此可以保留较长的$a$条边（2D 为例）， 其他$n-a$（n为近似内凸包边数）进行聚类得到$k-a$ 类， 最后得到边对应的垂直向外的方向作为法向。
-在三维空间里， 可按照~$x,y$~轴最多划分成 $(\xi+2)\times (\xi+2)$个网格， 每个网格取~$z$~的最大最小值， 因此所有网格含最多有~$2(\xi+2)^2$~个极值点， 其凸包可以在$O(\xi^2\log \xi^2) = O(\xi^2\log \xi)$ 内找出， 因此整个算法时间复杂度为$O(n+\xi^2\log\xi)$， 
-关于此算法更详细的细节可参考文献\onlinecite{bentley1982approximation}。 实验过程中， 为了更快地构造近似内凸包， $\xi$~值通常取得较小(例如取~$\xi=10$)。
+得到近似凸包后，因较长的边（图中的粗边）对最后凸包围多边形影响较大， 因此可以保留较长的~$a$~条边（2D 为例）， 其他~$n-a$（n为近似内凸包边数）进行聚类得到~$k-a$~类， 最后得到边对应的垂直向外的方向作为法向。
+在三维空间里， 可按照~$x,y$~轴最多划分成~$(\xi+2)\times (\xi+2)$~个网格， 每个网格取~$z$~的最大最小值， 因此所有网格含最多有~$2(\xi+2)^2$~个极值点， 其凸包可以在~$O(\xi^2\log \xi^2) = O(\xi^2\log \xi)$~内找出， 因此整个算法时间复杂度为~$O(n+\xi^2\log\xi)$， 
+关于此算法更详细的细节可参考文献\onlinecite{bentley1982approximation}。 实验过程中， 为了更快地构造近似内凸包， $\xi$~值通常取得较小（例如取~$\xi=10$）。
 
-假设点~$A,B,C$~为近似凸包的某个平面$P_i$上逆时针方向上的3个顶点，则该平面~$P_i$的法向$\bm{n_i}
+假设点~$A,B,C$~为近似凸包的某个平面~$P_i$~上逆时针方向上的3个顶点，则该平面~$P_i$~的法向~$\bm{n_i}
 = \overrightarrow{AB} \times
 \overrightarrow{AC}$，这些法向就是参与聚类算法的所有样本法向集。
-
 
 \subsection{聚类初始点的选择}
 \label{subsec:initial-normals}
 
 聚类算法是数据挖掘领域里的研究热点之一，$k$-means~是最流行和最简单的基于划分的聚类算法\cite{Jain2010}。其中，$k$-means
-算法最初的步骤就是初始聚类中心的选择。本文算法将采取如下的策略生成：给定一个单位球，将其按照等面积划分成$k$份即$k$-means中的参数$k$，连接球心到每份中心点构成的方向作为法向，其效果如图\ref{lbl:kmeans-init-normals-26}所示（$k=26$）。
+算法最初的步骤就是初始聚类中心的选择。本文算法将采取如下的策略生成：给定一个单位球，将其按照等面积划分成$k$份即$k$-means中的参数$k$，连接球心到每份中心点构成的方向作为法向，其效果如图~\ref{lbl:kmeans-init-normals-26}~所示（$k=26$）。
 
 \begin{figure}[htbp]
     \centering
@@ -124,7 +126,7 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \end{figure}
 
 初始点生成算法具体如算法~\ref{alg:get_init_normals_by_area}~所示\footnote{http://www.cmu.edu/biolphys/deserno/pdf/sphere\_equi.pdf}。
-另外，亦可使用如文献\onlinecite{wong1997sampling}中的数学统计方法在球面上生成若干个点使其满足均匀分布。
+另外，亦可使用如文献~\onlinecite{wong1997sampling}~中的数学统计方法在球面上生成若干个点使其满足均匀分布。
 
 \begin{algorithm}[htbp]
 \small
@@ -153,7 +155,6 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
   \EndFunction
 \end{algorithmic}
 \end{algorithm}
-
  
 \subsection{聚类确定法向}
 \label{subsec:determ-normals}
@@ -201,7 +202,6 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \end{algorithmic}
 \end{algorithm}
 
-
 通过聚类后得到的法向生成包围体比直接用初始法向生成的包围体更加紧致。如图~\ref{lbl:kemans-fixed-kcbp}~所示, 
 其中图~\ref{lbl:fixed-kcbp-bunny}~为按照初始方向为~Bunny~模型生成的凸包围多面体($k=26$)，
 聚类后其法向及其生成的凸包围多面体如图~\ref{lbl:kmeans-kcbp-bunny}~所示, 后者的紧致程度比前者高~14.98\%.
@@ -221,10 +221,9 @@ $k$-DOP预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数
 \label{sec:search:planes}
 
 在确定构成~$k$-CBP~的法向后，只需要搜索空间上的一个点即可确定
-~$k$-CBP~的截面，搜索截面等效于寻找沿着法向上的最大投影值，即对每个法向~$\bm{n_i}$，从输入模型的所有点中寻找最大投影值的点作为切点进而确定~$\bm{n_i}$~对应的截面。
-算法如算法~\ref{alg:search-plans-cpu}所示，该过程的算法复杂度为~$O(k\cdot
+~$k$-CBP~的截面，搜索截面等效于寻找沿着法向上的最大投影值，即对每个法向~$\bm{n_i}$，从输入模型的所有点中寻找最大投影值的点作为切点进而确定法向~$\bm{n_i}$~对应的截面。
+具体算法如算法~\ref{alg:search-plans-cpu}~所示，该过程的时间复杂度为~$O(k\cdot
 n)$， 其中~$k$~为法向数量， $n$~为模型所含点数。
-
 
 \begin{algorithm}[htbp]
 \small
@@ -232,8 +231,7 @@ n)$， 其中~$k$~为法向数量， $n$~为模型所含点数。
 \label{alg:search-plans-cpu}
 \begin{algorithmic}[1]
 \Require
-截面法向 $normals$
-模型点集 $points$
+截面法向 $normals$, 模型点集 $points$
 \Ensure
 多面体截面 $planes$
 \Function{SearchCuttingPlanes}{$normals, points$}
@@ -252,20 +250,20 @@ n)$， 其中~$k$~为法向数量， $n$~为模型所含点数。
 \end{algorithmic}
 \end{algorithm}
 
-从算法~\ref{alg:search-plans-cpu}~可以看出该搜索过程中各法向的计算相互独立，因此可借助~GPU~并行加速。
+从算法~\ref{alg:search-plans-cpu}~可以看出该搜索过程中各法向的计算相互独立，互不影响，因此可方便地借助~GPU~并行加速。
+
 
 \subsection{基于着色器的并行算法}
 \label{subsec:determ-normals-by-shader}
 
-OpenGL~提供了可编程管线，它的轻便性、跨平台性和被广泛硬件厂家所支持使得OpenGL
-着色语言（GLSL，OpenGL Shading Language）被广泛应用，在基于~GPU~的通用计算(GPGPU，General
-Purpose Graphic Process Unit)中也发挥着重要作用。下面将分别介绍本文提出的基于深度缓冲(Z Buffer)和乒乓技术的算法。
+OpenGL~提供了可编程管线，它的轻便性、跨平台性和被广泛硬件厂家所支持使得~OpenGL~着色语言（OpenGL Shading Language，简称~GLSL）被广泛应用，在基于~GPU~的通用计算（General
+Purpose Graphic Process Unit，简称~GPGPU）中也发挥着重要作用。下面将分别介绍本文提出的基于深度缓冲(Z Buffer)和乒乓技术的算法。
 
 \subsubsection{基于深度缓冲的算法}
 	
 在~OpenGL~中，当渲染~3D~模型时，深度测试是在片段着色器工作后的一个重要测试操作，当两个片段在相同的位置时，深度测试的目的是决定哪个片段将要保留下来，默认情况下，最前面即有较小（或较大，可设置）的~$z$~坐标值的片段将通过测试被保留下来。
 每个片段的深度信息保存在深度缓冲中，当新的片段通过测试后将更新缓冲中的值。
-我们充分利用了~OpenGL~的这种机制，算法流程图如~\ref{fig:flowchart:zbuffer}~所示，算法每走一遍渲染流程将找出一个方向的切点，在顶点着色器中，将所有点的~$x,y$~坐标值设为一样，并将该点在法向上的投影作为~$z$~值即深度值，所有点经过深度测试后将只有~$z$~值最大的点被保留下来，该点就是沿着这个法向的切点。
+我们充分利用了~OpenGL~的这种机制，算法每走一遍渲染流程将找出一个方向上的切点，在顶点着色器中，将所有点的~$x,y$~坐标值设为一样，并将该点在法向上的投影作为~$z$~值即深度值，所有点经过深度测试后将只有~$z$~值最大的点被保留下来，该点就是沿着这个法向的切点。该过程的算法流程图如~\ref{fig:flowchart:zbuffer}~所示。
 
 \begin{figure}[htbp]
   \centering
@@ -286,11 +284,12 @@ Purpose Graphic Process Unit)中也发挥着重要作用。下面将分别介绍
 
 \subsubsection{基于乒乓技术的算法}
 
-渲染到纹理是一个非常重要的图形可视化技术，它能够帮助快速地渲染很多漂亮的结果，同时也是GPGPU重要组成部分。在基于OpenGL的GPGPU中，通常要将参与计算的数据通过CPU传送至GPU的特定大小的纹理中，通过绘制一个跟保存数据同样大小的四边形来调用着色器中的算法\cite{gpgpuqiu}，将结果输出到纹理中，绘制同样大小的四边形是为了避免纹理插值对输入数据的影响。
+渲染到纹理（Render To Texture，简称~RTT）是一个非常重要的图形可视化技术，它能够帮助快速地渲染很多漂亮的结果，同时也是~GPGPU~重要组成部分。在基于~OpenGL~的~GPGPU~中，通常要将参与计算的数据通过~CPU~传送至~GPU~的特定大小的纹理中，
+通过绘制一个跟保存数据同样大小的四边形来调用着色器中的算法\cite{gpgpuqiu}，将结果输出到纹理中，绘制同样大小的四边形是为了避免纹理插值对输入数据的影响。
 算法一般是在片段着色器（Fragment Shader）中完成，有些时候通过一遍的绘制得不到最终结果还希望把前一次运算结果传递给下一个运算用来作为后继运算的输入，此时可以利用乒乓技术来解决。
 
 图~\ref{fig:shader-rtt-pingpong-flowchart}~为基于乒乓技术的算法的流程图，算法将所有法向保存在纹理$read$中并利用纹理$write$缓存中间结果，第$m$次渲染进行计算时，纹理$read$作为输入，将渲染即计算的结果缓存在纹理$write$中，在第$m+1$次渲染时将读取缓存在纹理$write$中的数据作为输入，而此时纹理$read$又作为输出，如此进行交替，每步交换只更换沿着每个法向的局部最大值。
-如附件~\ref{shader:pingpong}~片段着色器代码所示，用一个像素值保存法向的xyz坐标值和沿着该法向投影得到最大值，另外用一个像素的第四个分量保存该最大值点在输入点数组中的索引。算法将输入点分成x份，每次只处理一份，在当前渲染过程中，找出在该批点中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复x次，当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过CPU一次性从帧缓冲中读取所有法向的切点。
+如代码~\ref{shader:pingpong}~片段着色器代码所示，用一个像素值保存法向的xyz坐标值和沿着该法向投影得到最大值，另外用一个像素的第四个分量保存该最大值点在输入点数组中的索引。算法将输入点分成x份，每次只处理一份，在当前渲染过程中，找出在该批点中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复x次，当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过CPU一次性从帧缓冲中读取所有法向的切点。
 
 \begin{figure}[htbp]
   \centering
@@ -302,30 +301,28 @@ Purpose Graphic Process Unit)中也发挥着重要作用。下面将分别介绍
 \lstinputlisting[language={shader}, caption={基于乒乓技术算法着色器代码}, label=shader:pingpong]{shader_rrt_pingpong.frag}
 
 与Z Buffer算法相比，基于乒乓技术的算法在进行一次绘制操作能够得到沿着k个法向的局部(所有处理过的点集)最大值。为了充分利用GPU的并行计算能力，将每次处理点的数量设置为GPU硬件所支持的OpenGL中统一块（uniform
-block）所能容纳数据的大小，即需要反复绘制次数$x=n/b$，其中n为点集大小，b为统一块能容纳点的数量，值与显卡具体型号有关。 
+block）所能容纳数据的大小，即需要反复绘制次数~$x=n/b$，其中~$n$~为点集大小，$b$~为统一块能容纳点的数量，值与显卡具体型号有关。 
 
 \subsection{基于~CUDA~的并行算法}
 \label{subsec:determ-normals-by-cuda}
 
-~CUDA~是显卡公司~NVIDIA~推出的通用的并行计算架构平台，能够利用GPU解决并行计算问题，并提供了多种语言的编程接口。
+~CUDA~是显卡公司~NVIDIA~推出的通用的并行计算架构平台，能够利用~GPU~解决并行计算问题，并提供了多种语言的编程接口。
 \begin{figure}[htbp] % use [htbp] to fix the position
 \centering
 \includegraphics[width=4.0in]{gpureduction.pdf}
 \caption{并行规约求最大投影值}
 \label{lbl:reduction-getmax}
 \end{figure}
-如图\ref{lbl:reduction-getmax}~
-所示，最大投影值的计算可采用如下规约方式：将输入点交给数量为~$t$~的线程计算点积得到投影值，
-线程~$i$~和~$i +
-t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。更多更详细规约优化技术可参考文献~\onlinecite{Harris2007Optimizing}。
+如图~\ref{lbl:reduction-getmax}~所示，最大投影值的计算可采用如下规约方式：将输入点交给数量为~$t$~的线程计算点积得到投影值，
+线程~$i$~和~$i+t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。更多更详细规约优化技术可参考文献~\onlinecite{Harris2007Optimizing}。
 
 \section{截面求交算法}
 \label{sec:intersect-planes}
 
-确定$k$-CBP~各个截面后，直接求的所有平面交点并排除掉在平面外部的交点即可得到$k$-CBP~的顶点。即问题转化为：给定$k$个平面及其法向，平面及法向相当于一个半空间~$\bm{H}$，即已知集合${\bm{H_1},
+确定~$k$-CBP~各个截面后，直接求的所有平面交点并排除掉在平面外部的交点即可得到~$k$-CBP~的顶点。即问题转化为：给定~$k$~个平面及其法向，平面及法向相当于一个半空间~$\bm{H}$，即已知集合${\bm{H_1},
 \bm{H_2}, \cdots, \bm{H_k}}$，求$\bm{H_1} \cap \bm{H_2} \cap \cdots
 \cap \bm{H_k}$。该问题是一个线性规划（Linear
-Programming）问题，文献\onlinecite{dengcg}~详细介绍了在二维线性规划下的相关算法，本文将分别采用一种直观的枚举算法和利用对偶映射的方法求得$k$-CBP的交点。
+Programming）问题，文献~\onlinecite{dengcg}~详细介绍了在二维线性规划下的相关算法，本文将分别采用一种直观的枚举算法和利用对偶映射的方法求得~$k$-CBP~的交点。
 
 \subsection{枚举法}
 \label{subsec:intersection-enum-geometry}
@@ -633,7 +630,7 @@ max\_point$~为截面法向与截面上的投影点~$max\_point$~的点积，此
 i5-2320 CPU @ 3.2GHz 8G RAM NVIDIA GeForce GTX
 650。}，从两个角度对生成的~$k$-CBP~进行实验对比，
 一方面对生成~$k$-CBP~的速度进行效率上的对比，主要对比了串行算法、基于着色器和~CUDA~环境的并行算法和文献\onlinecite{karlsson2010parallel}的并行算法，其详细结果如~\ref{subsec:exper:efficiency}~节所示；
-另一个方面对生成~$k$-CBP~的质量即紧致性上进行了对比实验，主要围绕着凸包、文献\onlinecite{zachmann1998rapid}~中实现的~$k$-DOP~进行对比，详细结果见第~\ref{subsec:exper:efficiency}~节。
+另一个方面对生成~$k$-CBP~的质量即紧致性上进行了对比实验，主要围绕着凸包、文献\onlinecite{zachmann1998rapid}~中实现的~$k$-DOP~进行对比，详细结果见第~\ref{subsec:exper:tightness}~节。
 
 \subsection{凸包围多面体生成效率}
 \label{subsec:exper:efficiency}
@@ -674,7 +671,7 @@ n)$)一致，截面求交过程利用第\ref{subsec:intersection-dual-mapping}~�
 \label{fig:chart:exps:cputime}
 \end{figure}
 
-图~\ref{fig:chart:exps:shadertime}为着色器算法根据不同模型构造不同面的包围体所耗费的时间对比，横坐标表示多面体面数~$k$，纵坐标为运行时间（毫秒），曲线cpu、zbuffer和rtt\_pp分别表示基于CPU、深度缓冲和基于乒乓技术的算法的运行时间。
+图~\ref{fig:chart:exps:shadertime}~为着色器算法根据不同模型构造不同面数的包围体所耗费的时间对比，横坐标表示多面体面数~$k$，纵坐标为运行时间（毫秒），曲线cpu、zbuffer和rtt\_pp分别表示基于CPU、深度缓冲和基于乒乓技术的算法的运行时间。
 
 \begin{figure}[htbp] % use [htbp] to fix the position
 \centering
@@ -778,7 +775,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \label{subsec:exper:tightness}
 
 凸包围多面体的质量用公式~\ref{equa:judge:tightness}~衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
-文献~\onlinecite{zachmann1998rapid}~是基于~$k$-DOP~实现的层次结构的包围体，其顶层的~$k$-DOP~与本文算法生成的多面体的紧致程度对比如~\ref{chart:exps:tightness}~所示，
+文献~\onlinecite{zachmann1998rapid}~是基于~$k$-DOP~实现的层次结构的包围体，其顶层的~$k$-DOP~与本文算法生成的~$k$-CBP~的紧致程度对比如图~\ref{chart:exps:tightness}~所示，
 图中横坐标~$k$~为凸包围多面体的面数，纵坐标为紧致程度，曲线~$k$-DOP~和~$k$-CBP~分别为文献~\onlinecite{zachmann1998rapid}~和本文的方法，由图可知，
 对于不同模型，本文构造的凸包围多面体紧致程度均有所提升，如~Alice~模型提升了12.08\%，~Dinasour~模型提升了34.0\%。
 以~$k \in {20,38}$~为例，相应模型的~$k$-DOP~和~$k$-CBP~效果可见图~\ref{fig:kdop:kcbp:ui}。
@@ -805,7 +802,6 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \caption{紧致程度对比：$k$-DOP~为文献~\onlinecite{zachmann1998rapid}~的算法, $k$-CBP~为本文算法}
 \label{chart:exps:tightness}
 \end{figure}
-
 
 \begin{figure}[htbp] 
 \centering
@@ -906,7 +902,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 
 \begin{table}[htbp]   
 \centering
-\caption{用近似凸包与精确凸包构造~$k$-CBP~紧致程度比较}
+\caption{用近似凸包与精确凸包构造~$k$-CBP~紧致程度对比}
 \label{tab:exp:ach:ch:tightness}
 \begin{tabular}{lccccl}
 \toprule[1.5pt]
@@ -923,7 +919,6 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 \bottomrule[1.5pt]
 \end{tabular}
 \end{table}
-
 
 \begin{table}[htbp] 
 \centering
@@ -1044,5 +1039,3 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 \caption{~$k$-CBP~与凸包对比}
 \label{pic:exps:ch-kcbp}
 \end{figure}
-
-
