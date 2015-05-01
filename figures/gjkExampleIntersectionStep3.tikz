@@ -42,7 +42,7 @@
       \draw [thick, ->]  (0-2, 0+2) -- (1-2, -7/4+2); %normal is 13/4*(4/13, -7/13)  up 2,left 2
       \coordinate [label={right: \scriptsize{$\bm{d_3}$}}](N2) at (-3/2, -7/8+2);
       
-      \draw [fill=gray!30, opacity=0.5] (H1) -- (H2) -- (D1) -- cycle;
+      \draw [fill=gray!70, opacity=0.5] (H1) -- (H2) -- (D1) -- cycle;
       \node at (0, 0) {\textbullet};
       \node at (D1) {\textbullet};
       \node at (H2) {\textbullet};

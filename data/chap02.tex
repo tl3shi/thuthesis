@@ -9,15 +9,15 @@
 从第~\ref{sec:convex-bv}~节可以看出包围体的紧致程度直接影响相应算法的效率，对于不规则形体， 常见的包围体往往不够紧致，凸包紧致但往往包含过多的面片数而增加算法的复杂性。
 
 本文提出一种构造凸包围多面体的方法，该方法首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向。
-然后根据输入点集沿各法向搜索切点构成截面， 最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面过程中，各个法向的搜索过程相互独立互不影响，因此可以方便利用~GPU~进行加速。
-本文方法的主要优势是：
+然后根据输入点集沿各法向搜索切点构成截面， 最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面过程中，各个法向的搜索过程相互独立互不影响，因此可以方便地利用~GPU~进行加速。
+本文提出的方法的主要优势是：
 \begin{inparaenum}[(1)]
 \item 对给定点集可构造紧致的包围体；
 \item 利用~GPU~加速，能够快速构造包围体；
 \item 通过参数~$k$~调节凸包围多面体的简单性和紧致性，可适用于不同的应用场景。
 \end{inparaenum}
 
-由~$k$~个截面构成的凸包围多面体称为凸包围~$k$~面体($k$-Convex Bounding Polyhedron, 简称~$k$-CBP), 可通过~$k$~个半空间定义：
+由~$k$~个截面构成的凸包围多面体称为凸包围~$k$~面体($k$-Convex Bounding Polyhedron，简称~$k$-CBP), 可通过~$k$~个半空间定义：
 \begin{equation}
 \label{equ:kcbp_definition}
 \left\{
@@ -30,31 +30,26 @@
 其中，$\bm{n_i}$~是半空间~$\bm{H_i}$~的法向，方向指向包围体外部，
 $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
 如图~\ref{fig:bunny}~所示是~Bunny~模型的凸包围~34~面体（34-CBP）。
-
 \begin{figure}[H] 
 \centering
-  \includegraphics[width=1.3in]{bunny-34.png}
+  \includegraphics[width=1.5in]{bunny-34.png}
   \caption{~Bunny~模型的~34-CBP }
   \label{fig:bunny}
 \end{figure}
 
+
+本文算法的主要流程如图~\ref{lbl:kcbp-algorithm-flowchart}~所示，首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向，然后根据输入点集在~GPU~中沿各法向搜索切点构成截面，
+最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面需要多次扫描输入点集，在~CPU~中计算较耗时，因此用~GPU~加速使得算法整体性能得以提升，其他步骤在~CPU~计算即可。
+
 \begin{figure}[H]
     \centering
-    \includegraphics[width=5.0in]{kcbp-flowchart-x-aix.eps}
+    \includegraphics[width=5.5in]{kcbp-flowchart-x-aix.eps}
     \caption{算法流程图}
     \label{lbl:kcbp-algorithm-flowchart}
 \end{figure}
 
-本文算法的主要流程如图~\ref{lbl:kcbp-algorithm-flowchart}~
-所示，首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向，然后根据输入点集在~GPU~中沿各法向搜索切点构成截面，
-最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面需要多次扫描输入点集，在~CPU~中计算较耗时，因此用~GPU~加速使得算法整体性能得以提升，其他步骤在~CPU~计算即可。
-
 图~\ref{lbl:bunny-26-cbp-ch-ach}~从左至右分别显示了~Bunny~模型的~26-CBP、精确凸包和近似内凸包。
-近似凸包是精确凸包的一种近似，与精确凸包外观相似但其构造复杂度降低，不少研究者利用该性质解决计算机图形学中很多问题
-\cite{hossain2013constructing}。
-本文就是利用近似内凸包与精确凸包的相似性，从众多近似凸包面片的法向中通过聚类算法生成凸包围多面体的~$k$~个法向。
-本章将按步骤详细介绍算法的实现。
-%由图可知, 近似内凸包的三角面片大致反映了精确凸包三角面片的分布情况,近似内凸包相应位置面积较大的三角面片对应到精确凸包的三角面片面积也较大, 因此该三角面片所在平面需尽量保留.
+近似凸包是精确凸包的一种近似，与精确凸包外观相似但其构造复杂度降低，不少研究者利用该性质解决计算机图形学中很多问题\cite{hossain2013constructing}。
 
 \begin{figure}[H] % use [H] to fix the position
 \centering
@@ -63,18 +58,24 @@ $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
 \label{lbl:bunny-26-cbp-ch-ach}
 \end{figure}
 
+本文就利用了近似内凸包与精确凸包的相似性，从众多近似凸包面片的法向中通过~$k$-means~聚类算法生成构成凸包围多面体的~$k$~个法向。
+本章后续部分将按步骤详细介绍算法的实现。
+%由图可知, 近似内凸包的三角面片大致反映了精确凸包三角面片的分布情况,近似内凸包相应位置面积较大的三角面片对应到精确凸包的三角面片面积也较大, 因此该三角面片所在平面需尽量保留.
+
 \section{截面法向的生成}
 \label{sec:gen-normals}
 
 截面法向的选定与多面体的紧致程度密切相关。
-$k$-DOP~预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少数几个，导致其生成的多面体不能自适应模型，对于不规则形体不够紧致。与~$k$-DOP~相比本文算法~$k$~值取值更灵活，因此可以根据不同需求不同应用场景更加灵活地计算出凸包围体。
+$k$-DOP\cite{klosowski1998efficient}~预先定义~$k/2$~对法向，且~$k$~值局限于6、14、18或26等少数几个，对于不同的模型其方向始终一致，导致其生成的多面体不能自适应模型，对于不规则形体的模型不够紧致。
+与~$k$-DOP~相比，本文算法~$k$~值取值更灵活，因此可以根据不同需求不同应用场景更加灵活地选择需要的凸包围体。
 根据经验，为了使凸包围多面体尽可能逼近凸包，在多面体数量一定的情况下需尽量保留凸包中面积较大的面。 
-本文算法先通过一种线性算法\cite{bentley1982approximation}构造近似内凸包，然后从近似内凸包里选取面积最大的~$a$~个面的法向，最后用聚类算法从剩下的面中生成~$k-a$~个法向。
+本文生成凸包围多面体的法向的流程是先通过一种线性算法\cite{bentley1982approximation}构造近似内凸包，然后从近似内凸包里选取面积最大的~$a$~个面的法向，最后用聚类算法从剩下的面中生成~$k-a$~个法向。
+下面将介绍截面法向生成的主要步骤。
 
 \subsection{近似内凸包生成聚类样本法向集}
 \label{subsec:ach-gen-normals}
 
-下面以平面点集的近似内凸包为例说明初始法向集的生成。
+以平面点集的近似内凸包为例说明初始法向集的生成。
 
 \begin{figure}[H]
   \centering
@@ -92,21 +93,22 @@ $k$-DOP~预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少�
 
 如图~\ref{lbl:ach-2d}~所示，整个算法分为如下3个步骤：
 
-%\begin{inparaenum}[(1)]
-\begin{enumerate}[(1)]
+\begin{inparaenum}[(1)]
+%\begin{enumerate}[(1)]
 \item \textbf{分组：}
-首先根据~$x$~轴将输入点均分~$\xi$~组，如图~\ref{lbl:subfig-split-groups}所示，$\xi$值可以根据输入点集数量以及希望得到的近似凸包的近似程度进行选取，图示中分成了~6~组。
-\item \textbf{选极值点：}
-然后在每组中找出沿~$y$~轴的最大最小值，得到每组的极值点，如图~\ref{lbl:subfig-find-extrems}~所示，在边界上的点可直接当作极值点。
-\item \textbf{连线：}
-最后按条件连接每组的最值构成近似内凸包，如图~\ref{lbl:subfig-find-extrems}所示，以下半圈为例，在选定的极值点中先选定最左边的点~1，下一个候选点~2，连接~13~发现候选点~2~在~13~的左边，丢弃点候选点~2~直接连接~13，同理连接~35，
+首先根据~$x$~轴将输入点集均分~$\xi$~组，如图~\ref{lbl:subfig-split-groups}所示，$\xi$值可以根据输入点集数量以及希望得到的近似凸包的近似程度进行选取，图示中分成了~6~组。\\
+\indent \item \textbf{选极值点：}
+然后在每组中找出沿~$y$~轴的最大最小坐标值的点，得到每组的极值点，如图~\ref{lbl:subfig-find-extrems}~所示，在边界上的点可直接当作极值点。\\
+\indent \item \textbf{连线：}
+最后按条件连接每组的最值构成近似内凸包，如图~\ref{lbl:subfig-find-extrems}所示，以下半圈为例，在选定的极值点中先选定最左边的点~1，下一个候选点~2，连接~13~发现候选点~2~在~13~的左边，丢弃候选点~2~直接连接~13，同理连接~35，
 当查看候选点~6~时，发现点~6~在~57~连线的右边，因此候选点~6~保留，依次类推可得整个下半圈为凸包，上半圈同理可得。最后合并上下半圈得到如图~\ref{lbl:subfig-connect-extremes}所示的结果。
-%\end{inparaenum}
-\end{enumerate}
+\end{inparaenum}
+%\end{enumerate}
+
 此算法复杂度为~$O(n+\xi)$。  
-得到近似凸包后，因较长的边（图中的粗边）对最后凸包围多边形影响较大， 因此可以保留较长的~$a$~条边（2D 为例）， 其他~$n-a$（n为近似内凸包边数）进行聚类得到~$k-a$~类， 最后得到边对应的垂直向外的方向作为法向。
-在三维空间里， 可按照~$x,y$~轴最多划分成~$(\xi+2)\times (\xi+2)$~个网格， 每个网格取~$z$~轴的最大最小值， 因此所有网格含最多有~$2(\xi+2)^2$~个极值点， 其凸包可以在~$O(\xi^2\log \xi^2) = O(\xi^2\log \xi)$~内找出， 因此整个算法时间复杂度为~$O(n+\xi^2\log\xi)$， 
-关于此算法更详细的细节可参考文献\onlinecite{bentley1982approximation}。 实验过程中， 为了更快地构造近似内凸包， $\xi$~值通常取得较小（例如取~$\xi=10$）。
+得到近似凸包后，因较长的边（图~\ref{lbl:subfig-connect-extremes}~中的粗边）对最后凸包围多边形影响较大， 因此可以保留较长的~$a$~条边， 其他~$n-a$（n为近似内凸包边数）进行聚类得到~$k-a$~类， 最后得到边对应的垂直向外的方向作为法向。
+在三维空间里， 可按照~$x,y$~轴最多划分成~$(\xi+2)\times (\xi+2)$~个网格， 每个网格取~$z$~轴的最大最小坐标值， 因此所有网格含最多有~$2(\xi+2)^2$~个极值点， 其凸包可以在~$O(\xi^2\log \xi^2) = O(\xi^2\log \xi)$~内求得， 因此整个算法时间复杂度为~$O(n+\xi^2\log\xi)$， 
+关于此算法更详细的细节可参考文献~\onlinecite{bentley1982approximation}。 实验过程中， 为了更快地构造近似内凸包， $\xi$~值通常取得较小（例如取~$\xi=10$）。
 
 假设点~$A,B,C$~为近似凸包的某个平面~$P_i$~上逆时针方向上的3个顶点，则该平面~$P_i$~的法向~$\bm{n_i}
 = \overrightarrow{AB} \times
@@ -124,7 +126,6 @@ $k$-DOP~预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少�
     \caption{初始聚类法向的生成}
     \label{lbl:kmeans-init-normals-26}
 \end{figure}
-
 初始点生成算法具体如算法~\ref{alg:get_init_normals_by_area}~所示\footnote{http://www.cmu.edu/biolphys/deserno/pdf/sphere\_equi.pdf}。
 另外，亦可使用如文献~\onlinecite{wong1997sampling}~中的数学统计方法在球面上生成若干个点使其满足均匀分布。
 
@@ -160,19 +161,12 @@ $k$-DOP~预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少�
 \label{subsec:determ-normals}
 
 聚类算法将相似程度高的变量聚集到一类，距离度量是$k$-means中的关键，采用不同的距离计算函数可能得到不同的聚类结果，依据数据的不同性质可选用不同的距离度量方法，常用的有欧式距离，曼哈顿距离和卡方距离等等。
-本文采用余弦距离度量，将方向相近的点归聚到一类。$k$-means~本质上是一个迭代贪心算法，每一次迭代需要重新计算每一类的中心点，直到两次迭代后中心点相差在预定的容差范围内为止。
-本文聚类更新中心点时将面片的面积作为权重即
-\begin{equation}
-\label{equ:kmeans-update-center}
-\bm{c_i}=\frac{\sum_{i=1}^{i=n} \omega_i \cdot \bm{n_i} } {\sum_{i=1}^{i=n} \omega_i}
-,
-\end{equation}
-其中$\bm{c_i}$
-为第~$i$~类的中心点，$\omega_i$~为法向~$\bm{n_i}$~所在面片对应的面积，这样使得生成的法向尽量靠近原始近似凸包面积较大的面片的方向。完整的算法如算法~\ref{alg:kmeans-determine-normals}所示。
+本文采用余弦距离度量，将方向相近的点归聚到一类。$k$-means~本质上是一个迭代贪心算法，每一次迭代需要重新计算每一类的中心点，直到两次迭代后中心点相差在给定的容差范围内为止。
+完整的算法如算法~\ref{alg:kmeans-determine-normals}所示。
 
 \begin{algorithm}
 \small
-\caption{$k$-means确定法向}
+\caption{$k$-means~确定法向}
 \label{alg:kmeans-determine-normals}
 \begin{algorithmic}[1]
 \Require
@@ -188,7 +182,7 @@ $k$-DOP~预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少�
     \EndFor
     \ForAll {$c \in init$}
     \State $result \gets \Call{update}{c}$ 
-        \Comment{按照公式\ref{equ:kmeans-update-center}更新中心点}
+        \Comment{按照公式（\ref{equ:kmeans-update-center}）更新中心点}
         \If{$ \Call{checkState}{result, init, iter}$}
         \State \Return {$result$}
         \State \Comment{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
@@ -202,9 +196,19 @@ $k$-DOP~预先定义~$k/2$对法向，且$k$值局限于6、14、18或26等少�
 \end{algorithmic}
 \end{algorithm}
 
-通过聚类后得到的法向生成包围体比直接用初始法向生成的包围体更加紧致。如图~\ref{lbl:kemans-fixed-kcbp}~所示, 
-其中图~\ref{lbl:fixed-kcbp-bunny}~为按照初始方向为~Bunny~模型生成的凸包围多面体($k=26$)，
-聚类后其法向及其生成的凸包围多面体如图~\ref{lbl:kmeans-kcbp-bunny}~所示, 后者的紧致程度比前者高~14.98\%.
+算法~\ref{alg:kmeans-determine-normals}~中第7行~$UPDATE$~方法作用是聚类迭代更新每类的中心点，
+本文更新中心点时将每个法向对应的面片的面积作为权重即
+\begin{equation}
+\label{equ:kmeans-update-center}
+\bm{c_i}=\frac{\sum_{i=1}^{i=n} \omega_i \cdot \bm{n_i} } {\sum_{i=1}^{i=n} \omega_i}
+,
+\end{equation}
+其中，$\bm{c_i}$~为第~$i$~类的中心点，$\omega_i$~为法向~$\bm{n_i}$~所在面片对应的面积，这样使得生成的法向尽量靠近原始近似凸包面积较大的面片的方向。
+
+通过用聚类方法得到的法向生成的凸包围多面体比直接用初始法向生成的包围体更加紧致。
+如图~\ref{lbl:kemans-fixed-kcbp}~所示， 
+其中图~\ref{lbl:fixed-kcbp-bunny}~为按照初始方向为~Bunny~模型生成的凸包围多面体，其中~$k=26$。
+聚类后其法向及其生成的凸包围多面体如图~\ref{lbl:kmeans-kcbp-bunny}~所示，后者的紧致程度比前者高~14.98\%。
 
 \begin{figure}[H]
 \setcounter{subfigure}{0}
@@ -251,7 +255,7 @@ n)$， 其中~$k$~为法向数量， $n$~为模型所含点数。
 \end{algorithm}
 
 从算法~\ref{alg:search-plans-cpu}~可以看出该搜索过程中各法向的计算相互独立，互不影响，因此可方便地借助~GPU~并行加速。
-
+本文将采用两种平台进行~GPU~加速，一种平台是基于~OpenGL~着色语言，另外一种是~CUDA~平台，下面将分别介绍这两种平台的实现。
 
 \subsection{基于着色器的并行算法}
 \label{subsec:determ-normals-by-shader}
@@ -272,24 +276,19 @@ Purpose Graphic Process Unit，简称~GPGPU）中也发挥着重要作用。下�
   \label{fig:flowchart:zbuffer}
 \end{figure}
 
-在实际实现过程中需要注意默认情况下~OpenGL~处理$x$和$y$坐标值的范围是$[-1,1]$，而深度值需要映射到$[0,1]$。我们利用一张$k \times 1$ 大小的纹理保存结果，将第$i$个法向的切点保存在纹理的$(i,0)$坐标处，这样做的好处是每绘制一遍不用清除深度缓冲，最后可以一次性读取这个$k \times 1$大小的纹理得到结果。
-如代码~\ref{shader:zbuffer}~的着色器代码所示，~OpenGL~中利用齐次坐标处理渲染流程，因此我们利用前三个分量保存法向的$x,y,z$坐标值，第4个分量$w$保存法向的索引，在片段着色器中，只需要简单地输出切点的在输入点数组的索引即可。
-通过绘制$k$遍，我们从大小为$k \times 1$的纹理中读出点索引以此就能确定$k$切平面，每绘制一遍得到1个切平面，当$k$值较大时，这个过程仍然比较耗时，从实验结果也能看出，这种算法适用于$k$值相对较小的情况。
+在实际实现过程中需要注意默认情况下~OpenGL~处理~$x$~和~$y$~坐标值的范围是~$[-1,1]$，而深度值需要映射到~$[0,1]$。我们利用一张~$k \times 1$~大小的纹理保存结果，将第~$i$~个法向的切点保存在纹理的~$(i,0)$~坐标处，
+这样做的好处是每绘制一遍不用清除深度缓冲，最后可以一次性读取这个~$k \times 1$~大小的纹理得到结果。
+如代码~\ref{shader:zbuffer}~的着色器代码所示，~OpenGL~中利用齐次坐标处理渲染流程，因此我们利用前三个分量保存法向的~$x,y,z$~坐标值，第4个分量~$w$~保存法向的索引，在片段着色器中，只需要简单地输出切点的在输入点数组的索引即可。
+通过绘制~$k$~遍，我们从大小为~$k \times 1$~的纹理中读出点索引以此就能确定~$k$~切平面，每绘制一遍得到1个切平面，当~$k$~值较大时，这个过程仍然比较耗时，从实验结果也能看出，这种算法适用于~$k$~值相对较小的情况。
 
 %\lstinputlisting[language={shader}, caption={Vertex shader(Z buffer algorithm)}, label=vertex_shader_zbuffer]{shader_zbuffer.vert}
 \lstinputlisting[language={shader}, caption={基于~Z Buffer~算法着色器代码}, label=shader:zbuffer]{shader_zbuffer.vert}
 
-%\lstinputlisting[language={shader}]{shader_zbuffer.frag}
-
-
 \subsubsection{基于乒乓技术的算法}
 
 渲染到纹理（Render To Texture，简称~RTT）是一个非常重要的图形可视化技术，它能够帮助快速地渲染很多漂亮的结果，同时也是~GPGPU~重要组成部分。在基于~OpenGL~的~GPGPU~中，通常要将参与计算的数据通过~CPU~传送至~GPU~的特定大小的纹理中，
-通过绘制一个跟保存数据同样大小的四边形来调用着色器中的算法\cite{gpgpuqiu}，将结果输出到纹理中，绘制同样大小的四边形是为了避免纹理插值对输入数据的影响。
-算法一般是在片段着色器（Fragment Shader）中完成，有些时候通过一遍的绘制得不到最终结果还希望把前一次运算结果传递给下一个运算用来作为后继运算的输入，此时可以利用乒乓技术来解决。
-
-图~\ref{fig:shader-rtt-pingpong-flowchart}~为基于乒乓技术的算法的流程图，算法将所有法向保存在纹理$read$中并利用纹理$write$缓存中间结果，第$m$次渲染进行计算时，纹理$read$作为输入，将渲染即计算的结果缓存在纹理$write$中，在第$m+1$次渲染时将读取缓存在纹理$write$中的数据作为输入，而此时纹理$read$又作为输出，如此进行交替，每步交换只更换沿着每个法向的局部最大值。
-如代码~\ref{shader:pingpong}~片段着色器代码所示，用一个像素值保存法向的xyz坐标值和沿着该法向投影得到最大值，另外用一个像素的第四个分量保存该最大值点在输入点数组中的索引。算法将输入点分成x份，每次只处理一份，在当前渲染过程中，找出在该批点中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复x次，当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过CPU一次性从帧缓冲中读取所有法向的切点。
+通过绘制一个与保存数据有着同样大小的四边形来调用着色器中的算法\cite{gpgpuqiu}，将结果输出到纹理中。该过程中，绘制同样大小的四边形是为了避免纹理插值对输入数据的影响。
+RTT~的算法一般是在片段着色器（Fragment Shader）中完成，有时通过一遍的绘制得不到最终结果还需要把前一次运算结果传递给下一次运算用来作为后继运算的输入，此时可以利用乒乓技术来解决。
 
 \begin{figure}[H]
   \centering
@@ -298,41 +297,58 @@ Purpose Graphic Process Unit，简称~GPGPU）中也发挥着重要作用。下�
   \label{fig:shader-rtt-pingpong-flowchart}
 \end{figure}
 
+图~\ref{fig:shader-rtt-pingpong-flowchart}~为基于乒乓技术的算法的流程图，算法将所有法向保存在纹理~$read$~中并利用纹理~$write$~缓存中间结果，第~$m$~次渲染进行计算时，纹理~$read$~作为输入，将渲染即计算的结果缓存在纹理~$write$~中，
+在第~$m+1$~次渲染时将读取缓存在纹理~$write$~中的数据作为输入，而此时纹理~$read$~又作为输出，如此进行交替，每步交换只更改沿着每个法向的局部最大值。
+如代码~\ref{shader:pingpong}~中的片段着色器代码所示，用一个像素值保存法向的~$xyz$~坐标值和沿着该法向投影得到最大值，另外该像素的第四个分量保存该最大值点在输入点数组中的索引。
+算法将输入点分成~$x$~份，每次只处理一份，在当前渲染过程中，找出在该批点集中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复~$x$~次，
+当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过~CPU~一次性从帧缓冲中读取所有法向的切点。
+
 \lstinputlisting[language={shader}, caption={基于乒乓技术算法着色器代码}, label=shader:pingpong]{shader_rrt_pingpong.frag}
 
-与Z Buffer算法相比，基于乒乓技术的算法在进行一次绘制操作能够得到沿着k个法向的局部(所有处理过的点集)最大值。为了充分利用GPU的并行计算能力，将每次处理点的数量设置为GPU硬件所支持的OpenGL中统一块（uniform
-block）所能容纳数据的大小，即需要反复绘制次数~$x=n/b$，其中~$n$~为点集大小，$b$~为统一块能容纳点的数量，值与显卡具体型号有关。 
+与~Z Buffer~算法相比，基于乒乓技术的算法在进行一次绘制操作能够得到沿着~$k$~个法向的局部（所有处理过的点集）最大值。为了充分利用~GPU~的并行计算能力，将每次处理点的数量设置为~GPU~硬件所支持的~OpenGL~中统一块（uniform
+block）所能容纳数据的大小，即需要反复绘制的次数为~$x=n/b$，其中~$n$~为点集大小，$b$~为统一块能容纳点的数量，值与显卡具体型号有关。 
 
 \subsection{基于~CUDA~的并行算法}
 \label{subsec:determ-normals-by-cuda}
 
 ~CUDA~是显卡公司~NVIDIA~推出的通用的并行计算架构平台，能够利用~GPU~解决并行计算问题，并提供了多种语言的编程接口。
+CUDA~程序可以由一系列的主机程序组成，主机程序能够并行地在~GPU~设备上运行，GPU~运算单元将并行的线程分解成线程块，每个线程块又由若干线程组成，GPU~的流水处理器以线程块为单位进行调度。
+将问题划分成子问题提交给~GPU~让多线程同时处理这些子问题，这样可以提升算法的效率\cite{lauterbach2009fast}。
+
+如图~\ref{lbl:reduction-getmax}~所示，最大投影值的计算可采用如下规约方式：将输入点交给数量为~$t$~的线程计算点积得到投影值，
+线程~$i$~和~$i+t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。
+
 \begin{figure}[H] % use [H] to fix the position
 \centering
 \includegraphics[width=4.0in]{gpureduction.pdf}
 \caption{并行规约求最大投影值}
 \label{lbl:reduction-getmax}
 \end{figure}
-如图~\ref{lbl:reduction-getmax}~所示，最大投影值的计算可采用如下规约方式：将输入点交给数量为~$t$~的线程计算点积得到投影值，
-线程~$i$~和~$i+t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。更多更详细规约优化技术可参考文献~\onlinecite{Harris2007Optimizing}。
+
+图~\ref{lbl:reduction-getmax}~所示的示例中，假设有~8~个点与某法向点积得到的投影值为~$(1.2,2.4,1.5,4.5,8.0,-1.2,2.7,3.9)$，有4个线程~同时比较第~$i$~个投影值与~$i+4$~投影值得到新的较大投影值~$(8.0,2.4,2.7,4.5)$，并将新的较大的投影值放入线程~$i$~中，
+再以同样的方式规约得到较大的两个投影值~$(8.0,4.5)$，最后再通过一次比较得到最大的投影值~$8.0$~。
+文献~\onlinecite{Harris2007Optimizing}介绍了更多更详细规约优化技术。
 
 \section{截面求交算法}
 \label{sec:intersect-planes}
 
-确定~$k$-CBP~各个截面后，直接求的所有平面交点并排除掉在平面外部的交点即可得到~$k$-CBP~的顶点。即问题转化为：给定~$k$~个平面及其法向，平面及法向相当于一个半空间~$\bm{H}$，即已知集合${\bm{H_1},
-\bm{H_2}, \cdots, \bm{H_k}}$，求$\bm{H_1} \cap \bm{H_2} \cap \cdots
-\cap \bm{H_k}$。该问题是一个线性规划（Linear
-Programming）问题，文献~\onlinecite{dengcg}~详细介绍了在二维线性规划下的相关算法，本文将分别采用一种直观的枚举算法和利用对偶映射的方法求得~$k$-CBP~的交点。
+确定~$k$-CBP~各个截面后，直接求得所有平面的交点并排除在平面外部的交点即可得到~$k$-CBP~的顶点。该问题即转化为：给定~$k$~个平面及其法向，平面及法向相当于一个半空间~$\bm{H}$，即已知集合$\{\bm{H_1},
+\bm{H_2}, \cdots, \bm{H_k}\}$，求$\bm{H_1} \cap \bm{H_2} \cap \cdots
+\cap \bm{H_k}$。该问题是一个线性规划（Linear Programming）问题，文献~\onlinecite{dengcg}~详细介绍了在二维线性规划下的相关算法，本文将分别采用一种直观的枚举算法和利用对偶映射的方法求得~$k$-CBP~的交点。
 
 \subsection{枚举法}
 \label{subsec:intersection-enum-geometry}
 
-空间中的平面位置情况如图~\ref{fig:three-planes-intersection}~所示，
-若3个平面互相平行则没有交点，如图~\ref{lbl:intersection-center-0}~；
-或者相交于1条交线，如图~\ref{lbl:intersection-center-1}~；
-当有两个平面互相平行，另一个平面与其相交时有2条交线，如图~\ref{lbl:intersection-center-2}~；
-亦或交于3条交线，如图~\ref{lbl:intersection-center-3}~；
-最后一种情况是三个平面相交于1点的情况，如图~\ref{lbl:intersection-center-4}~所示。一个凸多面体的每一个顶点都可看作是至少3个平面的交点。现在只需要枚举出所有3个平面相交于1点的所有情况即可得到$k$-CBP~的顶点，值得注意的是，并非所有交点都是多面体的顶点，交点在某个半空间的正方向上即在半空间相交区域的外部须排除。
+空间中的平面位置情况如图~\ref{fig:three-planes-intersection}~所示，可分为如下几种情况：
+\begin{inparaenum}[(1)]
+\item \textbf{无交点} 若3个平面互相平行则没有交点，如图~\ref{lbl:intersection-center-0}~；
+\item \textbf{1~条交线} 如图~\ref{lbl:intersection-center-1}~所示，3个平面相交于~1~条交线；
+\item \textbf{2~条交线} 当有两个平面互相平行，另一个平面与其相交时有2条交线，如图~\ref{lbl:intersection-center-2}~；
+\item \textbf{3~条交线} 如图~\ref{lbl:intersection-center-3}~所示，3个平面交于~3~条交线；
+\item \textbf{1~个交点} 最后一种情况是三个平面相交于1点的情况，如图~\ref{lbl:intersection-center-4}~所示。
+\end{inparaenum}
+
+一个凸多面体的每一个顶点都可看作是至少3个平面的交点。现在只需要枚举出所有3个平面相交于1点的所有情况即可得到$k$-CBP~的顶点，值得注意的是，并非所有交点都是多面体的顶点，交点在某个半空间的正方向上即在半空间相交区域的外部须排除。
 
 \begin{figure}[H]
   \centering
@@ -351,8 +367,8 @@ Programming）问题，文献~\onlinecite{dengcg}~详细介绍了在二维线性
   \label{fig:three-planes-intersection}
 \end{figure}
 
-假设满足如图~\ref{lbl:intersection-center-4}~的三个平面的法向分别是$\bm{n_1}, \bm{n_2}, \bm{n_3}$，
-点$\bm{p_1}, \bm{p_2}, \bm{p_3}$，则三个平面的交点须满足如下方程： 
+假设满足如图~\ref{lbl:intersection-center-4}~所示的三个平面的法向分别是$\bm{n_1}, \bm{n_2}, \bm{n_3}$，
+平面上一点分别为~$\bm{p_1}, \bm{p_2}, \bm{p_3}$，则三个平面的交点须满足如下方程： 
 \begin{equation}
   \label{equa:three-planes-intersection}
   \left\{
@@ -365,7 +381,7 @@ Programming）问题，文献~\onlinecite{dengcg}~详细介绍了在二维线性
 \end{equation}
 
 令$(\bm{n_1} \cdot \bm{p_1}, \bm{n_2} \cdot \bm{p_2}, \bm{n_3} \cdot \bm{p_3})
-= (y_1, y_2, y_3) = \bm{y}$，则公式~\ref{equa:three-planes-intersection}~相当于解线性方程组
+= (y_1, y_2, y_3) = \bm{y}$，则求解式（\ref{equa:three-planes-intersection}）相当于解线性方程组
 $\bm{A} \bm{x}=\bm{y}$ 即 $(\bm{n_1},\bm{n_2}, \bm{n_3})^T \cdot \bm{x} = \bm{y}$， 令
 $\bm{n_i} = (a_{i1}, a_{i2}, a_{i3}), i=\{1,2,3\}$，则有：
 \begin{equation*}
@@ -395,9 +411,10 @@ $\bm{n_i} = (a_{i1}, a_{i2}, a_{i3}), i=\{1,2,3\}$，则有：
     \end{array}
   \right)
 \end{equation*}
+
 根据克莱姆法则（Crammer's Rule），上述方程有唯一解，则
 $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
-\{1,2,3\}$，其中$|\bm{A}_i|$是矩阵A中将第i列替换成$\bm{y}^T$之后的行列式，在计算$\bm{A}_i$和$|\bm{A}|$时为了避免一些重复计算，将其展开有：
+\{1,2,3\}$，其中~$|\bm{A}_i|$~是矩阵~$\bm{A}$~中将第~$i$~列替换成~$\bm{y}^T$~之后的行列式，在计算~$\bm{A}_i$~和~$|\bm{A}|$~时为了避免一些重复计算，将其展开有：
 \begin{equation*}
  \left\{
 \begin{array}{llll}
@@ -490,55 +507,110 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
 \right.
 \end{equation*}
 
+%TODO 下面可用一个大括号括起来
 令
-$b_1 = \left|
-\begin{array}{cc}
-  a_{22} & a_{23} \\
-  a_{32} & a_{33} 
-\end{array} 
-\right|
-  = a_{22}a_{33} - a_{32}a_{23}
-,
-b_2 = \left|
-\begin{array}{cc}
-  a_{21} & a_{23} \\
-  a_{31} & a_{33} 
-\end{array} 
-\right|
-  = a_{21}a_{33} - a_{31}a_{23}
-,
-b_3 = \left|
-\begin{array}{cc}
-  a_{21} & a_{22} \\
-  a_{31} & a_{32} \\
-\end{array}
-\right|
-= a_{21}a_{32}-a_{31}a_{22}
-,
-b_4 = \left|
-  \begin{array}{cc}
-    y_2 & a_{23} \\
-    y_3 & a_{33} \\
-  \end{array}
-\right|
-  = y_2a_{33}-y_3a_{23}
-,
-b_5 = \left|
-  \begin{array}{cc}
-      y_2 & a_{22} \\
-      y_3 & a_{32} \\
-      \end{array}
-    \right|
-  = y_2a_{32}-y_3a_{22}
-,
-b_6 = \left|
-    \begin{array}{cc}
-      a_{21} & y_{2} \\
-      a_{31} & y_{3} \\
+%$b_1 = \left|
+%\begin{array}{cc}
+%  a_{22} & a_{23} \\
+%  a_{32} & a_{33} 
+%\end{array} 
+%\right|
+%  = a_{22}a_{33} - a_{32}a_{23}
+%,
+%b_2 = \left|
+%\begin{array}{cc}
+%  a_{21} & a_{23} \\
+%  a_{31} & a_{33} 
+%\end{array} 
+%\right|
+%  = a_{21}a_{33} - a_{31}a_{23}
+%,
+%b_3 = \left|
+%\begin{array}{cc}
+%  a_{21} & a_{22} \\
+%  a_{31} & a_{32} \\
+%\end{array}
+%\right|
+%= a_{21}a_{32}-a_{31}a_{22}
+%,
+%b_4 = \left|
+%  \begin{array}{cc}
+%    y_2 & a_{23} \\
+%    y_3 & a_{33} \\
+%  \end{array}
+%\right|
+%  = y_2a_{33}-y_3a_{23}
+%,
+%b_5 = \left|
+%  \begin{array}{cc}
+%      y_2 & a_{22} \\
+%      y_3 & a_{32} \\
+%      \end{array}
+%    \right|
+%  = y_2a_{32}-y_3a_{22}
+%,
+%b_6 = \left|
+%    \begin{array}{cc}
+%      a_{21} & y_{2} \\
+%      a_{31} & y_{3} \\
+%    \end{array}
+%  \right|
+%  =a_{21}y_{3}-a_{31}y_{2}
+%$
+\begin{equation*}
+  \left\{
+    \begin{array}{lll}
+        b_1 &= \left|
+        \begin{array}{cc}
+          a_{22} & a_{23} \\
+          a_{32} & a_{33} 
+        \end{array} 
+        \right|
+         &= a_{22}a_{33} - a_{32}a_{23}
+        \\
+        b_2 &= \left|
+        \begin{array}{cc}
+          a_{21} & a_{23} \\
+          a_{31} & a_{33} 
+        \end{array} 
+        \right|
+          &= a_{21}a_{33} - a_{31}a_{23}
+        \\
+        b_3 &= \left|
+        \begin{array}{cc}
+          a_{21} & a_{22} \\
+          a_{31} & a_{32} \\
+        \end{array}
+        \right|
+        &= a_{21}a_{32}-a_{31}a_{22}
+        \\
+        b_4 &= \left|
+          \begin{array}{cc}
+            y_2 & a_{23} \\
+            y_3 & a_{33} \\
+          \end{array}
+        \right|
+         & = y_2a_{33}-y_3a_{23}
+        \\
+        b_5 &= \left|
+          \begin{array}{cc}
+              y_2 & a_{22} \\
+              y_3 & a_{32} \\
+              \end{array}
+            \right|
+          &= y_2a_{32}-y_3a_{22}
+        \\
+        b_6 &= \left|
+            \begin{array}{cc}
+              a_{21} & y_{2} \\
+              a_{31} & y_{3} \\
+            \end{array}
+          \right|
+          &=a_{21}y_{3}-a_{31}y_{2}
     \end{array}
-  \right|
-  =a_{21}y_{3}-a_{31}y_{2}
-$， 则有：
+\right.
+\end{equation*}
+则有：
 \begin{equation}
   \label{equa:solution:three-planes}
   \left\{
@@ -603,23 +675,23 @@ $， 则有：
 其中$a_i,b_i,c_i,d_i$是不同时为0的实数。
 
 求解~$k$-CBP~可将问题转换为求~$k$~个线性不等式的解。利用对偶映射的方式可在~$O(k \log k)$~的方式解决，
-具体方法分为三个步骤\cite{Preparata1985Introduction}：
-%\begin{inparaenum}[(1)]
-\begin{enumerate}[(1)]
+具体方法分为三个步骤\cite{Preparata1985Introduction}：\\ \indent
+\begin{inparaenum}[(1)]
+%\begin{enumerate}[(1)]
 \item   
 将上述线性不等式偶映射成一个欧式空间上的三维点，
 $a_ix+b_iy+c_iz=d_i \rightarrow \bm{p}(-a_i/d_i, -b_i/d_i,-c_i/d_i),d_i \neq 0$，其中~$(a_i,b_i,c_i)$~为第~\ref{sec:search:planes}~节中得到的
 截面法向~$\bm{n}$，$d_i=\bm{n} \cdot
-max\_point$~为截面法向与截面上的投影点~$max\_point$~的点积，此步骤的算法复杂度为~$O(k)$；
+max\_point$~为截面法向与截面上的投影点~$max\_point$~的点积，此步骤的算法复杂度为~$O(k)$； \\ \indent
 \item
-  对对偶映射得到的欧式空间~$k$~个点求凸包，此步骤的算法复杂度为~$O(k\log k)$~，可用第~\ref{subsec:convexhull}~节中的分治算法；
+  对对偶映射得到的欧式空间~$k$~个点求凸包，此步骤的算法复杂度为~$O(k\log k)$~，可用第~\ref{subsec:convexhull}~节中的分治算法； \\ \indent
 \item
   得到凸包后，再利用相同的对偶变换将凸包平面方程映射回欧式空间三维点，这些点即为原始半空间的交点，此步骤的算法复杂度仍为~$O(k)$。
-%\end{inparaenum}
-\end{enumerate}
+\end{inparaenum}
+%\end{enumerate}
 
-因此该方法总体复杂度为~$O(k\log k)$~。
-在利用这种对偶变化时需要注意约束条件即上述不等式中的~$d_i>0$，此时原点~$O(0,0,0)$~始终满足不等式~\ref{equa:halfspace:defition}，体现在算法输入上即原始模型需要包含原点。当原始模型不包含原点时，可用另外的对偶变换进行求解，文献\onlinecite{Preparata1979Intersection}对此问题进行了详述的阐述。
+综上，该方法总体复杂度为~$O(k\log k)$~。
+在利用这种对偶变化时需要注意约束条件即上述不等式中的~$d_i>0$，此时原点~$O(0,0,0)$~始终满足不等式~\ref{equa:halfspace:defition}，体现在算法输入上即原始模型需要包含原点。当原始模型不包含原点时，可以先对模型做一定平移或者也可用另外的对偶变换进行求解，文献\onlinecite{Preparata1979Intersection}对此问题进行了详述的阐述。
 
 \section{实验结果}
 \label{sec:exper-kcbp}
@@ -634,8 +706,8 @@ i5-2320 CPU @ 3.2GHz 8G RAM NVIDIA GeForce GTX
 \label{subsec:exper:efficiency}
 
 如图~\ref{fig:chart:exps:cputime}~所示为本文算法（CUDA）与传统的~CPU~算法对比结果，图中横纵坐标分别代表多面体面数和运行时间，其中虚线代表搜索截面的过程，实线为构造凸包围多面体总体耗时。
-当模型点数量较大时，搜索截面的过程占据了算法绝大多数时间，且随着凸包围多面体的面数~$k$~值增加而线性增长，这与搜索截面时间复杂度($O(k\cdot
-n)$)一致，截面求交过程利用第\ref{subsec:intersection-dual-mapping}~节中的对偶映射法，其时间复杂度为$O(k\log k)$，
+当模型点数量较大时，搜索截面的过程占据了算法绝大多数时间，且随着凸包围多面体的面数~$k$~值增加而线性增长，这与搜索截面时间复杂度~$O(k\cdot
+n)$一致，截面求交过程利用第~\ref{subsec:intersection-dual-mapping}~节中的对偶映射法，其时间复杂度为~$O(k\log k)$，
 当点数量极大时，如图~\ref{fig:exp:cpu:buggatti}~所示，实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略
 %，因此后文的时间对比无特别强调均为搜索截面的耗时
 。
@@ -733,7 +805,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 表~\ref{tab:exper:shadertime}~详细的展示了基于着色器的两种算法应用于~Alice~和~Bugatti~模型的构造时间及相应的加速比。
 从中可看出，Z Buffer~算法适合相对较小的~$k$~值，而基于乒乓技术的算法在较大~$k$~值时能达到更大的加速比。
 
-笔者实现了文献~\onlinecite{karlsson2010parallel}~中的并行算法并进行对比实验，表~\ref{tab:exp:sse-time}
+本文实现了文献~\onlinecite{karlsson2010parallel}~中的并行算法并进行对比实验，表~\ref{tab:exp:sse-time}
 ~为实验统计结果，表中数据均为搜索截面耗时，因为二者其他步骤均相同且从~\ref{fig:chart:exps:cputime}~可得搜索截面时间占用整体绝大部分时间，其中~$k$~为多面体面数，
 列~SSE~和列~$k$-CBP~分别为文献~\onlinecite{karlsson2010parallel}~中的算法和本文提出的基于~CUDA~算法的运行时间（单位毫秒）。
 
@@ -772,7 +844,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \subsection{凸包围多面体紧致程度}
 \label{subsec:exper:tightness}
 
-凸包围多面体的质量用公式~\ref{equa:judge:tightness}~衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
+凸包围多面体的质量用公式（\ref{equa:judge:tightness}）衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
 文献~\onlinecite{zachmann1998rapid}~是基于~$k$-DOP~实现的层次结构的包围体，其顶层的~$k$-DOP~与本文算法生成的~$k$-CBP~的紧致程度对比如图~\ref{chart:exps:tightness}~所示，
 图中横坐标~$k$~为凸包围多面体的面数，纵坐标为紧致程度，曲线~$k$-DOP~和~$k$-CBP~分别为文献~\onlinecite{zachmann1998rapid}~和本文的方法，由图可知，
 对于不同模型，本文构造的凸包围多面体紧致程度均有所提升，如~Alice~模型提升了12.08\%，~Dinasour~模型提升了34.0\%。
@@ -1046,3 +1118,4 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 然后多次扫描模型点集得到每个法向的切点进而得到截面，该过程各方向计算相互独立互不影响，因此利用了~GPU~进行加速；
 最后通过截面求交得到~$k$-CBP~的各个顶点。
 本章最后通过实验从凸包围多面体的生成效率和紧致程度两个角度与现有算法进行对比，说明本文算法能够快速构造更加紧致的凸包围多面体。
+

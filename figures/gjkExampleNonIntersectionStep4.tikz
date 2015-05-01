@@ -47,7 +47,7 @@
       \draw [thick, ->]  (-2.2, 2.2) -- (-0.7, 0.7); %normal is (1/4, -1/4)
       \coordinate [label={left: \scriptsize{$\bm{d_4}$}}](N4) at (-3/2, 3/2);
       
-      \draw [fill=gray!30, opacity=0.5] (H1) -- (H2) -- (H3) -- cycle;
+      \draw [fill=gray!70, opacity=0.5] (H1) -- (H2) -- (H3) -- cycle;
 
       \node at (0, 0) {\textbullet};
       \node at (H1) {\textbullet};
