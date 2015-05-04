@@ -247,37 +247,43 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
 \label{fig:gjk:example:2d:intersection:iterator}
 \end{figure}
 
-具体而言，仍以图~\ref{fig:gjk:example:intersection}~为例，令四边形~$DEFG$~为~$\mathbb{A}$~，三角形~$ABC$~为~$\mathbb{B}$~，第一次迭代不妨设~$\bm{d_1} = (1,0)$，
+具体而言，仍以图~\ref{fig:gjk:example:intersection}~为例，令四边形~$DEFG$~为~$\mathbb{A}$~，三角形~$ABC$~为~$\mathbb{B}$~，
+\begin{inparaenum}[(1)]
+\item 第一次迭代不妨设~$\bm{d_1} = (1,0)$，
 如图~\ref{fig:gjk:example:intersection:step1}~所示，
-\begin{equation*}
-  \begin{array}{ll}
-    Support_\mathbb{D}(\bm{d_1}) & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
-                                 & = E(-2.5, 2) - A(-3,1)  = D_1(0.5, 1)
-  \end{array}
-  \label{euqa:gjk:step1}
-\end{equation*}
-%$Support_\mathbb{D}(\bm{d_1})  = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1})  = E(-2.5, 2) - A(-3,1) = D_1(0.5, 1),$
-此时，$\bm{S} = \{D_1(0.5, 1)\}$，第二次迭代取~$\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，
-\begin{equation*}
-  \begin{array}{ll}
-  Support_\mathbb{D}(\bm{d_2})  & = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2}) \\
-                                & = D(-4, 2) - B(-1, 3)  = D_2(-3, -1)
-  \end{array}
-  \label{euqa:gjk:step2}
-\end{equation*}
-%$Support_\mathbb{D}(\bm{d_2})   = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2})  = D(-4, 2) - B(-1, 3) = D_2(-3, -1),$
-此时，$\bm{S} = \{D_1(-0.5, 1), D_2(-3, -1)\}$，第三次迭代，计算~$ConvexHull(S)$~中最小二范数的点为~$I(-4/13, 7/13)$~，
+%\begin{equation*}
+%  \begin{array}{ll}
+%    Support_\mathbb{D}(\bm{d_1}) & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
+%                                 & = E(-2.5, 2) - A(-3,1)  = D_1(0.5, 1)
+%  \end{array}
+%  \label{euqa:gjk:step1}
+%\end{equation*}
+$Support_\mathbb{D}(\bm{d_1})  = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1})  = E(-2.5, 2) - A(-3,1) = D_1(0.5, 1),$
+此时，$\bm{S} = \{D_1(0.5, 1)\}$；
+\item 第二次迭代取~$\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，
+%\begin{equation*}
+%  \begin{array}{ll}
+%  Support_\mathbb{D}(\bm{d_2})  & = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2}) \\
+%                                & = D(-4, 2) - B(-1, 3)  = D_2(-3, -1)
+%  \end{array}
+%  \label{euqa:gjk:step2}
+%\end{equation*}
+$Support_\mathbb{D}(\bm{d_2})   = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2})  = D(-4, 2) - B(-1, 3) = D_2(-3, -1),$
+此时，$\bm{S} = \{D_1(-0.5, 1), D_2(-3, -1)\}$；
+\item 第三次迭代，计算~$ConvexHull(S)$~中最小二范数的点为~$I(-4/13, 7/13)$~，
 并令~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
-\begin{equation*}
-  \begin{array}{ll}
-  Support_\mathbb{D}(\bm{d_3})  & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3}) \\
-                                & = E(-2.5, 2) - C(-3, 3)  = D_3(0.5, -1)
-  \end{array}
-  \label{euqa:gjk:step3}
-\end{equation*}
-%$ Support_\mathbb{D}(\bm{d_3})  = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3})  = E(-2.5, 2) - C(-3, 3) = D_3(0.5, -1),$
-此时，$\bm{S} = \{D_1(0.5, 1), D_2(-3, -1), D_3(0.5, -1)\}$，如图~\ref{fig:gjk:example:intersection:step3}~所示，$ConvexHull(S)$~为阴影部分覆盖区域，因其包含原点结束迭代，因此，$\mathbb{A}$~和~$\mathbb{B}$~相交。
-%迭代过程如下：
+%\begin{equation*}
+%  \begin{array}{ll}
+%  Support_\mathbb{D}(\bm{d_3})  & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3}) \\
+%                                & = E(-2.5, 2) - C(-3, 3)  = D_3(0.5, -1)
+%  \end{array}
+%  \label{euqa:gjk:step3}
+%\end{equation*}
+$ Support_\mathbb{D}(\bm{d_3})  = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3})  = E(-2.5, 2) - C(-3, 3) = D_3(0.5, -1),$
+此时，$\bm{S} = \{D_1(0.5, 1), D_2(-3, -1), D_3(0.5, -1)\}$，
+如图~\ref{fig:gjk:example:intersection:step3}~所示，$ConvexHull(S)$~为阴影部分覆盖区域，因其包含原点结束迭代，因此，$\mathbb{A}$~和~$\mathbb{B}$~相交。
+\end{inparaenum}
+%迭代过程如下：生成的公式高度高了，不好调整
 %\begin{equation*}
 %  \begin{array}{rl}
 %    Support_\mathbb{D}(\bm{d_1}) & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
