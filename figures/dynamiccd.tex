@@ -23,8 +23,8 @@
     legend entries={DP($k$-CBP),DP(Model)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[red, mark=square] table [x=moves, y=count(kCBP)] {experiments/dynamiccd.bunny.k24.csv};
-\addplot[blue,mark=triangle] table [x=moves, y=count(real)] {experiments/dynamiccd.bunny.k24.csv};
+\addplot[red, mark=square*] table [x=moves, y=count(kCBP)] {experiments/dynamiccd.bunny.k24.csv};
+\addplot[blue,mark=triangle*] table [x=moves, y=count(real)] {experiments/dynamiccd.bunny.k24.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -56,8 +56,8 @@
     legend entries={DP($k$-CBP),DP(Model)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[red, thick, mark=square] table [x=moves, y=count(kCBP)] {experiments/dynamiccd.bunny.k24.csv};\label{plot:dpkcbp}
-\addplot[blue,thick, mark=triangle] table [x=moves, y=count(real)] {experiments/dynamiccd.bunny.k24.csv};\label{plot:dpmodel}
+\addplot[red, thick, mark=square*] table [x=moves, y=count(kCBP)] {experiments/dynamiccd.bunny.k24.csv};\label{plot:dpkcbp}
+\addplot[blue,thick, mark=triangle*] table [x=moves, y=count(real)] {experiments/dynamiccd.bunny.k24.csv};\label{plot:dpmodel}
 \end{axis}
 \begin{axis}
 [

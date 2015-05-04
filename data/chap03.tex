@@ -90,7 +90,7 @@ AABB~树的根节点 $root$
   T(n) = O(n \log n ) + 2T(\frac{n}{2}),
 \label{equa:aabbtree:build}
 \end{equation}
-公式~\ref{equa:aabbtree:build}~中~$O(n \log n)$~为算法中根据某坐标轴排序的耗费，根据主定理得此构造包围体树的整体算法时间复杂度~$T(n)=O(n\log^2n)$~，文献~\onlinecite{ericson2005real}~中提到可以用一种~$O(n)$~的算法替代其中的排序操作，使得整体复杂度为~$O(n\log n)$。
+公式（\ref{equa:aabbtree:build}）中~$O(n \log n)$~为算法中根据某坐标轴排序的耗费，根据主定理得此构造包围体树的整体算法时间复杂度~$T(n)=O(n\log^2n)$~，文献~\onlinecite{ericson2005real}~中提到可以用一种~$O(n)$~的算法替代其中的排序操作，使得整体复杂度为~$O(n\log n)$。
 
 生成两个~$k$-CBP~的~AABB~包围体树后，当进行碰撞检测时，将采用算法~\ref{alg:aabbtree:traverse:iterator}~的迭代算法进行遍历判断。
 从顶层~AABB~节点开始，若两个节点的~AABB~包围体相交，则进行深度优先遍历其孩子节点，当到达叶子节点时，再进行原生几何（本文中的~$k$-CBP~多边形网格，为了统一转化成与输入模型一致的三角网格）进行相交测试的判断，$k$-CBP~相交后，进行真实模型的相交测试也通过此方法进行。
@@ -228,17 +228,6 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
 %\end{enumerate}
 \end{inparaenum}
 
-具体而言，仍以图~\ref{fig:gjk:example:intersection}~为例，令四边形~$DEFG$~为~$\mathbb{A}$~，三角形~$ABC$~为~$\mathbb{B}$~，第一次迭代不妨设~$\bm{d_1} = (1,0)$，
-如图~\ref{fig:gjk:example:intersection:step1}~所示，
-\begin{equation}
-  \begin{array}{ll}
-    Support_\mathbb{D}(\bm{d_1}) & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
-                            & = E(-2.5, 2) - A(-3,1) \\
-                            & = D_1(0.5, 1)
-  \end{array}
-  \label{euqa:gjk:step1}
-\end{equation}
-
 \begin{figure}[H]
 \centering
 \subcaptionbox{第一次迭代\label{fig:gjk:example:intersection:step1}}{
@@ -254,6 +243,16 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
 \label{fig:gjk:example:2d:intersection:iterator}
 \end{figure}
 
+具体而言，仍以图~\ref{fig:gjk:example:intersection}~为例，令四边形~$DEFG$~为~$\mathbb{A}$~，三角形~$ABC$~为~$\mathbb{B}$~，第一次迭代不妨设~$\bm{d_1} = (1,0)$，
+如图~\ref{fig:gjk:example:intersection:step1}~所示，
+\begin{equation}
+  \begin{array}{ll}
+    Support_\mathbb{D}(\bm{d_1}) & = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1}) \\
+                            & = E(-2.5, 2) - A(-3,1) \\
+                            & = D_1(0.5, 1)
+  \end{array}
+  \label{euqa:gjk:step1}
+\end{equation}
 此时，$\bm{S} = \{D_1(0.5, 1)\}$，第二次迭代取~$\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，
 \begin{equation}
   \begin{array}{ll}
@@ -263,7 +262,6 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
   \end{array}
   \label{euqa:gjk:step2}
 \end{equation}
-
 此时，$\bm{S} = \{D_1(-0.5, 1), D_2(-3, -1)\}$，第三次迭代，计算~$ConvexHull(S)$~中最小二范数的点为~$I(-4/13, 7/13)$~，
 并令~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
 \begin{equation}
@@ -274,11 +272,9 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
   \end{array}
   \label{euqa:gjk:step3}
 \end{equation}
-
 此时，$\bm{S} = \{D_1(0.5, 1), D_2(-3, -1), D_3(0.5, -1)\}$，如图~\ref{fig:gjk:example:intersection:step3}~所示，$ConvexHull(S)$~为阴影部分覆盖区域，因其包含原点结束迭代，因此，$\mathbb{A}$~和~$\mathbb{B}$~相交。
 
 再以图~\ref{fig:gjk:example:nonIntersection}~为例，设三角形$\mathbb{B'} = A'B'C'$，该例前两次迭代与上例相同，此处省略直接从第三次迭代起，
-
 \begin{figure}[H]
 \centering
 \subcaptionbox{第三次迭代\label{fig:gjk:example:nonIntersection:step3}}{
@@ -290,7 +286,6 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
 \caption{二维~GJK~算法迭代示例（不相交情况）}
 \label{fig:gjk:example:2d:intersection:iterator}
 \end{figure}
-
 第三次迭代，$\bm{S} = \{(D_1', D_2') \}$，此时~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
 \begin{equation}
   \begin{array}{ll}
@@ -300,27 +295,24 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
   \end{array}
   \label{euqa:gjk:non:step3}
 \end{equation}
-
 此时$\bm{S} = \{D_1'(0.5, 1), D_2'(-3, -1), D_3(-1.5, -1)\}$，如图~\ref{fig:gjk:example:nonIntersection:step3}~所示，与上例不同，此时~$ConvexHull(S)$~并不包含原点，所以继续迭代，
-
 计算~$\bm{S}$~中二范数最小的点为~$I_2(-1/4, 1/4)$~，并规约集合~$\bm{S}$，点~$D_2'$~可去掉，
 变为$\bm{S} = \{ (D_1'(0.5, 1), D_3'(-1.5, -1)\}$，并令~$\bm{d}_4 = -I_2 = (1/4, -1/4)$，
 \begin{equation}
   \begin{array}{ll}
   Support_\mathbb{D}(\bm{d_4})  & = Support_\mathbb{A}(\bm{d_4}) - Support_\mathbb{B'}(-\bm{d_4}) \\
-    & = E(-2.5, 2) - C'(-1, 3) \textbf{~or~} A'(-3, 1)  \\
-    & = D_3'(-1.5, -1) \textbf{~or~} D_1'(0.5, 1)
+    & = E(-2.5, 2) - C'(-1, 3) \textbf{~或~} A'(-3, 1)  \\
+    & = D_3'(-1.5, -1) \textbf{~或~} D_1'(0.5, 1)
   \end{array}
   \label{euqa:gjk:non:step4}
 \end{equation}
-
 此时，并没有新的~$Support_\mathbb{D}(\bm{d})$~产生，结束迭代，$\mathbb{A}$~和~$\mathbb{B}$~不相交。
 
 在实际计算过程中，并不需要计算离原点最近即二范数最小的点的具体坐标值，只需选择垂直已有方向再进行判断选择方向即可，以图~\ref{fig:gjk:example:intersection:step3}~为例，
 此时~$\overrightarrow{D_1D_2} = D_2(-3, -1) - D_1(0.5, 1) = (-3.5, -2)$，此时只需令~
 $\bm{d_3'} = \overrightarrow{D_1D_2} \times \overrightarrow{D_1O} \times \overrightarrow{D_1D_2} = -(\overrightarrow{D_1D_2} \cdot \overrightarrow{D_1O})\overrightarrow{D_1D_2} +
 (\overrightarrow{D_1D_2} \cdot \overrightarrow{D_1D_2})\overrightarrow{D_1O} = (5,-8.75)$
-\footnote{$\bm{a} \times \bm{b} \times \bm{c} = -(\bm{c}\cdot\bm{b})\bm{a}+(\bm{c}\cdot\bm{a})\bm{b})$}，
+\footnote{$\bm{a} \times \bm{b} \times \bm{c} = -(\bm{c}\cdot\bm{b})\bm{a}+(\bm{c}\cdot\bm{a})\bm{b}$}，
 \begin{equation}
   \begin{array}{ll}
   Support_\mathbb{D}(\bm{d_3'})  & = Support_\mathbb{A}(\bm{d_3'}) - Support_\mathbb{B'}(-\bm{d_3'}) \\
@@ -392,7 +384,7 @@ $\bm{d_3'} = \overrightarrow{D_1D_2} \times \overrightarrow{D_1O} \times \overri
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
-算法~\ref{alg:gjk}~第~12~行~$CheckContainUpdate$~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
+算法~\ref{alg:gjk}~第~12~行~$CHECKCONTAINUPDATE$~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
 具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
 
 \section{三角网格的相交测试算法}
@@ -403,7 +395,7 @@ $\bm{d_3'} = \overrightarrow{D_1D_2} \times \overrightarrow{D_1O} \times \overri
 
 \begin{figure}[H]
   \centering
-    \includegraphics[width=5in]{TriangleTriangleTest.pdf}
+    \includegraphics[width=4.5in]{TriangleTriangleTest.pdf}
     \caption{空间中两个非共面三角形的位置关系\cite{Moller1997}}
   \label{fig:two:triangle:ui}
 \end{figure}
@@ -436,7 +428,7 @@ $\bm{d_3'} = \overrightarrow{D_1D_2} \times \overrightarrow{D_1O} \times \overri
 
 \begin{figure}[H]
   \centering
-    \includegraphics[width=4in]{TriangleTriangleTest2.pdf}
+    \includegraphics[width=3.5in]{TriangleTriangleTest2.pdf}
     \caption{求非共面三角形区间线段示意图\cite{Moller1997}}
   \label{fig:two:triangle:ui2}
 \end{figure}
@@ -465,7 +457,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 是否相交
 
 \Function{TriangleTriangleDetection}{$\bm{U}_1, \bm{U}_2, \bm{U}_3, \bm{V}_1, \bm{V}_2, \bm{V}_3$}
-    \State {$\Pi_1 \gets \bm{n}_1 \cdot \bm{x}+d_1$} \Comment{按照公式~\ref{equa:tri:tri:plane}~计算$T_1$所在平面方程}
+    \State {$\Pi_1 \gets \bm{n}_1 \cdot \bm{x}+d_1$} \Comment{按照公式（\ref{equa:tri:tri:plane}）计算$T_1$所在平面方程}
     \For {$i = 1 \to 3$}
         \State {$l_{1i} \gets \bm{n}_1 \cdot \bm{V}_i + d_1$} \Comment {计算$T_2$到$\Pi_1$的有向距离}
     \EndFor
@@ -477,7 +469,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
         \State \Return \Call{EdgeEdgeTest}{$\bm{U}_1, \bm{U}_2, \bm{U}_3, \bm{V}_1, \bm{V}_2, \bm{V}_3$}
         \State \Comment{$T_2$与$T_1$的共面，普通的边边相交测试}
     \EndIf
-    \State {$\Pi_2 \gets \bm{n}_2 \cdot \bm{x}+d_2$} \Comment{按照公式~\ref{equa:tri:tri:plane}~计算$T_2$所在平面方程}
+    \State {$\Pi_2 \gets \bm{n}_2 \cdot \bm{x}+d_2$} \Comment{按照公式（\ref{equa:tri:tri:plane}）计算$T_2$所在平面方程}
     \For {$i = 1 \to 3$}
         \State {$l_{2i} \gets \bm{n}_2 \cdot \bm{U}_i + d_2$} \Comment {计算$T_1$到$\Pi_2$的有向距离}
     \EndFor
@@ -486,7 +478,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
           \State \Return \textbf{False} \Comment{$T_1$在$\Pi_2$的同侧，排除}
     \EndIf
     \State {$t_1 \gets \Call{CalParam}{}, t_2 \gets \Call{CalParam}$}  
-    \Comment {按照公式~\ref{equa:triangle:intersectionline:param}~计算线段$\bm{D}_1$的参数区间} 
+    \Comment {按照公式（\ref{equa:triangle:intersectionline:param}）计算线段$\bm{D}_1$的参数区间} 
     \State {$t_3 \gets \Call{CalParam}{}, t_4 \gets \Call{CalParam}$}  \Comment{类似的方法计算线段$\bm{D}_2$的参数区间} 
     \If {$\Call{Overlap}{t_1, t_2, t_3, t_4}$}
        \State \Return \textbf{True} \Comment{区间交叉，表明三角形相交返回\textbf{True}}
@@ -498,7 +490,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 \end{algorithmic}
 \end{algorithm}
 
-算法~\ref{alg:triangles:intersection}~第~10~行~在方法~$EDGEEDGETest$~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
+算法~\ref{alg:triangles:intersection}~第~10~行~在方法~$EDGEEDGETEST$~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
 在实际实现过程中，往往需要引入容差以提高算法的稳定性。文献~\onlinecite{Moller1997}~介绍了更多的优化技巧。
 
 \section{基于 $k$-CBP 的碰撞检测算法}
@@ -707,6 +699,9 @@ AABB包围盒 $box$，
 
 \section{实验结果}
 \label{sec:exper-cd}
+本章的实验主要分为3个部分，首先从~$k$-CBP~应用与碰撞检测的有效性上与仅用包围盒过滤算法进行对比，然后分别从静止场景和运动场景中与文献~\onlinecite{abenchmarking2007}中的基于~$k$-DOP~树的算法对比。
+CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/research/colldet/~下载得到}是~Gabriel Zachmann~等人实现的一个碰撞检测库\cite{abenchmarking2007}，内含基于~$k$-DOP~的实现，
+在与~$k$-DOP~进行的实验对比结果中，本文在实验过程中均只通过~CPU~进行计算，针对碰撞检测实验环境中多个相同的实验模型\footnote{后文实验中用到的~HappyBuddha~模型和后文的~Hand~模型可从~http://cgvr.cs.uni-bremen.de/research/colldet\_benchmark/下载。}，$k$-CBP~与~$k$-DOP~的构造均采用重新扫描扫描点集构造。
 
 \subsection{与包围盒过滤算法对比}
 \label{subsec:exper:box:kcbp}
@@ -747,10 +742,6 @@ AABB包围盒 $box$，
 
 \subsection{静止场景中与~$k$-DOP~算法对比}
 \label{subsec:exper:kdop:kcbp:static}
-
-CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/research/colldet/~下载得到}是~Gabriel Zachmann~等人实现的一个碰撞检测库\cite{abenchmarking2007}，内含基于~$k$-DOP~的实现，本文将从静态和动态两个角度对其进行对比实验分析，为了和~$k$-DOP~进行公平实验对比，本文在实验过程中均只通过~CPU~进行计算，并未采用~GPU~加速，
-针对碰撞检测实验环境中多个相同的实验模型\footnote{后文实验中用到的~HappyBuddha~模型和后文的~Hand~模型可从~http://cgvr.cs.uni-bremen.de/research/colldet\_benchmark/ 下载。}，$k$-CBP~与~$k$-DOP~的构造均采用重新扫描扫描点集构造。
-
 在静态场景中的碰撞检测实验中，本文生成不同数量的模型，其位置和旋转角度随机生成（$k$-DOP~和~$k$-CBP~采用相同的随机生成的数据），图~\ref{fig:static:cd:bunny}~为~Bunny~模型在模拟碰撞检测的实验实例。
 
 \begin{figure}[H]

@@ -180,7 +180,7 @@ $dop_1, dop_2, k$
 除了以上几种常见的凸包围体外，不同学者在特定领域里也研究出以下另外几种包围体：\\
 \begin{inparaenum}[(1)]
 \indent
-\item \textbf{Tribox} 可以看作是$k$-DOP~的一种特例，其中，二维~Tribox~中的~$k=8$ ，三维中~$k=18$。文献\onlinecite{crosnier1999tribox}中提出的方法可以方便构造~Tribox~层次结构，并应用于模型分解，当投影方向固定时，对于运动对象，更新其~Tribox~包围体也比较方便。 \\ 
+\item \textbf{Tribox} 可以看作是~$k$-DOP~的一种特例，其中，二维~Tribox~中的~$k=8$ ，三维中~$k=18$。文献\onlinecite{crosnier1999tribox}中提出的方法可以方便构造~Tribox~层次结构，并应用于模型分解，当投影方向固定时，对于运动对象，更新其~Tribox~包围体也比较方便。 \\ 
 \indent
 \item \textbf{Swept-sphere}
 是由~Eric.Larsen~等人\cite{Larsen1999Fast}提出的一种用于查询两个物体之间精确和近似最近距离的解决方案，因而也用于碰撞检测的应用当中，该包围体有多种变种。原文中给出了球沿直线做拉伸构成的~Line-swept-sphere（如图\ref{fig:subfig-bv-swept-sphere}所示）
