@@ -739,7 +739,7 @@ AABB包围盒 $box$，
 %\end{landscape}
 
 如表~\ref{tab:exp:box:kcbp:collsiondetection}~所示，
-其中~$n$~表示场景中模型的数量， CT(Box)、 CT($16$-CBP)~分别表示模型包围盒的构造时间（Construction Time，简称~CT）和凸包围16面体的构造时间（单位ms）\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间
+其中~$n$~表示场景中模型的数量， CT(Box)、 CT($16$-CBP)~分别表示模型包围盒的构造时间（Construction Time，简称~CT）和凸包围16面体的构造时间\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间
 且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}， DT(Box)、DT($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间（Detection Time，简称~DT），
 其中~r(Box)、r($16$-CBP)分别表示包围盒、16-CBP~的命中率（即用实际模型相交的数量除以包围体检测出来相交的数量）， DP(Model)~检测到的模型实际相交的对数（Detection Pair，简称~DP），
 显然计算模型包围盒所耗费的时间要明显少于计算凸包围多面体的时间，但由于凸包围多面体比包围盒紧致，

@@ -62,21 +62,20 @@
 % 定义中英文摘要和关键字
 \begin{cabstract}
   
-在计算机辅助设计、计算机动画和计算机图形学等领域中，包围盒的应用十分广泛，根据其相交测试比原始模型更简单这个性质，常用于在模型之间的相关计算（如几何求交、光线跟踪或者碰撞
-检测）之前进行预判剪枝，以提高整体算法的效率。
-凸包围多面体作为包围盒的推广，对于一般不规则形体，可达到比包围盒更好的紧致程度，因而能够更好地对相关算法进行预判剪枝以提高效率。
+在计算机辅助设计、计算机动画和计算机图形学等领域中，包围盒的应用十分广泛，根据其相交测试比原始模型更简单这个性质，常用于在模型之间的相关计算（如几何求交、光线跟踪或者碰撞检测等）之前进行预判剪枝，以提高整体算法的效率。
+凸包围多面体作为包围盒的推广，对于一般不规则形体，可达到比包围盒更好的紧致程度，因而能够更好地进行预判剪枝以提高算法的整体效率。
 
-本文提出了一种快速构造给定点集的指定~$k$~面的紧致凸包围多面体（$k$ - Convex Bounding Polyhedron, 简称~$k$-CBP）的方法。
-该方法首先利用一个线性算法对输入点集构造一个近似内凸包, 然后根据该内凸包的面片法向通过~$k$-means~聚类算法生成构造凸包围多面体的~$k$~个截面法向，
-然后扫描输入点集依次沿各个法向搜索切点构造构成凸包围多面体的截面，最后通过截面求交构成~$k$-CBP。 
-在搜索截面的过程中，各个法向之间的搜索过程相互独立，可以方便地进行并行搜索，本文分别基于~OpenGL~着手语言和~CUDA~两种平台提供了并行加速的方案。
+本文提出了一种能够快速构造给定点集的指定~$k$~面的紧致凸包围多面体（$k$ - Convex Bounding Polyhedron，简称~$k$-CBP）的方法。
+该方法首先利用一个线性算法对输入点集构造一个近似内凸包，然后根据该近似凸包的面片法向通过~$k$-means~聚类算法生成构造凸包围多面体的~$k$~个截面法向，
+再依次沿各个法向搜索切点构造构成凸包围多面体的截面，最后通过截面求交构成~$k$-CBP。 
+在搜索截面的过程中，各个法向之间的搜索过程相互独立，可以方便地进行并行搜索，本文分别就基于~OpenGL~着色语言和~CUDA~两种平台提供了并行加速的方案。
 在截面求交过程中，本文利用计算几何中的对偶映射技术加快求交过程。
 实验结果表明，与同类算法相比，本文方法能够更快地构造给定点集更加紧致的凸包围多面体。
 
-碰撞检测算法一直是计算机动画和计算机图形学领域中研究热点，本文在常用的层次结构包围盒树方法的基础上，
+碰撞检测算法一直是计算机动画和计算机图形学领域中研究热点，本文在层次结构包围盒树的基础上，
 利用构造模型的~$k$-CBP~进行预判剪枝，提出了一种基于~$k$-CBP~的碰撞检测算法。
 该方法首先构造模型的包围盒，通过包围盒相交检测的模型须通过~$k$-CBP~的相交检测才能进行真实模型的相交检测。
-本文在~$k$-CBP~之间的相交测试过程中，利用了一种基于包围盒树的方法和一种计算基于凸体模型之间的距离的方法进行相交测试，
+本文在~$k$-CBP~之间的相交测试过程中，利用了一种基于包围盒树的方法和一种基于计算凸体模型之间的最近距离的方法进行相交测试，
 实验结果表明该方法在静态或运动场景的碰撞检测环境中均达到良好的剪枝效果，有助于提高碰撞检测算法的效率。
 
 
@@ -92,24 +91,26 @@
 \ckeywords{凸包围体, 近似凸包, 并行计算, 碰撞检测}
 
 \begin{eabstract} 
-   [TODO] An abstract of a dissertation is a summary and extraction of research work
-   and contributions. Included in an abstract should be description of research
-   topic and research objective, brief introduction to methodology and research
-   process, and summarization of conclusion and contributions of the
-   research. An abstract should be characterized by independence and clarity and
-   carry identical information with the dissertation. It should be such that the
-   general idea and major contributions of the dissertation are conveyed without
-   reading the dissertation. 
+Bounding box is widely applied in computer-aided design, computer animation, computer graphics and related fields. 
+According to the property that it is simpier than the original model, the calculations between original models can be pruned if the precomputed bounding box do not intersect, so that the efficiency of the algorithms, such as geomtry intersection, ray tracing, collision detection and etc., can be increased.
+Convex bounding polyhedron, which is a generalization of bounding box,  can approximate a model with higher tightness compared to the corresponding bounding box in usual cases, and therefore, can be used to prune more calculations.
 
-   An abstract should be concise and to the point. It is a misunderstanding to
-   make an abstract an outline of the dissertation and words ``the first
-   chapter'', ``the second chapter'' and the like should be avoided in the
-   abstract.
+This paper proposes a method to construct the convex bounding polyhedron made of given $k$ faces (k-Convex Bounding Polyhedron, $k$-CBP for short) from a point set.
+Based on an algorithm with a linear time complexity to get an approximate convex hull from the input point set, 
+the algorithm generates $k$ normals by $k$-means algorithm from the normals of the approximate convex hull,  
+then searches the tangent point to generate a cutting plane along each normal and at last constructs the convex bounding polyhedron by getting the intersection of the cutting planes. 
+It is easy to use GPU to accelerate parallely  the searching process of the cutting planes which is independent between each other. 
+This paper provides methods on both OpenGL shader language and CUDA platform to parallelize it. 
+Technology of duality mapping in computional geometry is used to accelerate the process of getting the intersection of cutting planes. 
+Experiments show that the algorithm can construct tighter convex bounding polyhedron faster compared to the related algorithms from the given point set.
 
-   Key words are terms used in a dissertation for indexing, reflecting core
-   information of the dissertation. An abstract may contain a maximum of 5 key
-   words, with semi-colons used in between to separate one another.
+Collision detection has always been a hot topic in the field of the computer animation and computer graphics. 
+This paper proposes a method that uses the constructed $k$-CBP to avoid redundant operations between models if their $k$-CBPs do not intersect with each other based on the bounding volume hierarchies.
+This method first constructs the bounding box of models, the models do the intersection test should first pass the pruning intersection test of bounding boxes and then the intersection test of $k$-CBPs. 
+Bounding box hierachy and a method used to calculate the minimized distance between two convex objects are used during the process of intersection test between $k$-CBPs. 
+Experiments illustrate that this method can achieve good pruning effects in both static and moving environments so that it is able to speed up the process of collision detection.
+
 \end{eabstract}
 
-\ekeywords{Convex bounding volume, Approximate Convex hull, Parallel computing,
+\ekeywords{Convex bounding volume, Approximate convex hull, Parallel computing,
 Collision detection}
