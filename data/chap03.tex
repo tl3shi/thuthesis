@@ -161,10 +161,11 @@ AABB~树的根节点 $root$
 GJK~算法是~E.G.Gilbert，D. W. Jonhson~和S.S. Keerthi（取三位作者姓名首字母作为算法名称的缩写）~等人在1988年发表的一种用于计算三维欧式空间中两个凸集合点之间的最近距离的方法\cite{gilbert1988fast}，后常用于凸体之间的碰撞检测算法\cite{bergen1999fast}。本文也利用此算法用于计算两个凸包围多面体~$k$-CBP~之间的相交测试。
 
 GJK~算法需要用到闵科夫斯基和（Minkowski Sum）如下定义：两个点集~$\mathbb{A}$~和~$\mathbb{B}$~，其~Minkowski~和为
-\begin{equation}
-  \mathbb{A} + \mathbb{B} = \{ \bm{a} + \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\},  
-  \label{}
-\end{equation}
+%\begin{equation}
+%  \mathbb{A} + \mathbb{B} = \{ \bm{a} + \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\},  
+%  \label{}
+%\end{equation}
+~$\mathbb{A} + \mathbb{B} = \{ \bm{a} + \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\}$， 
 将相应的加号改为减号得到~Minkowski~差，即~$\mathbb{A} - \mathbb{B} = \{ \bm{a} - \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\} $，GJK~算法的核心基础在于若两个凸体相交，则其~Minkowski~差必包含原点，因为若~$\mathbb{A}$~和
 ~$\mathbb{B}$~相交即~$\mathbb{A}$~和~$\mathbb{B}$~必含有公共交集，
 即至少含有一点同时属于~$\mathbb{A}$~和~$\mathbb{B}$~，该点的~Minkowski~差即为原点~$(0, 0)$，
@@ -247,7 +248,7 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
 \label{fig:gjk:example:2d:intersection:iterator}
 \end{figure}
 
-具体而言，仍以图~\ref{fig:gjk:example:intersection}~为例，令四边形~$DEFG$~为~$\mathbb{A}$~，三角形~$ABC$~为~$\mathbb{B}$~，
+具体而言，仍以图~\ref{fig:gjk:example:intersection}~为例，令四边形~$DEFG$~为~$\mathbb{A}$~，三角形~$ABC$~为~$\mathbb{B}$~，迭代过程如下：\\ \indent
 \begin{inparaenum}[(1)]
 \item 第一次迭代不妨设~$\bm{d_1} = (1,0)$，
 如图~\ref{fig:gjk:example:intersection:step1}~所示，
@@ -259,8 +260,8 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
 %  \label{euqa:gjk:step1}
 %\end{equation*}
 $Support_\mathbb{D}(\bm{d_1})  = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{B}(-\bm{d_1})  = E(-2.5, 2) - A(-3,1) = D_1(0.5, 1),$
-此时，$\bm{S} = \{D_1(0.5, 1)\}$；
-\item 第二次迭代取~$\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，
+此时，$\bm{S} = \{D_1(0.5, 1)\}$；\\ \indent
+\item 第二次迭代取~$\bm{d_2}=-\bm{D_1}=(-0.5, -1)$，如图~\ref{fig:gjk:example:intersection:step2}~所示，
 %\begin{equation*}
 %  \begin{array}{ll}
 %  Support_\mathbb{D}(\bm{d_2})  & = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2}) \\
@@ -269,7 +270,7 @@ $Support_\mathbb{D}(\bm{d_1})  = Support_\mathbb{A}(\bm{d_1}) - Support_\mathbb{
 %  \label{euqa:gjk:step2}
 %\end{equation*}
 $Support_\mathbb{D}(\bm{d_2})   = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb{B}(-\bm{d_2})  = D(-4, 2) - B(-1, 3) = D_2(-3, -1),$
-此时，$\bm{S} = \{D_1(-0.5, 1), D_2(-3, -1)\}$；
+此时，$\bm{S} = \{D_1(-0.5, 1), D_2(-3, -1)\}$；\\ \indent
 \item 第三次迭代，计算~$ConvexHull(S)$~中最小二范数的点为~$I(-4/13, 7/13)$~，
 并令~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
 %\begin{equation*}
@@ -300,7 +301,6 @@ $ Support_\mathbb{D}(\bm{d_3})  = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb
 %\end{equation*}
 %如图~\ref{fig:gjk:example:intersection:step3}~所示，$ConvexHull(S)$~为阴影部分覆盖区域，因其包含原点结束迭代，因此~$\mathbb{A}$~和~$\mathbb{B}$~相交。
 
-再以图~\ref{fig:gjk:example:nonIntersection}~为例，设三角形$\mathbb{B'} = A'B'C'$，该例前两次迭代与上例相同，此处省略直接从第三次迭代起，
 \begin{figure}[H]
 \centering
 \subcaptionbox{第三次迭代\label{fig:gjk:example:nonIntersection:step3}}{
@@ -312,41 +312,44 @@ $ Support_\mathbb{D}(\bm{d_3})  = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb
 \caption{二维~GJK~算法迭代示例（不相交情况）}
 \label{fig:gjk:example:2d:intersection:iterator}
 \end{figure}
-第三次迭代，$\bm{S} = \{(D_1', D_2') \}$，此时~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
-\begin{equation*}
-  \begin{array}{ll}
-  Support_\mathbb{D}(\bm{d_3})  & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B'}(-\bm{d_3}) \\
-    & = E(-2.5, 2) - C'(-1, 3) = D_3'(-1.5, -1)
-  \end{array}
-  \label{euqa:gjk:non:step3}
-\end{equation*}
-%$ Support_\mathbb{D}(\bm{d_3})   = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B'}(-\bm{d_3}) = E(-2.5, 2) - C'(-1, 3)  = D_3'(-1.5, -1),$
-此时$\bm{S} = \{D_1'(0.5, 1), D_2'(-3, -1), D_3(-1.5, -1)\}$，如图~\ref{fig:gjk:example:nonIntersection:step3}~所示，与上例不同，此时~$ConvexHull(S)$~并不包含原点，所以继续迭代，
-计算~$\bm{S}$~中二范数最小的点为~$I_2(-1/4, 1/4)$~，并规约集合~$\bm{S}$，点~$D_2'$~可去掉，
-变为$\bm{S} = \{ (D_1'(0.5, 1), D_3'(-1.5, -1)\}$，并令~$\bm{d}_4 = -I_2 = (1/4, -1/4)$，
-\begin{equation*}
-  \begin{array}{ll}
-  Support_\mathbb{D}(\bm{d_4})  & = Support_\mathbb{A}(\bm{d_4}) - Support_\mathbb{B'}(-\bm{d_4}) \\
-    & = E(-2.5, 2) - C'(-1, 3) \textrm{~或~} A'(-3, 1)  \\
-    & = D_3'(-1.5, -1) \textrm{~或~} D_1'(0.5, 1)
-  \end{array}
-  \label{euqa:gjk:non:step4}
-\end{equation*}
-%$Support_\mathbb{D}(\bm{d_4})   = Support_\mathbb{A}(\bm{d_4}) - Support_\mathbb{B'}(-\bm{d_4}) = E(-2.5, 2) - C'(-1, 3) \textrm{~或~} A'(-3, 1)   = D_3'(-1.5, -1) \textrm{~或~} D_1'(0.5, 1),$
+再以图~\ref{fig:gjk:example:nonIntersection}~为例，设三角形$\mathbb{B'} = A'B'C'$，该例前两次迭代与上例相同，此处省略直接从第三次迭代起：\\ \indent
+\begin{inparaenum}[(1)]
+\item 第三次迭代，此时~$\bm{S} = \{(D_1', D_2') \}$，令~$\bm{d_3}=-\bm{I}=(4/13, -7/13)$，
+%\begin{equation*}
+%  \begin{array}{ll}
+%  Support_\mathbb{D}(\bm{d_3})  & = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B'}(-\bm{d_3}) \\
+%    & = E(-2.5, 2) - C'(-1, 3) = D_3'(-1.5, -1)
+%  \end{array}
+%  \label{euqa:gjk:non:step3}
+%\end{equation*}
+$ Support_\mathbb{D}(\bm{d_3})   = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B'}(-\bm{d_3}) = E(-2.5, 2) - C'(-1, 3)  = D_3'(-1.5, -1),$
+此时$\bm{S} = \{D_1'(0.5, 1), D_2'(-3, -1), D_3(-1.5, -1)\}$，如图~\ref{fig:gjk:example:nonIntersection:step3}~所示，与上例不同，此时~$ConvexHull(S)$~并不包含原点，
+所以规约集合~$\bm{S} = \{ (D_1'(0.5, 1), D_3'(-1.5, -1)\}$；\\ \indent
+\item 第四次迭代，计算~$\bm{S}$~中二范数最小的点为~$I_2(-1/4, 1/4)$~，并令~$\bm{d}_4 = -I_2 = (1/4, -1/4)$，
+%\begin{equation*}
+%  \begin{array}{ll}
+%  Support_\mathbb{D}(\bm{d_4})  & = Support_\mathbb{A}(\bm{d_4}) - Support_\mathbb{B'}(-\bm{d_4}) \\
+%    & = E(-2.5, 2) - C'(-1, 3) \textrm{~或~} A'(-3, 1)  \\
+%    & = D_3'(-1.5, -1) \textrm{~或~} D_1'(0.5, 1)
+%  \end{array}
+%  \label{euqa:gjk:non:step4}
+%\end{equation*}
+$Support_\mathbb{D}(\bm{d_4})   = Support_\mathbb{A}(\bm{d_4}) - Support_\mathbb{B'}(-\bm{d_4}) = E(-2.5, 2) - C'(-1, 3) \textrm{~或~} A'(-3, 1)   = D_3'(-1.5, -1) \textrm{~或~} D_1'(0.5, 1),$
 此时，并没有新的~$Support_\mathbb{D}(\bm{d})$~产生，结束迭代，$\mathbb{A}$~和~$\mathbb{B}$~不相交。
+\end{inparaenum}
 
 在实际计算过程中，并不需要计算离原点最近即二范数最小的点的具体坐标值，只需选择垂直已有方向再进行判断选择方向即可，以图~\ref{fig:gjk:example:intersection:step3}~为例，
 此时~$\overrightarrow{D_1D_2} = D_2(-3, -1) - D_1(0.5, 1) = (-3.5, -2)$，此时只需令~
 $\bm{d_3'} = \overrightarrow{D_1D_2} \times \overrightarrow{D_1O} \times \overrightarrow{D_1D_2} = -(\overrightarrow{D_1D_2} \cdot \overrightarrow{D_1O})\overrightarrow{D_1D_2} +
 (\overrightarrow{D_1D_2} \cdot \overrightarrow{D_1D_2})\overrightarrow{D_1O} = (5,-8.75)$
 \footnote{$\bm{a} \times \bm{b} \times \bm{c} = -(\bm{c}\cdot\bm{b})\bm{a}+(\bm{c}\cdot\bm{a})\bm{b}$}，
-\begin{equation*}
-  \begin{array}{ll}
-  Support_\mathbb{D}(\bm{d_3'})  & = Support_\mathbb{A}(\bm{d_3'}) - Support_\mathbb{B'}(-\bm{d_3'}) \\
-    & = E(-2.5, 2) - C(-3, 3) = D_3(0.5, -1) 
-  \end{array}
-\end{equation*}
-%$  Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\mathbb{B'}(-\bm{d_3'})  = E(-2.5, 2) - C(-3, 3)  = D_3(0.5, -1),$
+%\begin{equation*}
+%  \begin{array}{ll}
+%  Support_\mathbb{D}(\bm{d_3'})  & = Support_\mathbb{A}(\bm{d_3'}) - Support_\mathbb{B'}(-\bm{d_3'}) \\
+%    & = E(-2.5, 2) - C(-3, 3) = D_3(0.5, -1) 
+%  \end{array}
+%\end{equation*}
+$  Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\mathbb{B'}(-\bm{d_3'})  = E(-2.5, 2) - C(-3, 3)  = D_3(0.5, -1),$
 得到的~$Support_\mathbb{D}(d_3')$~仍为~$D_3(0.5,-1)$，与选择二范数最小点~$I$~所代表的方向达到相同的结果，因为选择二范数最小点的坐标代表方向与该垂直方向相同，因此结果一致。
 
 判断原点是否被阴影部分面积所覆盖的过程如下：\\ \indent
