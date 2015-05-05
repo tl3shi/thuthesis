@@ -643,7 +643,7 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
               \If{$ p_1 \nparallel p_2 \nparallel p_3$}
                   \If{$|A| \not= 0$}
                       \State $P = \Call{vec3}{x_1, x_2, x_3}$
-                      \Comment{按照公式~\ref{equa:solution:three-planes}~计算得到交点坐标值} 
+                      \Comment{按照公式（\ref{equa:solution:three-planes}）计算得到交点坐标值} 
                       \If{\Call{validate}{P}}
                         \State \Comment{验证交点P是否都在半空间负方向上}
                         \State $Intersection \gets Intersection \cup P$

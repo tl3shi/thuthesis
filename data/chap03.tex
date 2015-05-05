@@ -386,10 +386,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 具体的算法如算法~\ref{alg:gjk}~所示，文献~\onlinecite{bergen1999fast}~证明了集合~$\bm{S}$~中在三维空间最多只包含4个点，且算法最终会收敛。
 在实际实现过程中可以根据需求设定最大迭代次数，达到后或者认为没找到相交点或者采取保守态度进行下一步验证。
 
-算法~\ref{alg:gjk}~第~12~行~$CHECKCONTAINUPDATE$~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
-具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
-
-\begin{algorithm}[!ht]
+\begin{algorithm}[htbp]
 \small
 \caption{基于~GJK~的~$k$-CBP~相交检测算法}
 \label{alg:gjk}
@@ -419,11 +416,15 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 \end{algorithmic}
 \end{algorithm}
 
+算法~\ref{alg:gjk}~第~12~行~$CHECKCONTAINUPDATE$~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
+具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
+
+\FloatBarrier
 \section{三角网格的相交测试算法}
 \label{sec:intersection:triangles}
 
 所有针对三角网格模型的碰撞检测算法最终都离不开三角网格的相交测试，不管模型是用何种包围体采用几何或者代数的方法都需要进行三角网格的相交测试。本文将利用一种几何代数相结合的方法进行三角网格之间的相交测试。
-具体而言，假设两个不同面的三角形所在平面交于直线~$\bm{L}$~，两个三角形位置关系分为相交或者不相交两种情况，如图~\ref{fig:two:triangle:ui}所示。
+具体而言，假设两个不同面的三角形所在平面交于直线~$\bm{L}$~，两个三角形位置关系分为相交或者不相交两种情况，如图~\ref{fig:two:triangle:ui}~所示。
 
 \begin{figure}[!ht]
   \centering
@@ -453,8 +454,13 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 %\end{enumerate}
 \end{inparaenum}
 
-同理可以根据三角形~$T_1$~到三角形~$T_2$~所在平面~$\Pi_2$~得到类似的情况。针对情况（1），共面的两个三角形求交可以通过两个三角形中三条线段两两判定是否相交最多9次线段线段求交判定可得，或者通过我们在文献~\onlinecite{linjianli2014}~中提出的方法进行，该方法对线段三角形的位置做了详细的分类可通过不超过~6~次线段线段求交判定；针对情况（2），计算出有向距离同号后即可排除相交立即返回；
-针对情况（3），如图~\ref{fig:two:triangle:ui2}~所示，不妨设在三角形~$T_1$~中，点~$\bm{V}_1, \bm{V}_2$~在平面~$\Pi_2$的一侧，$\bm{V}_3$~在另外一侧，
+同理可以根据三角形~$T_1$~到三角形~$T_2$~所在平面~$\Pi_2$~得到类似的情况。
+
+针对情况（1），共面的两个三角形求交可以通过两个三角形中三条线段两两判定是否相交最多9次线段线段求交判定可得，或者通过我们在文献~\onlinecite{linjianli2014}~中提出的方法进行，该方法对线段三角形的位置做了详细的分类可通过不超过~6~次线段线段求交判定；
+
+针对情况（2），计算出有向距离同号后即可排除相交立即返回；
+
+针对情况（3），如图~\ref{fig:two:triangle:ui2}~所示，不妨设在三角形~$T_1$~中，点~$\bm{V}_1, \bm{V}_2$~在~$\Pi_2$的一侧，$\bm{V}_3$~在另外一侧，
 且点~$\bm{V}_1, \bm{V}_2$~在平面上投影点分别为~$\bm{K}_1,\bm{K}_2$，线段~$\bm{V}_1\bm{V}_2, \bm{V}_2\bm{V}_3$~与~$\bm{L}$~分别交于点~$\bm{I}_1,\bm{I}_2$，点~$\bm{V}_1,\bm{V}_2$~向直线~$\bm{L}$~的投影点分别为~$\bm{P}_1,\bm{P}_2$，
 三角形~$T_1$~交于直线~$\bm{L}$~与线段~$\overline{I_1I_2}$。%，现在目的是求$I_1I_2$。
 
@@ -471,10 +477,9 @@ $p_1 = \bm{n}_L \cdot(\bm{V}_1 - \bm{O}), p_2 = \bm{n}_L \cdot (\bm{V}_2 - \bm{O
 $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_1 \sim \bigtriangleup V_2K_2I_1$，可得
 \begin{equation}
   \frac{t_1 - p_1}{p_2-p_1} = \frac{l_{11}}{l_{11}-l_{12}} \Rightarrow \newline
-   t_1 = (p_2-p_1)\frac{l_{11}}{l_{11}-l_{12}} + p_1
+   t_1 = (p_2-p_1)\frac{l_{11}}{l_{11}-l_{12}} + p_1,
   \label{equa:triangle:intersectionline:param}
 \end{equation}
-
 同理可得~$\bm{I}_2$~的参数~$t_2$，三角形~$T_2$~用相同的方法也能得到区间的参数，即可判断两个区间线段是否相交，进而可得该非共面的两个三角形是否相交。
 完整的算法如~\ref{alg:triangles:intersection}~所示。
 
@@ -523,6 +528,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 \end{algorithmic}
 \end{algorithm}
 
+\FloatBarrier
 \section{基于 $k$-CBP 的碰撞检测算法}
 \label{sec:cd:baseon:kcbp}
 
@@ -551,17 +557,17 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
   \label{fig:bunny:aabb:bvh:toplayer4}
 \end{figure}
 
+整体的碰撞检测算法流程图如图~\ref{fig:flowchart:cd}~所示，首先扫描所有输入模型点集，对每个模型计算其包围盒，然后计算要参与碰撞检测的模型的包围盒对进行相交测试，
+假设参与碰撞检测的模型的包围盒相交的对数为~$n_1$，再对这~$n_1$~对模型计算其~$k$-CBP~并进行初始化，如构造~$k$-CBP~的~AABB~树、初始化~GJK~算法，并计算~$k$-CBP~
+是否相交，此步骤后剩余模型对数为~$n_2$，最后再对这~$n_2$~对模型进行构造~AABB~树进而进行相交测试，真实模型相交对数为~$n_3$。
+整个流程中，包围盒的命中率为~$n_3 / n_1$，$k$-CBP~的命中率为~$n_3/n_2$。
+
 \begin{figure}[htpb]
   \centering
   \includegraphics[width=\textwidth]{collision-detection-flowchart.pdf}
   \caption{基于~$k$-CBP~的碰撞检测算法流程图}
   \label{fig:flowchart:cd}
 \end{figure}
-
-整体的碰撞检测算法流程图如图~\ref{fig:flowchart:cd}~所示，首先扫描所有输入模型点集，对每个模型计算其包围盒，然后计算要参与碰撞检测的模型的包围盒对进行相交测试，
-假设参与碰撞检测的模型的包围盒相交的对数为~$n_1$，再对这~$n_1$~对模型计算其~$k$-CBP~并进行初始化，如构造~$k$-CBP~的~AABB~树、初始化~GJK~算法，并计算~$k$-CBP~
-是否相交，此步骤后剩余模型对数为~$n_2$，最后再对这~$n_2$~对模型进行构造~AABB~树进而进行相交测试，真实模型相交对数为~$n_3$。
-整个流程中，包围盒的命中率为~$n_3 / n_1$，$k$-CBP~的命中率为~$n_3/n_2$。
 
 \subsection{运动场景中的碰撞检测算法}
 \label{subsec:moving:cd}
@@ -726,7 +732,7 @@ AABB包围盒 $box$，
 在基于~GJK~的~$k$-CBP~碰撞检测算法中，只需要改变算法~\ref{alg:gjk}~中~$Support$~子过程，将变换矩阵应用到原始顶点进行计算得到新的支持点即可，而在连续运动的模型碰撞检测过程中，
 利用爬山法可以将支持点的搜索优化到常数时间复杂度\cite{bergen1999fast}。
 
-
+\FloatBarrier
 \section{实验结果}
 \label{sec:exper-cd}
 本章的实验主要分为3个部分，首先从~$k$-CBP~应用与碰撞检测的有效性上与仅用包围盒过滤算法进行对比，然后分别从静止场景和运动场景中与文献~\onlinecite{abenchmarking2007}中的基于~$k$-DOP~树的算法对比。
@@ -764,7 +770,7 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 %\end{landscape}
 
 如表~\ref{tab:exp:box:kcbp:collsiondetection}~所示，
-其中~$n$~表示场景中模型的数量， CT(Box)、 CT($16$-CBP)~分别表示模型包围盒的构造时间（Construction Time，简称~CT）和凸包围16面体的构造时间\footnote{此处的时间为得到一个$k$-CBP后直接通过应用变换矩阵得到新的$k$-CBP总时间
+其中~$n$~表示场景中~Bunny~模型的数量，CT(Box)、 CT($16$-CBP)~分别表示模型包围盒的构造时间（Construction Time，简称~CT）和凸包围16面体的构造时间\footnote{此处的时间为得到一个~$k$-CBP~后直接通过应用变换矩阵得到新的~$k$-CBP~总时间
 且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}， DT(Box)、DT($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间（Detection Time，简称~DT），
 其中~r(Box)、r($16$-CBP)分别表示包围盒、16-CBP~的命中率（即用实际模型相交的数量除以包围体检测出来相交的数量）， DP(Model)~检测到的模型实际相交的对数（Detection Pair，简称~DP），
 显然计算模型包围盒所耗费的时间要明显少于计算凸包围多面体的时间，但由于凸包围多面体比包围盒紧致，
@@ -876,7 +882,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \label{chart:exps:kdop:kcbp:bunny}
 \end{figure}
 
-图~\ref{chart:exps:kdop:kcbp:bunny}~为本文的两种算法和文献~\onlinecite{abenchmarking2007,zachmann1998rapid}~中基于~$k$-DOP~的实现的实验结果的曲线展示图，
+图~\ref{chart:exps:kdop:kcbp:bunny}~为本文的两种算法和文献~\onlinecite{abenchmarking2007}~中基于~$k$-DOP~的实现的实验结果的曲线展示图，
 从图~\ref{chart:exps:kdop:kcbp:bunny:init}~可以看出，初始化构造~$k$-DOP~树和本文算法初始化所耗费时间与参与碰撞检测的模型的数量近线性关系，但明显本文算法所耗费时间更少，
 图~\ref{chart:exps:kdop:kcbp:bunny:cd}~为初始化碰撞检测环境后进行碰撞检测所耗费的时间，本文的两种算法和基于~$k$-DOP~的算法相比，碰撞检测所耗费的时间相差不大，
 总体来说针对~Bunny~模型而言，基于$k$-CBP~结合~AABB~树算法所耗费时间稍微较少，但三者相差不大，整体相差在~1--4~毫秒范围内。
@@ -928,7 +934,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \label{fig:chart:exps:kdop:kcbp:k46}
 \end{figure}
 
-对于更大的~$k$~值，构造层次结构的$k$-DOP~树时会耗费更多的时间和存储空间，在模型较大且模型数量较多时，以文献~\onlinecite{abenchmarking2007,zachmann1998rapid}~中最大的~$k$值为46~为例，例如当对~70~个~Dinosaur~模型进行构造~$k$-DOP~树时，32位应用程序已经会报内存不足的异常，且构造时间也更久，图~\ref{fig:chart:exps:kdop:kcbp:k46}~为~$k$-DOP~实现中的最大值~$k=46$~的实验结果。
+对于更大的~$k$~值，构造层次结构的$k$-DOP~树时会耗费更多的时间和存储空间，在模型较大且模型数量较多时，以文献~\onlinecite{abenchmarking2007}~中最大的~$k$值为46~为例，32位应用程序已经满足不了构造~70~个~Dinosaur~模型~的~$k$-DOP~树，且构造时间也更久，图~\ref{fig:chart:exps:kdop:kcbp:k46}~为~$k$-DOP~实现中的最大值~$k=46$~的实验结果。
 
 更大的~$k$~值不一定能够使碰撞检测的效率提高，这与具体的碰撞检测环境有关，以~Bunny~模型和~Apple~模型为例，如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46}~为~$k=24$~和~$k=46$~的结果对比，
 其中，虚线的结果为~$k=46$~的结果，实现为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
@@ -1104,7 +1110,7 @@ $moves$ & DT($k$-CBP)(AABB) &DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(M
 本文基于~$k$-CBP~的两种碰撞检测算法步调一致，如~Hand~模型在~$moves=700$~时都耗时较久，因为两种算法在~$k$-CBP~相交后，都是利用~AABB~树进行对真实模型的碰撞检测，且此时~AABB~包围盒节点相交检测较多，达到~5~万多次，因此耗时较久。
 整体来看，在运动场景的碰撞检测环境中，本文基于$k$-CBP~结合~GJK~的算法在一定程度上有一定优势，而基于$k$-DOP~算法相对较稳定，但其初始化时间很长。
 
-\begin{figure}[htbp] 
+\begin{figure}[H] 
 \centering
 \subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:static:k24:k46:bunny:dynamic}}
 {  
@@ -1122,6 +1128,7 @@ $moves$ & DT($k$-CBP)(AABB) &DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(M
 如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}~为~$k=24$~和~$k=46$~的结果对比，其中，虚线的结果为~$k=46$~的结果，实线为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
 选择不同的~$k$~值。
 
+\FloatBarrier
 \section{本章小结}
 \label{sec:chap03:summary}
 

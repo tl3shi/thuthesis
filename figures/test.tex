@@ -1,0 +1,30 @@
+\documentclass[a4paper]{article}
+\usepackage{ctex}
+\usepackage{pgfplots}
+\usepgfplotslibrary{colormaps}
+\pgfplotsset{compat=newest}
+\usepackage[graphics,tightpage,active]{preview}
+\usepackage{filecontents}
+
+\setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
+\begin{document}
+
+\pgfplotsset{
+  legend style={font=\footnotesize}
+}
+
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=appleNew model(8118 points),
+    scale only axis, 
+    %axis y line*=left,
+    legend pos=north west,
+    legend entries={CT($k$-CBP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[red] table [x=n, y=value] {experiments/test.csv};
+\end{axis}
+\end{tikzpicture}
+
+\end{document}
