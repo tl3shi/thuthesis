@@ -31,7 +31,7 @@
 \section{凸包围体}
 \label{sec:convex-bv}
 
-对于“凸”定义\cite{Preparata1985Introduction}如下（以二维欧式空间为例）：
+对于“凸”定义\cite{dengcg}如下（以二维欧式空间为例）：
 给定点集~$S = \{p_1, ..., p_n\} \subseteq E^2$，如果有
 $\lambda = (\lambda_1,...,\lambda_n)^T \in R^n, \lambda_1 + ... + \lambda_n = 1
 $~且~ $min\{\lambda_1,...\lambda_n\} \geq 0$，我们称点 $p = (p_1, ... ,
@@ -171,7 +171,9 @@ $dop_1, dop_2, k$
   \caption{Convex hull 包围体}
   \label{fig:convexhull-bunny}
 \end{figure}
-常用的凸包构造算法有~Gift Wrapping~\cite{Chand1970An}，时间复杂度最坏情况下为~$O(n^2)$，构造凸包的算法时间复杂度下限为~$O(n\log n)$，如~Preparata~提出的分治算法\cite{Preparata1977}。
+常用的凸包构造算法\cite{dengcg}有~Gift Wrapping~%\cite{Chand1970An}
+，时间复杂度最坏情况下为~$O(n^2)$，构造凸包的算法时间复杂度下限为~$O(n\log n)$，如~Preparata~提出的分治算法%\cite{Preparata1977}
+。
 当模型点集较大时，包围体涉及到的面片数量太多，做相交测试等相关计算时耗费时间较久，同时也耗费较多存储空间。因此~Convex hull~包围体不太适用于大模型。
 为此有学者在一些应用中用到近似凸包，
 近似凸包可分为三类：近似外凸包、近似内凸包和近似凸包\cite{hossain2013constructing}，近似内凸包完全在精确凸包内部，近似外凸包完全包含精确凸包，近似凸包即与精确凸包有相交的区域。
