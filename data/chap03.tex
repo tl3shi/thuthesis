@@ -233,7 +233,7 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
 %\end{enumerate}
 \end{inparaenum}
 
-\begin{figure}[htbp]
+\begin{figure}[!ht]
 \centering
 \subcaptionbox{第一次迭代\label{fig:gjk:example:intersection:step1}}{
   \includegraphics[width=.48\textwidth]{gjkExampleIntersectionStep1.tikz}
@@ -389,7 +389,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 算法~\ref{alg:gjk}~第~12~行~$CHECKCONTAINUPDATE$~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
 具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
 
-\begin{algorithm}[htbp]
+\begin{algorithm}[!ht]
 \small
 \caption{基于~GJK~的~$k$-CBP~相交检测算法}
 \label{alg:gjk}
@@ -425,7 +425,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 所有针对三角网格模型的碰撞检测算法最终都离不开三角网格的相交测试，不管模型是用何种包围体采用几何或者代数的方法都需要进行三角网格的相交测试。本文将利用一种几何代数相结合的方法进行三角网格之间的相交测试。
 具体而言，假设两个不同面的三角形所在平面交于直线~$\bm{L}$~，两个三角形位置关系分为相交或者不相交两种情况，如图~\ref{fig:two:triangle:ui}所示。
 
-\begin{figure}[htbp]
+\begin{figure}[!ht]
   \centering
     \includegraphics[width=4.5in]{TriangleTriangleTest.pdf}
     \caption{空间中两个非共面三角形的位置关系\cite{Moller1997}}
@@ -567,7 +567,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 \label{subsec:moving:cd}
 
 当在运动场景中的模型进行碰撞检测时，模型中的点坐标会更新，一种方法是重新计算模型中的所有点再以相同的流程和步骤对模型做碰撞检测，但当模型点数量较大时，耗时太久因此该方法不可取；
-另外一种算法是仍然利用静态场景中的~AABB~树形结构，仅重新计算将要碰撞的节点的坐标值，进而进行相交检测。
+另外一种算法是仍然利用静止场景中的~AABB~树形结构，仅重新计算将要碰撞的节点的坐标值，进而进行相交检测。
 节点包围盒坐标在运动过程中发生变化，精确的包围盒是重新计算该节点包含原始模型的点在变化后的点坐标值的包围盒，本文利用一种近似算法即仅对包围盒的~8~个顶点进行转换
 然后计算这8个顶点的包围盒，用这个近似包围盒进行遍历剪枝，当到叶子节点后，再重新计算网格模型的点的新坐标值用同样的方法进行相交检测。
 
@@ -666,7 +666,7 @@ AABB包围盒 $box$，
 \end{algorithm}
 
 
-\begin{algorithm}[htbp]
+\begin{algorithm}[!ht]
 \small
 \caption{运动场景中基于~AABB~树碰撞检测算法}
 \label{alg:moving:cd}
@@ -772,7 +772,7 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 
 \subsection{静止场景中与~$k$-DOP~算法对比}
 \label{subsec:exper:kdop:kcbp:static}
-在静态场景中的碰撞检测实验中，本文生成不同数量的模型，其位置和旋转角度随机生成（$k$-DOP~和~$k$-CBP~采用相同的随机生成的数据），图~\ref{fig:static:cd:bunny}~为~Bunny~模型在模拟碰撞检测的实验实例。
+在静止场景中的碰撞检测实验中，本文生成不同数量的模型，其位置和旋转角度随机生成（$k$-DOP~和~$k$-CBP~采用相同的随机生成的数据），图~\ref{fig:static:cd:bunny}~为~Bunny~模型在模拟碰撞检测的实验实例。
 
 \begin{figure}[htbp]
 \centering
@@ -800,7 +800,7 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 \subcaptionbox{n=80}{
   \includegraphics[width=.22\textwidth]{bunny-static-80.png}
 }\\
-\caption{静态场景下~Bunny~模型碰撞检测示例}
+\caption{静止场景下~Bunny~模型碰撞检测示例}
 \label{fig:static:cd:bunny}
 \end{figure}
 
@@ -810,9 +810,9 @@ $k$-CBP~以及用于实际模型碰撞检测算法的~AABB~树，DT($k$-DOP)、D
 DT($k$-CBP)($AABB$)~为通过第~\ref{subsec:kcbp:cd:aabb}~节中介绍的~AABB~方法对~$k$-CBP~进行相交检测（包括构造~$k$-CBP~的~AABB~树所耗费的时间），
 而~DT($k$-CBP)($GJK$)~表示通过第~\ref{subsec:kcbp:cd:gjk}~节中介绍的~GJK~方法对~$k$-CBP~进行相交检测，相应的时间都包括~$k$-CBP~相交后对模型进行~AABB~相交检测时间。
 
-\begin{table}[htbp]  
+\begin{table}[!ht]  
 \centering
-\caption{静态场景下本文算法与~$k$-DOP~结果对比（Bunny）}
+\caption{静止场景下本文算法与~$k$-DOP~结果对比（Bunny）}
 \label{tab:exp:bunny:k24:kdop:kcbp}
 \begin{tabular}{cccccccc}
 \toprule[1.5pt]
@@ -841,7 +841,7 @@ DP(Box)~和~DP(Model)~表示包围盒相交的对数和实际模型碰撞的对�
 
 \begin{table}[htbp]  
 \centering
-\caption{静态场景下本文算法实验结果（Bunny）}
+\caption{静止场景下本文算法实验结果（Bunny）}
 \label{tab:exp:bunny:k24:kdop:kcbp:detail}
 \begin{tabular}{cccccc}
 \toprule[1.5pt]
@@ -861,7 +861,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 \end{tabular}
 \end{table}
 
-\begin{figure}[htbp] 
+\begin{figure}[!ht] 
 \centering
 \subcaptionbox{初始化时间对比\label{chart:exps:kdop:kcbp:bunny:init}}
 {
@@ -872,7 +872,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
    \includegraphics[width=0.43\textwidth,page=2]{staticcd.pdf}
 }
-\caption{静态场景下本文算法与~$k$-DOP~实验结果对比（Bunny）}
+\caption{静止场景下本文算法与~$k$-DOP~实验结果对比（Bunny）}
 \label{chart:exps:kdop:kcbp:bunny}
 \end{figure}
 
@@ -899,7 +899,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=6]{staticcd.pdf}
 }
-\caption{静态场景下本文算法与~$k$-DOP~实验结果对比(k=24)}
+\caption{静止场景下本文算法与~$k$-DOP~实验结果对比(k=24)}
 \label{fig:chart:exps:kdop:kcbp:k24}
 \end{figure}
 
@@ -924,7 +924,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=10]{staticcd.pdf}
 }
-\caption{静态场景下本文算法与~$k$-DOP~实验结果对比(k=46)}
+\caption{静止场景下本文算法与~$k$-DOP~实验结果对比(k=46)}
 \label{fig:chart:exps:kdop:kcbp:k46}
 \end{figure}
 
@@ -934,7 +934,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 其中，虚线的结果为~$k=46$~的结果，实现为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
 选择不同的~$k$~值。
 
-\begin{figure}[htbp] 
+\begin{figure}[!ht] 
 \centering
 \subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:static:k24:k46:bunny}}
 {  
@@ -944,7 +944,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
     \includegraphics[width=\fourgraphicswidth\textwidth, page=13]{staticcd.pdf}
 }
-\caption{静态场景下不同~$k$~值实验结果对比}
+\caption{静止场景下不同~$k$~值实验结果对比}
 \label{fig:chart:exp:kdop:kcbp:k24:k46}
 \end{figure}
 
@@ -955,7 +955,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 然后令其中一个模型产生随机平移旋转变换进行运动，检测该运动模型与其他所有的模型进行碰撞检测，图~\ref{fig:dynamic:cd:bunny}~为随机产生的10个模型，
 并让其中一个随机运动~7~步的示意图，示例中，对于没有和运动模型产生碰撞的模型，图中仅显示了其包围盒和~$k$-CBP。
 
-\begin{figure}[htbp]
+\begin{figure}[!ht]
 \centering
 \subcaptionbox{$move=0$}{
   \includegraphics[width=.22\textwidth]{dynamic-bunny-m10-s0.png}
@@ -1118,7 +1118,7 @@ $moves$ & DT($k$-CBP)(AABB) &DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(M
 \label{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}
 \end{figure}
 
-与在静态场景的碰撞检测环境一样，在运动场景的碰撞检测环境中，更大的~$k$~值也不一定能够使碰撞检测的效率提高，仍以~Bunny~模型和~Apple~模型为例（模型数量~$n=10$），
+与在静止场景的碰撞检测环境一样，在运动场景的碰撞检测环境中，更大的~$k$~值也不一定能够使碰撞检测的效率提高，仍以~Bunny~模型和~Apple~模型为例（模型数量~$n=10$），
 如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}~为~$k=24$~和~$k=46$~的结果对比，其中，虚线的结果为~$k=46$~的结果，实线为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
 选择不同的~$k$~值。
 

@@ -303,7 +303,7 @@ RTT~的算法一般是在片段着色器（Fragment Shader）中完成，有时�
 算法将输入点分成~$x$~份，每次只处理一份，在当前渲染过程中，找出在该批点集中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复~$x$~次，
 当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过~CPU~一次性从帧缓冲中读取所有法向的切点。
 
-\lstinputlisting[language={shader}, caption={基于乒乓技术算法着色器代码}, label=shader:pingpong]{shader_rrt_pingpong.frag}
+\lstinputlisting[float=!ht, language={shader}, caption={基于乒乓技术算法着色器代码}, label=shader:pingpong]{shader_rrt_pingpong.frag}
 
 与~Z Buffer~算法相比，基于乒乓技术的算法在进行一次绘制操作能够得到沿着~$k$~个法向的局部（所有处理过的点集）最大值。为了充分利用~GPU~的并行计算能力，将每次处理点的数量设置为~GPU~硬件所支持的~OpenGL~中统一块（uniform
 block）所能容纳数据的大小，即需要反复绘制的次数为~$x=n/b$，其中~$n$~为点集大小，$b$~为统一块能容纳点的数量，值与显卡具体型号有关。 
@@ -970,7 +970,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 另一方面，因近似凸包的时间复杂度为线性，而精确凸包为~$O(n\log n)$，
 因此本文利用近似凸包聚类生成法向。示例中构造近似凸包耗费时间仅为~0.88ms~，而精确凸包为~79.31ms~。
 
-\begin{table}[htbp]   
+\begin{table}[!ht]   
 \centering
 \caption{用近似凸包与精确凸包构造~$k$-CBP~紧致程度对比}
 \label{tab:exp:ach:ch:tightness}
@@ -1062,7 +1062,7 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 %\label{pic:exps:ch-kcbp}
 %\end{figure}
 
-\begin{figure}[htbp] 
+\begin{figure}[!ht] 
 \centering
 \subcaptionbox{Alice(44-CBP)\label{fig:exp:alice}}
 {  
