@@ -30,6 +30,7 @@
 其中，$\bm{n_i}$~是半空间~$\bm{H_i}$~的法向，方向指向包围体外部，
 $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
 如图~\ref{fig:bunny}~所示是~Bunny~模型的凸包围~34~面体（34-CBP）。
+
 \begin{figure}[htbp] 
 \centering
   \includegraphics[width=1.5in]{bunny-34.png}
@@ -37,14 +38,13 @@ $w_i$~是输入点集中沿~$\bm{n_i}$~方向投影的最大值。
   \label{fig:bunny}
 \end{figure}
 
-
 本文算法的主要流程如图~\ref{lbl:kcbp-algorithm-flowchart}~所示，首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向，然后根据输入点集在~GPU~中沿各法向搜索切点构成截面，
 最后由这些截面通过对偶映射的方式求交构成凸包围多面体。搜索截面需要多次扫描输入点集，在~CPU~中计算较耗时，因此用~GPU~加速使得算法整体性能得以提升，其他步骤在~CPU~计算即可。
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=5.5in]{kcbp-flowchart-x-aix.eps}
-    \caption{算法流程图}
+    \caption{构造~$k$-CBP~算法流程图}
     \label{lbl:kcbp-algorithm-flowchart}
 \end{figure}
 
@@ -675,7 +675,8 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
 其中$a_i,b_i,c_i,d_i$是不同时为0的实数。
 
 求解~$k$-CBP~可将问题转换为求~$k$~个线性不等式的解。利用对偶映射的方式可在~$O(k \log k)$~的方式解决，
-具体方法分为三个步骤\cite{Preparata1985Introduction}：\\ \indent
+具体方法分为三个步骤\cite{Preparata1985Introduction}：
+\\ \indent
 \begin{inparaenum}[(1)]
 %\begin{enumerate}[(1)]
 \item   
@@ -700,7 +701,7 @@ max\_point$~为截面法向与截面上的投影点~$max\_point$~的点积，此
 i5-2320 CPU @ 3.2GHz 8G RAM NVIDIA GeForce GTX
 650。}，从两个角度对生成的~$k$-CBP~进行实验对比，
 一方面对生成~$k$-CBP~的速度进行效率上的对比，主要对比了串行算法、基于着色器和~CUDA~环境的并行算法和文献\onlinecite{karlsson2010parallel}的并行算法，其详细结果如~\ref{subsec:exper:efficiency}~节所示；
-另一个方面对生成~$k$-CBP~的质量即紧致性上进行了对比实验，主要围绕着凸包、文献\onlinecite{zachmann1998rapid}~中实现的~$k$-DOP~进行对比，详细结果见第~\ref{subsec:exper:tightness}~节。
+另一个方面对生成~$k$-CBP~的质量即紧致性上进行了对比实验，主要围绕着凸包、文献\onlinecite{zachmann1998rapid,abenchmarking2007}~中实现的~$k$-DOP~进行对比，详细结果见第~\ref{subsec:exper:tightness}~节。
 
 \subsection{凸包围多面体生成效率}
 \label{subsec:exper:efficiency}
@@ -708,19 +709,11 @@ i5-2320 CPU @ 3.2GHz 8G RAM NVIDIA GeForce GTX
 如图~\ref{fig:chart:exps:cputime}~所示为本文算法（CUDA）与传统的~CPU~算法对比结果，图中横纵坐标分别代表多面体面数和运行时间，其中虚线代表搜索截面的过程，实线为构造凸包围多面体总体耗时。
 当模型点数量较大时，搜索截面的过程占据了算法绝大多数时间，且随着凸包围多面体的面数~$k$~值增加而线性增长，这与搜索截面时间复杂度~$O(k\cdot
 n)$一致，截面求交过程利用第~\ref{subsec:intersection-dual-mapping}~节中的对偶映射法，其时间复杂度为~$O(k\log k)$，
-当点数量极大时，如图~\ref{fig:exp:cpu:buggatti}~所示，实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略
-%，因此后文的时间对比无特别强调均为搜索截面的耗时
-。
+当点数量极大时，如图~\ref{fig:exp:cpu:buggatti}~所示，实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略。
 当输入模型的点数量越大，本文算法的优势越明显。如~Budda~模型点数量~31k~左右，加速比约为~3-6~倍，而含有~224k~个点的~Alice~模型和~1010k~个点的~Bugatti~模型，能够加速~7-9~倍。
 
 \begin{figure}[htbp] % use [htbp] to fix the position
 \centering
-%\subfloat[Apple(8118 points)]
-%{
-%    \label{fig:exp:cpu:apple}
-%    \includegraphics[width=\fourgraphicswidth\textwidth,page=1]{cputime.pdf}
-%}
-%\vspace{-10mm}
 \subcaptionbox{Budda模型(31232个点)\label{fig:exp:cpu:budda}}
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth,page=2]{cudatime.pdf}
@@ -770,7 +763,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 随着输入模型所含有点的数量规模的增加，CPU~和~GPU~运行时间之间的差距也越来越大。
 当多面体面数增加即~$k$~的增大时，在~Z Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所增加，而在基于乒乓技术的算法中，当点规模一定时，$k$~的变化对最后运行时间影响不明显，因此当较大的~$k$~时，这种算法更快。
 
-\begin{table}
+\begin{table}[htbp]
 \centering
 \caption{基于着色器并行算法加速比}
 \label{tab:exper:shadertime}

@@ -53,6 +53,7 @@ p_n$~为~$S$~的一个凸组合。一个点集~$P \subseteq E^2$~为凸集合，
   \caption{AABB 包围体}
   \label{fig:aabb-bunny}
 \end{figure}
+
 表达~AABB~包围体的数据结构通常有3种方式：\\ \indent
 %\begin{enumerate}[(1)]
 \begin{inparaenum}[(1)]
@@ -287,7 +288,6 @@ Solid Geometry，简称~CSG）模型，隐式方程或者参数表达曲面模�
 
 随着~3D~扫描仪的出现，近年来也出现了一些基于点云的碰撞检测算法。Klein Jan~等人\cite{klein2004point}首次在~EuroGraphics 04~上提出了点云的碰撞检测概念，同样利用了层次结构包围体进行加速检测，并提出了一个给定容差的判断点云模型之间是否相交的算法。
 文献~\onlinecite{figueiredo2010efficient}将~AABB~包围体和~R~树结合起来，并从~OAABB（Overlapped AABB）中找出是否含有一个模型的点在容差范围内逼近另外一个点云模型以此判断是否发生相交。
-
 随着计算机图形卡的产生，又不断涌现出基于~GPU~的碰撞检测并行算法，如文献\onlinecite{Zhang2007Interactive,hebing2009}等，利用~GPU~多线程技术提高碰撞检测的效率。
 
 \subsection{基于包围体树的碰撞检测算法}
@@ -364,7 +364,7 @@ T_{cost} = n_v * C_v + n_p * C_p,
 其中，$n_v$~和~$n_p$~分别表示参与包围体节点相交测试的数量和参与原始几何相交测试的数量，$C_v$和$C_p$则表示相应的平均测试耗费的代价\cite{klosowski1998efficient}。
 当运动场景或连续碰撞的模型之间的碰撞检测时，往往还需要考虑到因物体模型旋转平移等变换产生的包围体的更新所付出的代价，即上述代价函数变成
 \begin{equation}
-T_{cost} = n_v * C_v + n_p * C_p + n_u * C_u
+T_{cost} = n_v * C_v + n_p * C_p + n_u * C_u,
   \label{equa:evaluate:dynamic:bv}
 \end{equation}
 其中~$n_u$~和~$C_n$~就是模型旋转或者运动后包围体更新的数量和更新的代价。希望提高碰撞检测算法的整体性能，就得想办法减小~$T_{cost}$~的值。
