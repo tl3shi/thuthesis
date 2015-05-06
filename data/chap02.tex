@@ -694,7 +694,7 @@ max\_point$~为截面法向与截面上的投影点~$max\_point$~的点积，此
 综上，该方法总体复杂度为~$O(k\log k)$~。
 在利用这种对偶变化时需要注意约束条件即上述不等式中的~$d_i>0$，此时原点~$O(0,0,0)$~始终满足不等式~\ref{equa:halfspace:defition}，体现在算法输入上即原始模型需要包含原点。当原始模型不包含原点时，可以先对模型做一定平移或者也可用另外的对偶变换进行求解，文献\onlinecite{Preparata1979Intersection}对此问题进行了详述的阐述。
 
-\section{实验结果}
+\section{实验结果及分析}
 \label{sec:exper-kcbp}
 
 本文将针对不同点集规模的模型进行测试\footnote{运行时环境为：Intel(R) Core(TM)
