@@ -282,7 +282,7 @@ $Support_\mathbb{D}(\bm{d_2})   = Support_\mathbb{A}(\bm{d_2}) - Support_\mathbb
 %\end{equation*}
 $ Support_\mathbb{D}(\bm{d_3})  = Support_\mathbb{A}(\bm{d_3}) - Support_\mathbb{B}(-\bm{d_3})  = E(-2.5, 2) - C(-3, 3) = D_3(0.5, -1),$
 此时，$\bm{S} = \{D_1(0.5, 1), D_2(-3, -1), D_3(0.5, -1)\}$，
-如图~\ref{fig:gjk:example:intersection:step3}~所示，$ConvexHull(S)$~为阴影部分覆盖区域，因其包含原点结束迭代，因此，$\mathbb{A}$~和~$\mathbb{B}$~相交。
+如图~\ref{fig:gjk:example:intersection:step3}~所示，$ConvexHull(S)$~为阴影部分覆盖区域，因其包含原点故结束迭代，因此，$\mathbb{A}$~和~$\mathbb{B}$~相交。
 \end{inparaenum}
 %迭代过程如下：生成的公式高度高了，不好调整
 %\begin{equation*}
@@ -778,7 +778,7 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 
 \subsection{静止场景中与~$k$-DOP~算法对比}
 \label{subsec:exper:kdop:kcbp:static}
-在静止场景中的碰撞检测实验中，本文生成不同数量的模型，其位置和旋转角度随机生成（$k$-DOP~和~$k$-CBP~采用相同的随机生成的数据），图~\ref{fig:static:cd:bunny}~为~Bunny~模型在模拟碰撞检测的实验实例。
+在静止场景中的碰撞检测实验中，本文生成不同数量的模型，其位置和旋转角度随机生成（$k$-DOP~和~$k$-CBP~采用相同的随机生成的数据），图~\ref{fig:static:cd:bunny}~为~Bunny~模型在模拟碰撞检测的实验示例。
 
 \begin{figure}[htbp]
 \centering
