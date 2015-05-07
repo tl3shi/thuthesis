@@ -1,0 +1,2 @@
+sed -i 's/\selectcolormodel{gray}/%\selectcolormodel{gray} /g' *.tex 
+sed -i 's/\[H\]/[htbp]/g' *.tex 

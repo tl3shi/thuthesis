@@ -9,6 +9,8 @@
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
 
+%\selectcolormodel{gray} 
+
 \pgfplotsset{
   legend style={font=\footnotesize}
 }
@@ -40,9 +42,9 @@
     legend entries={DT($k$-DOP), DT($k$-CBP)(AABB),DT($k$-DOP)(GJK)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k24.csv};
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k24.csv};
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k24.csv};
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k24.csv};
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k24.csv};
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k24.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -72,9 +74,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k24.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -101,9 +103,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k24.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -132,9 +134,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.budda.k24.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.budda.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.budda.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.budda.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.budda.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.budda.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -161,9 +163,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.dinosaur.k24.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.dinosaur.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.dinosaur.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.dinosaur.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.dinosaur.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.dinosaur.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -192,9 +194,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k46.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k46.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -222,9 +224,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k46.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k46.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -263,7 +265,7 @@
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
 %\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.budda.k46.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[black, mark=o] coordinates{
+\addplot[black, thick, mark=o] coordinates{
     (10, 0.00 ) 
     (20, 0.20 ) 
     (30, 4.60 ) 
@@ -272,8 +274,8 @@
     (60, 9.60 )
 };
 \addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.budda.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.budda.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.budda.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.budda.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -309,7 +311,7 @@
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
 %\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.dinosaur.k46.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[black, mark=o] coordinates{
+\addplot[black, thick, mark=o] coordinates{
     (10, 0.20 ) 
     (20, 0.20 ) 
     (30, 1.60 ) 
@@ -318,14 +320,15 @@
     (60, 6.60 )
 };
 \addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.dinosaur.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.dinosaur.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.dinosaur.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.dinosaur.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
 
 %k=24  k=46 对比
 
+%page 11
 \begin{tikzpicture}
 \begin{axis}
 [
@@ -334,7 +337,7 @@
     %axis y line*=left,
     xlabel=$n$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={CT($k$-CBP),CT($k$-DOP)}
+    legend entries={CT(24-CBP),CT(46-CBP),CT(24-DOP),CT(46-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
 \addplot[red, mark=square*] table [x=n, y=CT(k-CBP)] {experiments/staticcd.bunny.k24.csv};
@@ -356,12 +359,12 @@
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-DOP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-DOP)(GJK)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k24.csv};
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k24.csv};
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k24.csv};
-\addplot[black, dashed, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k46.csv};
-\addplot[green, dashed,mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k46.csv};
-\addplot[gray, dashed,mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k46.csv};
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k24.csv};
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k24.csv};
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k24.csv};
+\addplot[black, thick, dashed, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.bunny.k46.csv};
+\addplot[green, thick, dashed,mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.bunny.k46.csv};
+\addplot[gray, thick, dashed,mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.bunny.k46.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -377,12 +380,12 @@
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-DOP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-DOP)(GJK)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k24.csv};
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k24.csv};
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k24.csv};
-\addplot[black, dashed, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k46.csv};
-\addplot[green, dashed,mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k46.csv};
-\addplot[gray, dashed,mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k46.csv};
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k24.csv};
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k24.csv};
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k24.csv};
+\addplot[black, thick, dashed, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.apple.k46.csv};
+\addplot[green, thick, dashed,mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.apple.k46.csv};
+\addplot[gray, thick, dashed,mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.apple.k46.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -413,9 +416,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.happyBuddha.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -444,9 +447,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.happyBuddha.k46.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -476,9 +479,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:kdop}\addlegendentry{CT($k$-DOP)}
-\addplot[black, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-DOP)}
-\addplot[green, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 \end{document}
