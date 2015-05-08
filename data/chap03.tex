@@ -428,7 +428,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 
 \begin{figure}[!ht]
   \centering
-    \includegraphics[width=4.5in]{TriangleTriangleTest.pdf}
+    \includegraphics[width=4.5in]{TriangleTriangleTest.eps}
     \caption{空间中两个非共面三角形的位置关系\cite{Moller1997}}
   \label{fig:two:triangle:ui}
 \end{figure}
@@ -466,7 +466,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 
 \begin{figure}[htbp]
   \centering
-    \includegraphics[width=3.5in]{TriangleTriangleTest2.pdf}
+    \includegraphics[width=3.5in]{TriangleTriangleTest2.eps}
     \caption{求非共面三角形区间线段示意图\cite{Moller1997}}
   \label{fig:two:triangle:ui2}
 \end{figure}
@@ -814,7 +814,7 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 其中，$n$~表示场景中模型的数量，$n$(Box)~表示通过包围盒过滤后构造碰撞检测对的有效模型数量，$n-n(\textnormal{Box})$~的值表示场景中模型的包围盒不与任何其他模型包围盒相交的模型数量，CT($k$-DOP)~和~CT($k$-CBP)~分别表示初始化的时间， CT($k$-DOP)~包括计算模型包围盒和计算$k$-DOP~树，CT($k$-CBP)~包括计算模型包围盒，
 $k$-CBP~以及用于实际模型碰撞检测算法的~AABB~树，DT($k$-DOP)、DT($k$-CBP)($AABB$) 和~DT($k$-CBP)($GJK$)~均表示碰撞检测所耗费的时间， 
 DT($k$-CBP)($AABB$)~为通过第~\ref{subsec:kcbp:cd:aabb}~节中介绍的~AABB~方法对~$k$-CBP~进行相交检测（包括构造~$k$-CBP~的~AABB~树所耗费的时间），
-而~DT($k$-CBP)($GJK$)~表示通过第~\ref{subsec:kcbp:cd:gjk}~节中介绍的~GJK~方法对~$k$-CBP~进行相交检测，相应的时间都包括~$k$-CBP~相交后对模型进行~AABB~相交检测时间。
+而~DT($k$-CBP)($GJK$)~表示通过第~\ref{subsec:kcbp:cd:gjk}~节中介绍的~GJK~方法对~$k$-CBP~进行相交检测，相应的时间都包括~$k$-CBP~相交后对模型进行~AABB~树相交检测时间。
 
 \begin{table}[!ht]  
 \centering
@@ -905,7 +905,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=6]{staticcd.pdf}
 }
-\caption{静止场景下本文算法与~$k$-DOP~实验结果对比(k=24)}
+\caption{静止场景下本文算法与~$k$-DOP~实验结果对比($k=24$)}
 \label{fig:chart:exps:kdop:kcbp:k24}
 \end{figure}
 
@@ -930,14 +930,14 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=10]{staticcd.pdf}
 }
-\caption{静止场景下本文算法与~$k$-DOP~实验结果对比(k=46)}
+\caption{静止场景下本文算法与~$k$-DOP~实验结果对比($k=46$)}
 \label{fig:chart:exps:kdop:kcbp:k46}
 \end{figure}
 
 对于更大的~$k$~值，构造层次结构的$k$-DOP~树时会耗费更多的时间和存储空间，在模型较大且模型数量较多时，以文献~\onlinecite{abenchmarking2007}~中最大的~$k$值为46~为例，32位应用程序已经满足不了构造~70~个~Dinosaur~模型~的~$k$-DOP~树，且构造时间也更久，图~\ref{fig:chart:exps:kdop:kcbp:k46}~为~$k$-DOP~实现中的最大值~$k=46$~的实验结果。
 
 更大的~$k$~值不一定能够使碰撞检测的效率提高，这与具体的碰撞检测环境有关，以~Bunny~模型和~Apple~模型为例，如图~\ref{fig:chart:exp:kdop:kcbp:k24:k46}~为~$k=24$~和~$k=46$~的结果对比，
-其中，虚线的结果为~$k=46$~的结果，实现为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
+其中，虚线的结果为~$k=46$~的结果，实线为~$k=24$~的结果，看出三种算法在~$k=24$~时碰撞检测所耗费的时间更少。因此在实际应用环境中应该根据具体的碰撞检测环境
 选择不同的~$k$~值。
 
 \begin{figure}[!ht] 
