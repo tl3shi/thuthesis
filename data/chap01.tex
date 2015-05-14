@@ -296,7 +296,9 @@ Solid Geometry，简称~CSG）模型，隐式方程或者参数表达曲面模�
 \label{sec:cd-bvh}
 
 \begin{figure}[htbp]
-  \centering
+  %\begin{mdframed}[align=center]
+  \begin{center}
+  \begin{boxedminipage}{0.87\textwidth}
   \subcaptionbox*{\label{lbl:bvh-bunny-center-0.png}}
     {\includegraphics[height=2.8cm]{bvh-bunny-center-0.png}}
   \subcaptionbox*{\label{lbl:bvh-bunny-center-1.png}}
@@ -315,9 +317,14 @@ Solid Geometry，简称~CSG）模型，隐式方程或者参数表达曲面模�
     {\includegraphics[height=3.0cm]{bvh-bunny-center-6.png}}
   \subcaptionbox*{\label{lbl:bvh-bunny-center-7.png}}
     {\includegraphics[height=3.0cm]{bvh-bunny-center-7.png}}
+  \vspace{-0.5cm}
+  \end{boxedminipage}
+  %\end{mdframed}
 \caption{八层~BVH~示例}
 \label{lbl:bvh-example}
+\end{center}
 \end{figure}
+\vspace{-12pt}
 在第~\ref{sec:convex-bv}~节中介绍了在对原始几何模型进行求交判断之前先用其包围体判断是否相交有助于提高求交过程的性能，
 通过将包围体组织成树形结构即层次结构包围体（BVH）能够将包围体预判阶段从理论上降低到对数时间复杂度（要求树是平衡的）。
 当构造原始复杂模型的包围体树时，复杂模型会被拆分成多个部分，每个部分用某种包围体近似，这构成了树型结构的叶子节点，这些节点会按照某种分组策略进行合并成更大的包围体分别构成其父节点，如此递归，最终形成一颗树，
