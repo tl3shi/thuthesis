@@ -102,7 +102,7 @@ $O(n+1/\epsilon^{4.5})$~复杂度内计算出一个近似最小~OBB（$\epsilon$
 为了得到最小包围球，~E.Welzl~\cite{Welzl1991Smallest}提出了一种线性的随机算法求出最小包围球。T.Larsson~\cite{larsson2008fast}提出了一种快速简单的算法，该算法基于选择~$k$~个极点生成~$k/2$~个方向构造包围球，
 因而称为~EPOS~（Extremal Points Optimal Sphere~）算法，用户可以自定义~$k$~的值，能够给执行时间和包围盒紧致性之间进行调整折衷，提高了灵活性。
 
-测试两个~Sphere~包围体是否相交比较简单，只需判断两个球心之间的距离是否大于两个球半径之和即可。
+一般而言，球形包围体的紧致程度较差，但测试两个~Sphere~包围体是否相交比较简单，只需判断两个球心之间的距离是否大于两个球半径之和即可。
 
 \subsection{$k$-DOP 包围体}
 
@@ -120,7 +120,6 @@ Directions Hull，简称~$k$-FDH）\cite{weiyingmei2001}。
 
 对于$k$-DOP~中的每一个方向，可以由相应边（面）的法向决定，其数据结构一般用~$k/2$~对半平面的法向，再加上模型在各个方向上的投影的极值即可。因为~$k$-DOP~的方向固定，$k$~值确定后，相应的法向也随即确定，所以只需要存储各个方向的极值即可。当~$k$-DOP~用于碰撞检测或可视化时，还需要存储包围体的各个顶点。
 
-$k$-DOP~之间的相交测试如算法~\ref{algo:kdop:overlaptest}~所示\cite{ericson2005real}，即针对平行于~$k/2$~对方向的每个方向上检测是否含有重叠交叉。
 \begin{algorithm}
 \caption{$k$-DOP~相交测试算法}
 \small
@@ -140,8 +139,12 @@ $dop_1, dop_2, k$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+$k$-DOP~之间的相交测试如算法~\ref{algo:kdop:overlaptest}~所示\cite{ericson2005real}，与~AABB~包围体的相交测试相似，不同点在于~AABB~包围体是针对~$x,y,z$~3个轴方向进行判断是否有交叉重叠，
+而~$k$-DOP~是针对平行于~$k/2$~对方向的每个方向上检测是否含有重叠交叉。
+
 与其他几种包围体相比较而言，$k$-DOP~是取包围体存储计算和相交测试耗费时间的一个折衷，且可以通过修改~$k$~的值来提高包围体的灵活性。在不同的碰撞检测环境中可能选择不同的~$k$~值能达到更优的结果，
-文献~\onlinecite{klosowski1998efficient}~中综合对比了~$k \in \{6,14,18,26\}$~的实验效果，得出~$k=18$~时能达到效率最优的结论，而文献~\onlinecite{zachmann1998rapid}~经过实验发现在~$k \in \{6,8,14\}$~中，从构造时间、性能和存储空间角度方面，$k=6$~与~$k=14$~时达到类似的实验结果，
+文献~\onlinecite{klosowski1998efficient}~中综合对比了~$k \in \{6,14,18,26\}$~的实验效果，得出~$k=18$~时能达到效率最优的结论，而文献~\onlinecite{zachmann1998rapid}~从构造时间、性能和存储空间角度等方面进行实验，发现在~$k \in \{6,8,14\}$~中，$k=6$~与~$k=14$~时能达到基本相当的实验结果，
 事实上对于不同的碰撞检测测试环境，不同的模型而言，达到最优的结果选取的~$k$~值可能不都相同，文献~\onlinecite{abenchmarking2007}~在综合测试比较后又得出~$k=24$~时更容易得到更优的结果。
 
 本文提出的~$k$-CBP~与~$k$-DOP~不同之处在于：\\ \indent
@@ -182,6 +185,23 @@ $dop_1, dop_2, k$
 
 \subsection{其他包围体}
 
+\begin{figure}[htbp]
+  \centering%
+  \subcaptionbox{圆柱形包围体\label{fig:subfig-bv-cylinder}}%[3cm] %标题的长度
+    {\includegraphics[height=4cm]{bv-cylinder.png}}
+  \subcaptionbox{Sphere-shell~包围体\label{fig:subfig-spherical-shell}}
+    {\includegraphics[height=4cm]{bv-spherical-shell.png}}
+  \subcaptionbox{圆锥形包围体\label{fig:subfig-bvcone}}
+    {\includegraphics[height=4cm]{bv-cone.png}}
+  \\
+  \subcaptionbox{椭球形包围体\label{fig:subfig-bv-ellipse}}
+    {\includegraphics[height=4cm]{bv-ellipse.png}}
+  \subcaptionbox{Swept-sphere~包围体\label{fig:subfig-bv-swept-sphere}}
+    {\includegraphics[height=4cm]{bv-swept-sphere.png}}
+  \caption{其他包围体}
+  \label{fig:bv-others}
+\end{figure}
+
 除了以上几种常见的凸包围体外，不同学者在特定领域里也研究出以下另外几种包围体：\\
 \begin{inparaenum}[(1)]
 \indent
@@ -201,22 +221,6 @@ J.Guibas~\cite{Guibas2003Zonotopes}等人在2003 年提出了一种利用对偶�
 \item \textbf{其他}
 还有如图~\ref{fig:subfig-bv-cylinder}~所示的圆柱形\cite{Schomer2000Smallest}、图~\ref{fig:subfig-bvcone}~所示的圆锥形\cite{held1997erit}和如图~\ref{fig:subfig-bv-ellipse}~所示的椭球形\cite{Wang2004Efficient}等等包围体。
 \end{inparaenum}
-\begin{figure}[htbp]
-  \centering%
-  \subcaptionbox{圆柱形包围体\label{fig:subfig-bv-cylinder}}%[3cm] %标题的长度
-    {\includegraphics[height=4cm]{bv-cylinder.png}}
-  \subcaptionbox{Sphere-shell~包围体\label{fig:subfig-spherical-shell}}
-    {\includegraphics[height=4cm]{bv-spherical-shell.png}}
-  \subcaptionbox{圆锥形包围体\label{fig:subfig-bvcone}}
-    {\includegraphics[height=4cm]{bv-cone.png}}
-  \\
-  \subcaptionbox{椭球形包围体\label{fig:subfig-bv-ellipse}}
-    {\includegraphics[height=4cm]{bv-ellipse.png}}
-  \subcaptionbox{Swept-sphere~包围体\label{fig:subfig-bv-swept-sphere}}
-    {\includegraphics[height=4cm]{bv-swept-sphere.png}}
-  \caption{其他包围体}
-  \label{fig:bv-others}
-\end{figure}
 
 \subsection{包围体的应用}
 \label{subsec:bv:application}
@@ -324,7 +328,7 @@ Solid Geometry，简称~CSG）模型，隐式方程或者参数表达曲面模�
 \label{lbl:bvh-example}
 \end{center}
 \end{figure}
-\vspace{-12pt}
+
 在第~\ref{sec:convex-bv}~节中介绍了在对原始几何模型进行求交判断之前先用其包围体判断是否相交有助于提高求交过程的性能，
 通过将包围体组织成树形结构即层次结构包围体（BVH）能够将包围体预判阶段从理论上降低到对数时间复杂度（要求树是平衡的）。
 当构造原始复杂模型的包围体树时，复杂模型会被拆分成多个部分，每个部分用某种包围体近似，这构成了树型结构的叶子节点，这些节点会按照某种分组策略进行合并成更大的包围体分别构成其父节点，如此递归，最终形成一颗树，
@@ -401,6 +405,7 @@ Convex hull & 5 & 5 & 1 & 5 \\
 \label{lbl:table:bv-comp}
 \end{table}
 
+本文算法在基于~AABB~包围体树的算法基础上，通过更加紧致的~$k$-CBP~来过滤更多不相交的模型，通过减少公式（\ref{equa:evaluate:static:bv}）及公式（\ref{equa:evaluate:dynamic:bv}）中~$n_p$~的值来达到提高碰撞检测算法的效率。
 
 \section{本文主要内容}
 \label{sec:structure}
