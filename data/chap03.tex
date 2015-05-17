@@ -420,7 +420,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
 
 \FloatBarrier
-\section{三角网格的相交测试算法}
+\section{两个三角网格的相交测试算法}
 \label{sec:intersection:triangles}
 
 所有针对三角网格模型的碰撞检测算法最终都离不开三角网格的相交测试，不管模型是用何种包围体采用几何或者代数的方法都需要进行三角网格的相交测试。本文将利用一种几何代数相结合的方法进行三角网格之间的相交测试。
@@ -488,7 +488,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 
 \begin{algorithm}[htbp]
 \small
-\caption{三角网格求交算法}
+\caption{两个三角网格的相交测试算法}
 \label{alg:triangles:intersection}
 \begin{algorithmic}[1]
 \Require
