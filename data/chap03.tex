@@ -40,9 +40,9 @@ AABB~包围体是碰撞检测算法过程中一种最常用的包围体，构造
 \label{alg:aabbtree:build}
 \begin{algorithmic}[1]
 \Require
-原始三角网格 $primitives$ 和下标 $first, last$
+原始三角网格数组~$primitives$~和对应数组下标~$first, last$
 \Ensure
-AABB~树的根节点 $root$
+AABB~树的根节点~$root$
 
 \Function{ConstructAABBTree}{$primitives, first, last$}
   \State $root \gets \Call{constructNode()}{}$ 
@@ -90,7 +90,7 @@ AABB~树的根节点 $root$
   T(n) = O(n \log n ) + 2T(\frac{n}{2}),
 \label{equa:aabbtree:build}
 \end{equation}
-公式（\ref{equa:aabbtree:build}）中~$O(n \log n)$~为算法中根据某坐标轴排序的耗费，根据主定理得此构造包围体树的整体算法时间复杂度~$T(n)=O(n\log^2n)$~，文献~\onlinecite{ericson2005real}~中提到可以用一种~$O(n)$~的算法替代其中的排序操作，使得整体复杂度为~$O(n\log n)$。
+公式(\ref{equa:aabbtree:build}）中~$O(n \log n)$~为算法中根据某坐标轴排序的耗费，根据主定理得此构造包围体树的整体算法时间复杂度~$T(n)=O(n\log^2n)$~，文献~\onlinecite{ericson2005real}~中提到可以用一种~$O(n)$~的算法替代其中的排序操作，使得整体复杂度为~$O(n\log n)$。
 
 生成两个~$k$-CBP~的~AABB~包围体树后，当进行碰撞检测时，将采用算法~\ref{alg:aabbtree:traverse:iterator}~的迭代算法进行遍历判断。
 从顶层~AABB~节点开始，若两个节点的~AABB~包围体相交，则进行深度优先遍历其孩子节点，当到达叶子节点时，再进行原生几何（本文中的~$k$-CBP~多边形网格，为了统一转化成与输入模型一致的三角网格）进行相交测试的判断，$k$-CBP~相交后，进行真实模型的相交测试也通过此方法进行。
@@ -101,9 +101,9 @@ AABB~树的根节点 $root$
 \label{alg:aabbtree:traverse:iterator}
 \begin{algorithmic}[1]
 \Require
-两棵~AABB~树的根节点 $rootA, rootB$
+两个~AABB~树的根节点~$rootA, rootB$
 \Ensure
-是否相交
+模型是否相交
 
 \Function{TraverseDetection}{$rootA, rootB$}
   \State $p \gets \Call{initStack()}{}, q \gets \Call{initStack()}{}$  \Comment{初始化两个栈，用于记录待判断的~AABB~节点对}
@@ -185,7 +185,7 @@ GJK~算法需要用到闵科夫斯基和（Minkowski Sum）如下定义：两个
 
 图~\ref{fig:gjk:example:intersection}~中，四个点坐标~$D(-4, 2), E(-2.5, 2), F(-2.5, 3.5), G(-4, 3.5)$~构成了四边形~$DEFG$~的四个顶点，
 三角形~$ABC$~的坐标分别为~$A(-3, 1), B(-1,3), C(-3, 3)$~，
-%其~Minkowski~差如式（\ref{equa:gjk:example:mink:diff}）所示，
+%其~Minkowski~差如式(\ref{equa:gjk:example:mink:diff})所示，
 %\begin{equation}
 %\label{equa:gjk:example:mink:diff}
 %\Box_{DEFG} - \bigtriangleup_{ABC} = \left\{ 
@@ -199,7 +199,7 @@ GJK~算法需要用到闵科夫斯基和（Minkowski Sum）如下定义：两个
 其~Minkowski~差为~$\Box_{DEFG} - \bigtriangleup_{ABC} = \{  (0.5, 1),  (-1.5, 0.5),  (0.5, 2.5), (-1, 2.5),  (-3, -1),$\\$ (-1, -1),  (0.5, 0.5), (-1, 1),  (-3, 0.5),(0.5, -1), (-1.5, -1), (-1, 0.5) \}$，
 四边形~$DEFG$~与三角形~$ABC$~相交，该~Minkowski~差构成的多边形~$H_1H_2H_3H_4H_5$~包含原点~$\bm{O}$。
 而在图~\ref{fig:gjk:example:nonIntersection}~中，三角形坐标变为~$A'(-3, 1), B'(-1, 1), C'(-1,3)$，四边形~$DEFG$~坐标不变，
-%其~Minkowski~差如式（\ref{equa:gjk:example:mink:diff2}）所示，
+%其~Minkowski~差如式(\ref{equa:gjk:example:mink:diff2})所示，
 %\begin{equation}
 %\label{equa:gjk:example:mink:diff2}
 %\Box_{DEFG} - \bigtriangleup_{A'B'C'} = \left\{ 
@@ -229,7 +229,7 @@ GJK~算法采用如下的流程\cite{ericson2005real}进行迭代计算两个凸
   \item 如果~$\bm{D}$~是原点本身或~$ConvexHull(S)$~包含原点，则表明$\mathbb{A}$~和~$\mathbb{B}$~相交，停止迭代；\\ \indent
   \item 规约集合~$\bm{S}$~，使得~$\bm{S}$~中是满足~$\bm{D}$~属于其凸包的最小的集合；\\ \indent
   \item 更新方向~$\bm{d} = -\bm{D}$~，并计算~$Support_\mathbb{D}(\bm{d}) = Support_\mathbb{A}(\bm{d}) - Support_\mathbb{B}(-\bm{d})$；\\ \indent
-  \item 如果有新的$Support_\mathbb{D}(\bm{d})$~产生，则添加至集合~$\bm{S}$~并从第（2）步继续迭代，否则结束迭代，且得出~$\mathbb{A}$~和~$\mathbb{B}$~不相交的结论。
+  \item 如果有新的$Support_\mathbb{D}(\bm{d})$~产生，则添加至集合~$\bm{S}$~并从第(2)步继续迭代，否则结束迭代，且得出~$\mathbb{A}$~和~$\mathbb{B}$~不相交的结论。
 %\end{enumerate}
 \end{inparaenum}
 
@@ -392,9 +392,9 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 \label{alg:gjk}
 \begin{algorithmic}[1]
 \Require
-两个$k$-CBP： $k\texttt{-}CBP_1, k\texttt{-}CBP_2$
+两个~$k$-CBP~$k\texttt{-}CBP_1, k\texttt{-}CBP_2$
 \Ensure
-是否相交
+~$k$-CBP~是否相交
 \Function{KCBPDetectionBasedOnGJK}{$k\texttt{-}CBP_1, k\texttt{-}CBP_2$}
     \State $\bm{d} \gets \Call{initNormal}$
     \State $\bm{D} \gets \Call{Support}{k\texttt{-}CBP_1, k\texttt{-}CBP_2, \bm{d}}$
@@ -416,7 +416,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 \end{algorithmic}
 \end{algorithm}
 
-算法~\ref{alg:gjk}~第~12~行~$CHECKCONTAINUPDATE$~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
+算法~\ref{alg:gjk}~第~12~行~CHECKCONTAINUPDATE~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
 具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
 
 \FloatBarrier
@@ -443,9 +443,9 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
   \Pi_1 = \bm{n}_1 \cdot \bm{x}+d_1 = (\bm{U_2} - \bm{U_1}) \times (\bm{U_3}-\bm{U_1})  \cdot \bm{x} + d_1,
 \label{equa:tri:tri:plane}
 \end{equation}
-其中将任意一点~$U_i, i \in \{1,2,3\}$~带入公式（\ref{equa:tri:tri:plane}）得~$d_1$，同理得到~$\Pi_2$。
+其中将任意一点~$U_i, i \in \{1,2,3\}$~带入公式(\ref{equa:tri:tri:plane})得~$d_1$，同理得到~$\Pi_2$。
 
-然后将三角形~$T_2$~的三个顶点带入方程（\ref{equa:tri:tri:plane}）得到~$T_2$~到~$\Pi_1$~的有向距离~$\bm{l}_{1i}, i \in \{1,2,3\}$，根据~$\bm{l}_{1i}$~的值分为下面三种情况讨论：\\ \indent
+然后将三角形~$T_2$~的三个顶点带入方程(\ref{equa:tri:tri:plane})得到~$T_2$~到~$\Pi_1$~的有向距离~$\bm{l}_{1i}, i \in \{1,2,3\}$，根据~$\bm{l}_{1i}$~的值分为下面三种情况讨论：\\ \indent
 %\begin{enumerate}[(1)]
 \begin{inparaenum}[(1)]
   \item 若~$\forall i \in \{1,2,3\}, l_{1i} = 0$，即三角形~$T_2$~的三个顶点到三角形~$T_1$~所在~$\Pi_1$~的距离都为$0$，则两个三角形共面；\\ \indent
@@ -456,11 +456,11 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 
 同理可以根据三角形~$T_1$~到三角形~$T_2$~所在平面~$\Pi_2$~得到类似的情况。
 
-针对情况（1），共面的两个三角形求交可以通过两个三角形中三条线段两两判定是否相交最多9次线段线段求交判定可得，或者通过我们在文献~\onlinecite{linjianli2014}~中提出的方法进行，该方法对线段三角形的位置做了详细的分类可通过不超过~6~次线段线段求交判定；
+针对情况(1)，共面的两个三角形求交可以通过两个三角形中三条线段两两判定是否相交最多9次线段线段求交判定可得，或者通过我们在文献~\onlinecite{linjianli2014}~中提出的方法进行，该方法对线段三角形的位置做了详细的分类可通过不超过~6~次线段线段求交判定；
 
-针对情况（2），计算出有向距离同号后即可排除相交立即返回；
+针对情况(2)，计算出有向距离同号后即可排除相交立即返回；
 
-针对情况（3），如图~\ref{fig:two:triangle:ui2}~所示，不妨设在三角形~$T_1$~中，点~$\bm{V}_1, \bm{V}_2$~在~$\Pi_2$的一侧，$\bm{V}_3$~在另外一侧，
+针对情况(3)，如图~\ref{fig:two:triangle:ui2}~所示，不妨设在三角形~$T_1$~中，点~$\bm{V}_1, \bm{V}_2$~在~$\Pi_2$的一侧，$\bm{V}_3$~在另外一侧，
 且点~$\bm{V}_1, \bm{V}_2$~在平面上投影点分别为~$\bm{K}_1,\bm{K}_2$，线段~$\bm{V}_1\bm{V}_2, \bm{V}_2\bm{V}_3$~与~$\bm{L}$~分别交于点~$\bm{I}_1,\bm{I}_2$，点~$\bm{V}_1,\bm{V}_2$~向直线~$\bm{L}$~的投影点分别为~$\bm{P}_1,\bm{P}_2$，
 三角形~$T_1$~交于直线~$\bm{L}$~与线段~$\overline{I_1I_2}$。%，现在目的是求$I_1I_2$。
 
@@ -483,7 +483,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 同理可得~$\bm{I}_2$~的参数~$t_2$，三角形~$T_2$~用相同的方法也能得到区间的参数，即可判断两个区间线段是否相交，进而可得该非共面的两个三角形是否相交。
 完整的算法如~\ref{alg:triangles:intersection}~所示。
 
-算法~\ref{alg:triangles:intersection}~第~10~行~在方法~$EDGEEDGETEST$~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
+算法~\ref{alg:triangles:intersection}~第~10~行~在方法~EDGEEDGETEST~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
 在实际实现过程中，往往需要引入容差以提高算法的稳定性。文献~\onlinecite{Moller1997}~介绍了更多的优化技巧。
 
 \begin{algorithm}[htbp]
@@ -492,11 +492,11 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 \label{alg:triangles:intersection}
 \begin{algorithmic}[1]
 \Require
-两个三角形的6个顶点 $T_1(\bm{U}_1, \bm{U}_2, \bm{U}_3), T_2(\bm{V}_1, \bm{V}_2, \bm{V}_3)$
+两个三角形的6个顶点~$T_1(\bm{U}_1, \bm{U}_2, \bm{U}_3), T_2(\bm{V}_1, \bm{V}_2, \bm{V}_3)$
 \Ensure
-是否相交
+三角形是否相交
 \Function{TriangleTriangleDetection}{$\bm{U}_1, \bm{U}_2, \bm{U}_3, \bm{V}_1, \bm{V}_2, \bm{V}_3$}
-    \State {$\Pi_1 \gets \bm{n}_1 \cdot \bm{x}+d_1$} \Comment{按照公式（\ref{equa:tri:tri:plane}）计算$T_1$所在平面方程}
+    \State {$\Pi_1 \gets \bm{n}_1 \cdot \bm{x}+d_1$} \Comment{按照公式(\ref{equa:tri:tri:plane})计算$T_1$所在平面方程}
     \For {$i = 1 \to 3$}
         \State {$l_{1i} \gets \bm{n}_1 \cdot \bm{V}_i + d_1$} \Comment {计算$T_2$到$\Pi_1$的有向距离}
     \EndFor
@@ -508,7 +508,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
         \State \Return \Call{EdgeEdgeTest}{$\bm{U}_1, \bm{U}_2, \bm{U}_3, \bm{V}_1, \bm{V}_2, \bm{V}_3$}
         \State \Comment{$T_2$与$T_1$的共面，普通的边边相交测试}
     \EndIf
-    \State {$\Pi_2 \gets \bm{n}_2 \cdot \bm{x}+d_2$} \Comment{按照公式（\ref{equa:tri:tri:plane}）计算$T_2$所在平面方程}
+    \State {$\Pi_2 \gets \bm{n}_2 \cdot \bm{x}+d_2$} \Comment{按照公式(\ref{equa:tri:tri:plane})计算$T_2$所在平面方程}
     \For {$i = 1 \to 3$}
         \State {$l_{2i} \gets \bm{n}_2 \cdot \bm{U}_i + d_2$} \Comment {计算$T_1$到$\Pi_2$的有向距离}
     \EndFor
@@ -517,7 +517,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
           \State \Return \textbf{False} \Comment{$T_1$在$\Pi_2$的同侧，排除}
     \EndIf
     \State {$t_1 \gets \Call{CalParam}{}, t_2 \gets \Call{CalParam}$}  
-    \Comment {按照公式（\ref{equa:triangle:intersectionline:param}）计算线段$\bm{D}_1$的参数区间} 
+    \Comment {按照公式(\ref{equa:triangle:intersectionline:param})计算线段$\bm{D}_1$的参数区间} 
     \State {$t_3 \gets \Call{CalParam}{}, t_4 \gets \Call{CalParam}$}  \Comment{类似的方法计算线段$\bm{D}_2$的参数区间} 
     \If {$\Call{Overlap}{t_1, t_2, t_3, t_4}$}
        \State \Return \textbf{True} \Comment{区间交叉，表明三角形相交返回\textbf{True}}
@@ -564,7 +564,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=\textwidth]{collision-detection-flowchart.pdf}
+  \includegraphics[width=\textwidth]{collision-detection-flowchart.eps}
   \caption{基于~$k$-CBP~的碰撞检测算法流程图}
   \label{fig:flowchart:cd}
 \end{figure}
@@ -588,7 +588,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 但速度更快，若包围盒相交后，会再用其~$k$-CBP~进行过滤，$k$-CBP~的顶点是精确顶点因而能更有效地进行过滤。
 
 模型围绕任意过原点的轴~$\bm{n}(x, y,
-z)$~旋转任意角度~$\theta$~的变换矩阵如式（\ref{equa:rotate:matrix}）所示，其中$\lambda
+z)$~旋转任意角度~$\theta$~的变换矩阵如式(\ref{equa:rotate:matrix})所示，其中$\lambda
 = 1-\cos\theta$，
 详细的推导过程可以参考文献~\onlinecite{dunn20023d}。
 \begin{equation}
@@ -654,10 +654,10 @@ AABB~节点包围盒更新后的算法如算法~\ref{alg:transform:box}~所示�
 \label{alg:transform:box}
 \begin{algorithmic}[1]
 \Require
-AABB包围盒 $box$，
-平移旋转变换矩阵$\bm{M}$
+AABB~包围盒~$box$，
+平移旋转变换矩阵~$\bm{M}$
 \Ensure
-变换之后的包围盒 $box'$
+变换之后的包围盒~$box'$
 
 \Function{TransformBox}{$box, \bm{M}$}
     \State $vertices \gets \Call{GetAABBVertices}{box}$ 
@@ -678,8 +678,8 @@ AABB包围盒 $box$，
 \label{alg:moving:cd}
 \begin{algorithmic}[1]
 \Require
-两个模型~AABB~树的根节点 $root_0, root_1$ 及
-平移旋转变换矩阵$\bm{M}$
+两个模型~AABB~树的根节点~$root_0, root_1$ 及
+~平移旋转变换矩阵~$\bm{M}$
 \Ensure
 模型是否相交 
 
@@ -751,10 +751,10 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 \caption{$k$-CBP~和包围盒应用于碰撞检测结果对比}
 \label{tab:exp:box:kcbp:collsiondetection}
 \centering
-\begin{tabular}{lccccccr}
+\begin{tabular}{lccccccc}
  \toprule[1.5pt]
- \multirow{2}{*}{$n$} & CT(Box) & CT($16$-CBP) & DT(Box) & DT($16$-CBP) & r(Box) & r($k$-CBP) & \multirow{2}{*}{DP(Model)} \\
-                      & (ms)    & (ms)          & (ms)  & (ms)          & (\%)      & (\%)  &   \\
+ \multirow{2}{*}{$n$} & CT(Box) & CT($16$-CBP) & DT(Box) & DT($16$-CBP) & r(Box) & r($k$-CBP) & DP(Model)\\ %\multirow{2}{*}{DP(Model)} \\
+                      & (ms)    & (ms)          & (ms)  & (ms)          & (\%)      & (\%)  & (对)  \\
   \midrule[1.0pt]
    10 & 0.1 & 1.8 &    26.0  & 0.1    & 0.00  & 100.00 & 0\\
    30 & 0.2 & 2.9 &   134.0  & 70.0   & 45.45 & 83.33 & 5\\
@@ -771,7 +771,7 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 
 如表~\ref{tab:exp:box:kcbp:collsiondetection}~所示，
 其中~$n$~表示场景中~Bunny~模型的数量，CT(Box)、 CT($16$-CBP)~分别表示模型包围盒的构造时间（Construction Time，简称~CT）和凸包围16面体的构造时间\footnote{此处的时间为得到一个~$k$-CBP~后直接通过应用变换矩阵得到新的~$k$-CBP~总时间
-且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现}， DT(Box)、DT($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间（Detection Time，简称~DT），
+且是利用~GPU~搜索截面的时间，后文与~$k$-DOP对比均采用~CPU~算法实现。}， DT(Box)、DT($16$-CBP)~分表表示用包围盒进行碰撞检测和利用凸包围16面体进行碰撞检测所耗费的时间（Detection Time，简称~DT），
 其中~r(Box)、r($16$-CBP)分别表示包围盒、16-CBP~的命中率（即用实际模型相交的数量除以包围体检测出来相交的数量）， DP(Model)~检测到的模型实际相交的对数（Detection Pair，简称~DP），
 显然计算模型包围盒所耗费的时间要明显少于计算凸包围多面体的时间，但由于凸包围多面体比包围盒紧致，
 因而命中率比包围盒高，能排除更多本不相交的模型进而节省碰撞检测总时间，提高算法效率。该部分工作已经发表，详细内容见参考文献~\onlinecite{tanglei2014}。
@@ -782,28 +782,28 @@ CollDet~\footnote{其源码和文档均可通过http://cgvr.cs.uni-bremen.de/res
 
 \begin{figure}[htbp]
 \centering
-\subcaptionbox{n=10}{
+\subcaptionbox{$n=10$}{
   \includegraphics[width=.22\textwidth]{bunny-static-10.png}
 } 
-\subcaptionbox{n=20}{
+\subcaptionbox{$n=20$}{
   \includegraphics[width=.22\textwidth]{bunny-static-20.png}
 }
-\subcaptionbox{n=30}{
+\subcaptionbox{$n=30$}{
   \includegraphics[width=.22\textwidth]{bunny-static-30.png}
 }
-\subcaptionbox{n=40}{
+\subcaptionbox{$n=40$}{
   \includegraphics[width=.22\textwidth]{bunny-static-40.png}
 }\\ 
-\subcaptionbox{n=50}{
+\subcaptionbox{$n=50$}{
   \includegraphics[width=.22\textwidth]{bunny-static-50.png}
 }
-\subcaptionbox{n=60}{
+\subcaptionbox{$n=60$}{
   \includegraphics[width=.22\textwidth]{bunny-static-60.png}
 }
-\subcaptionbox{n=70}{
+\subcaptionbox{$n=70$}{
   \includegraphics[width=.22\textwidth]{bunny-static-70.png}
 }
-\subcaptionbox{n=80}{
+\subcaptionbox{$n=80$}{
   \includegraphics[width=.22\textwidth]{bunny-static-80.png}
 }\\
 \caption{静止场景下~Bunny~模型碰撞检测示例}
@@ -823,7 +823,7 @@ DT($k$-CBP)($AABB$)~为通过第~\ref{subsec:kcbp:cd:aabb}~节中介绍的~AABB~
 \begin{tabular}{cccccccc}
 \toprule[1.5pt]
 \multirow{2}{*}{$n$} & \multirow{2}{*}{$n$(Box)} & CT($k$-DOP) &  CT($k$-CBP) & DT($k$-DOP) & DT($k$-CBP) & DT($k$-CBP) \\%& \multirow{2}{*}{DP(Model)} \\ 
-                     &                         &  (ms)        & (ms)         & (ms)        & $(AABB)$~(ms) & $(GJK)$~(ms)       \\
+                     &                         &  (ms)        & (ms)         & (ms)        & (AABB)~(ms) & (GJK)~(ms)       \\
 \midrule[1.0pt]
 10 & 3 &	285.00 &	29.30      &0.01 &	0.01  & 	0.20  \\ %& 0  \\ 
 20 & 10&	937.20 &	77.30      &0.60 &	0.70  & 	0.50  \\ %& 2  \\ 
@@ -851,7 +851,7 @@ DP(Box)~和~DP(Model)~表示包围盒相交的对数和实际模型碰撞的对�
 \label{tab:exp:bunny:k24:kdop:kcbp:detail}
 \begin{tabular}{cccccc}
 \toprule[1.5pt]
-$n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
+$n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box)(对) & DP($k$-CBP)(对) & DP(Model)(对)\\
 \midrule[1.0pt]
 10 &  13.60 &	16.60      & 2   &2   & 0  \\
 20 &  23.80 &	53.40      & 10  &4   & 2  \\
@@ -905,7 +905,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=6]{staticcd.pdf}
 }
-\caption{静止场景下本文算法与~$k$-DOP~实验结果对比($k=24$)}
+\caption{静止场景下本文算法与~$k$-DOP~实验结果对比（$k=24$）}
 \label{fig:chart:exps:kdop:kcbp:k24}
 \end{figure}
 
@@ -930,7 +930,7 @@ $n$ & CT($k$-CBP)(ms) &  CT(AABB)(ms) & DP(Box) & DP($k$-CBP) & DP(Model)\\
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=10]{staticcd.pdf}
 }
-\caption{静止场景下本文算法与~$k$-DOP~实验结果对比($k=46$)}
+\caption{静止场景下本文算法与~$k$-DOP~实验结果对比（$k=46$）}
 \label{fig:chart:exps:kdop:kcbp:k46}
 \end{figure}
 
@@ -997,7 +997,7 @@ $k$-DOP~算法需要近~40~秒的时间，而本文算法仅需~4.5~秒。
 
 \begin{table}[htbp]
 \centering
-\caption{本文算法与~$k$-DOP~初始化时间对比($k=24$)}
+\caption{本文算法与~$k$-DOP~初始化时间对比（$k=24$）}
 \label{tab:exper:kcbp:kdop:init:k24}
 \begin{tabular}{ccccc}
 \toprule[1.5pt]
@@ -1042,7 +1042,7 @@ Hand	&506.98 &	7926.88 &	4478.18 &	39538.70 \\
    \includegraphics[width=\fourgraphicswidth\textwidth, page=15]{dynamiccd.pdf}
 }
 
-\caption{运动场景下本文算法与~$k$-DOP~实验结果对比($k=24,n=2$)}
+\caption{运动场景下本文算法与~$k$-DOP~实验结果对比（$k=24,n=2$）}
 \label{fig:chart:exps:kdop:kcbp:k24:dynamic}
 \end{figure}
 
@@ -1055,7 +1055,10 @@ Hand	&506.98 &	7926.88 &	4478.18 &	39538.70 \\
 \label{tab:exp:bunny:k24:kdop:kcbp:detail:dynamic}
 \begin{tabular}{cccccc}
 \toprule[1.5pt]
-$moves$ & DT($k$-CBP)(AABB) &DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(Model) \\
+%\multirow{2}{*}{$n$} & \multirow{2}{*}{$n$(Box)} & CT($k$-DOP) &  CT($k$-CBP) & DT($k$-DOP) & DT($k$-CBP) & DT($k$-CBP) \\%& \multirow{2}{*}{DP(Model)} \\ 
+%                     &                         &  (ms)        & (ms)         & (ms)        & $(AABB)$~(ms) & $(GJK)$~(ms)       \\
+\multirow{2}{*}{$moves$} & DT($k$-CBP)(AABB) & DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(Model) \\
+                         & (ms)              &  (ms)       & (ms)           & (对)&(对) \\
 \midrule[1.0pt]
 10  &   0.00  &	  0.40 & 	0.01&  0	& 0 \\
 50  &   0.80  &	  0.20 & 	0.01&  0	& 0 \\
@@ -1101,7 +1104,7 @@ $moves$ & DT($k$-CBP)(AABB) &DT($k$-DOP) & DT($k$-CBP)(GJK) & DP($k$-CBP) & DP(M
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=16]{dynamiccd.pdf}
 }
-\caption{运动场景下本文算法与~$k$-DOP~实验结果对比($k=24,n=10$)}
+\caption{运动场景下本文算法与~$k$-DOP~实验结果对比（$k=24,n=10$）}
 \label{fig:chart:exps:kdop:kcbp:k24:m10:dynamic}
 \end{figure}
 

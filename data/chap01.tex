@@ -110,7 +110,7 @@ $O(n+1/\epsilon^{4.5})$~复杂度内计算出一个近似最小~OBB（$\epsilon$
 等人提出的用于解决光线追踪的问题，~$k$-DOP~术语是由~J.Klosowski~等人\cite{klosowski1998efficient}
 在1998 年用于解决碰撞检测问题时提出的，有学者也称~$k$-DOP~为固定方向凸包（$k$-Fixed
 Directions Hull，简称~$k$-FDH）\cite{weiyingmei2001}。
-在二维（三维）平面上，~k-DOP~就是一个由~$k/2$~对平行的固定方向的边（面）围成的凸多边形（多面体），其中$k\in\mathbb{N}$，$k\geq4$（$k\geq6$）。如图~\ref{fig:8dop-bunny}所示，为平面图形~Bunny~的$8$-DOP。
+在二维（三维）平面上，~k-DOP~就是一个由~$k/2$~对平行的固定方向的边（面）围成的凸多边形（多面体），其中~$k\in\mathbb{N}$，$k\geq4$（$k\geq6$）。如图~\ref{fig:8dop-bunny}所示，为平面图形~Bunny~的$8$-DOP。
 \begin{figure}[htbp] % use float package If you want it here
   \centering
   \includegraphics[width=1.8in]{bunny-2d-8DOP.eps}
@@ -126,7 +126,7 @@ Directions Hull，简称~$k$-FDH）\cite{weiyingmei2001}。
 \label{algo:kdop:overlaptest}
 \begin{algorithmic}[1]
 \Require
-$dop_1, dop_2, k$ 
+两个~$k$-DOP~节点~$dop_1, dop_2$~和~$k$ 
 \Ensure
 两个~$k$-DOP~是否相交
 \Function {CheckIntersection}{$dop_1, dop_2, k$}
@@ -255,7 +255,7 @@ Decompositions，~简称~ACD）仅得到98个组成部分，同时保持了原�
 \end{figure}
 这种分解还可以应用于多种应用，例如运动规划（~Motion planning~），网格生成（~Mesh generation~），点定位（~Point location~）问题等等，更多内容可以参考~\onlinecite{lien2008approximate} 以及~Jyh-Ming Lien~ 的博士学位论文\cite{lien2006approximatephd}。
 
-文献\onlinecite{attene2008hierarchical}利用一种类似的方法将原始3D模型分解成一个具有层次结构的模型（图~\ref{lbl:attene2008hierarchical-example:subfig1}所示），最顶层将是整个模型的凸包。将该算法应用到3D编辑环境中，能够更加方便地让用户选择模型的某个部分进行交互设计。效果如图\ref{lbl:attene2008hierarchical-example:subfig2} 所示，用户选择模型的头部，并进行拖拽能够较快速得到模型新的外观。\footnote{详情可参考视频：http://www.readcube.com/articles/10.1111/j.1467-8659.2008.01271.x }
+文献\onlinecite{attene2008hierarchical}利用一种类似的方法将原始3D模型分解成一个具有层次结构的模型（图~\ref{lbl:attene2008hierarchical-example:subfig1}所示），最顶层将是整个模型的凸包。将该算法应用到3D编辑环境中，能够更加方便地让用户选择模型的某个部分进行交互设计。效果如图~\ref{lbl:attene2008hierarchical-example:subfig2}~所示，用户选择模型的头部，并进行拖拽能够较快速得到模型新的外观。\footnote{详情可参考视频：http://www.readcube.com/articles/10.1111/j.1467-8659.2008.01271.x }
 \begin{figure}[htbp]
   \centering
   \subcaptionbox{层次结构的分解\label{lbl:attene2008hierarchical-example:subfig1}}
@@ -270,7 +270,7 @@ Decompositions，~简称~ACD）仅得到98个组成部分，同时保持了原�
 文献\onlinecite{karlsson2010parallel}利用~Intel~单指令多数据流（Single Instruction
 Multiple Data~，简称SIMD）~SSE~指令集和~OpenMP~实现了对~AABB~，~OBB~和~$k$-DOP~的计算。
 文献\onlinecite{lauterbach2009fast}提出了在~统一计算设备架构（Compute Unified Device
-Architecture，简称CUDA，后同）~平台上基于~GPU~构造~AABB~包围体树的方法并应用于光线追踪。
+Architecture，简称~CUDA，后同）~平台上基于~GPU~构造~AABB~包围体树的方法并应用于光线追踪。
 
 \section{碰撞检测算法}
 \label{sec:collisiondetection}
@@ -343,9 +343,9 @@ Solid Geometry，简称~CSG）模型，隐式方程或者参数表达曲面模�
 \label{alg:traverse-bvh-tree}
 \begin{algorithmic}[1]
 \Require
-$node_1$，$node_2$：BVH~树中的节点1、节点2
+两个~BVH~树的根节点~$node_1$，$node_2$
 \Ensure
-是否相交
+模型是否相交
 \Function {TraverseBVHTree}{$node_1, node_2$}
   \If{$node_1.bv \cap node_2.bv = \emptyset$} 
     \State \Return{\textbf{False}} 
@@ -353,7 +353,8 @@ $node_1$，$node_2$：BVH~树中的节点1、节点2
   \Else
       \If {$node_1.children = \emptyset$}
            \If {$node_2.children = \emptyset$}
-              \State {$\Return \Call{CheckIntersection}{node_1.primitives, node_2.primitives}$} \Comment{最底层叶子节点原生几何相交测试}
+           \State \Comment{最底层叶子节点原生几何相交测试}
+           \State \Return {\Call{CheckIntersection}{$node_1.primitives, node_2.primitives$}}
            \Else
               \ForAll {$child \in node_2.children$}
               \State \Call{TraverseBVHTree}{$node_1, child$} \Comment{递归调用}
@@ -369,7 +370,7 @@ $node_1$，$node_2$：BVH~树中的节点1、节点2
 \end{algorithmic}
 \end{algorithm}
 从算法~\ref{alg:traverse-bvh-tree}~可以看出，基于~BVH~的碰撞检测算法性能的好坏关键在于两个操作，一是分别来自两个~BVH~内部节点包围体之间的相交测试，二是~BVH~最底层叶子节点内的原生几何相交测试，
-常常利用公式（\ref{equa:evaluate:static:bv}）~来衡量单次相交测试的所付出的代价
+常常利用公式(\ref{equa:evaluate:static:bv})~来衡量单次相交测试的所付出的代价
 \begin{equation}
 T_{cost} = n_v * C_v + n_p * C_p,
 \label{equa:evaluate:static:bv}
@@ -405,7 +406,7 @@ Convex hull & 5 & 5 & 1 & 5 \\
 \label{lbl:table:bv-comp}
 \end{table}
 
-本文算法在基于~AABB~包围体树的算法基础上，通过更加紧致的~$k$-CBP~来过滤更多不相交的模型，通过减少公式（\ref{equa:evaluate:static:bv}）及公式（\ref{equa:evaluate:dynamic:bv}）中~$n_p$~的值来达到提高碰撞检测算法的效率。
+本文算法在基于~AABB~包围体树的算法基础上，通过更加紧致的~$k$-CBP~来过滤更多不相交的模型，通过减少公式(\ref{equa:evaluate:static:bv})及公式(\ref{equa:evaluate:dynamic:bv})中~$n_p$~的值来达到提高碰撞检测算法的效率。
 
 \section{本文主要内容}
 \label{sec:structure}

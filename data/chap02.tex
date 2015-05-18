@@ -135,9 +135,9 @@ $k$-DOP\cite{klosowski1998efficient}~预先定义~$k/2$~对法向，且~$k$~值�
 \label{alg:get_init_normals_by_area}
 \begin{algorithmic}[1]
 \Require
-初始法向数量$k$
+初始法向数量~$k$
 \Ensure
-~$k$~个法向 $normals$
+$k$~个法向~$normals$
 
 \Function{GenerateInitNormal}{$k$}
   \State $area \leftarrow 4\pi / k$
@@ -170,7 +170,7 @@ $k$-DOP\cite{klosowski1998efficient}~预先定义~$k/2$~对法向，且~$k$~值�
 \label{alg:kmeans-determine-normals}
 \begin{algorithmic}[1]
 \Require
-初始中心点 $init$, 聚类数量 $k$, 聚类样本法向集 $points$
+初始中心点~$init$, 聚类数量~$k$, 聚类样本法向集~$points$
 \Ensure
 ~$k$~个聚类后的法向 $result$
 \Function{kmeansCluster}{$init, k, points$}
@@ -182,7 +182,7 @@ $k$-DOP\cite{klosowski1998efficient}~预先定义~$k/2$~对法向，且~$k$~值�
     \EndFor
     \ForAll {$c \in init$}
     \State $result \gets \Call{update}{c}$ 
-        \Comment{按照公式（\ref{equ:kmeans-update-center}）更新中心点}
+        \Comment{按照公式(\ref{equ:kmeans-update-center})更新中心点}
         \If{$ \Call{checkState}{result, init, iter}$}
         \State \Return {$result$}
         \State \Comment{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
@@ -235,7 +235,7 @@ n)$， 其中~$k$~为法向数量，$n$~为模型点的数量。
 \label{alg:search-plans-cpu}
 \begin{algorithmic}[1]
 \Require
-截面法向 $normals$, 模型点集 $points$
+截面法向~$normals$, 模型点集~$points$
 \Ensure
 多面体截面 $planes$
 \Function{SearchCuttingPlanes}{$normals, points$}
@@ -280,7 +280,6 @@ Purpose Graphic Process Unit，简称~GPGPU）中也发挥着重要作用。下�
 这样做的好处是每绘制一遍不用清除深度缓冲，最后可以一次性读取这个~$k \times 1$~大小的纹理得到结果。
 如代码~\ref{shader:zbuffer}~的着色器代码所示，OpenGL~中利用齐次坐标处理渲染流程，因此我们利用前三个分量保存法向的~$x,y,z$~坐标值，第4个分量~$w$~保存法向的索引，在片段着色器中，只需要简单地输出切点的在输入点数组的索引即可。
 通过绘制~$k$~遍，我们从大小为~$k \times 1$~的纹理中读出点索引以此就能确定~$k$~切平面，每绘制一遍得到1个切平面，当~$k$~值较大时，这个过程仍然比较耗时，从实验结果也能看出，这种算法适用于~$k$~值相对较小的情况。
-
 %\lstinputlisting[language={shader}, caption={Vertex shader(Z buffer algorithm)}, label=vertex_shader_zbuffer]{shader_zbuffer.vert}
 \lstinputlisting[language={shader}, caption={基于~Z Buffer~算法着色器代码}, label=shader:zbuffer]{shader_zbuffer.vert}
 
@@ -302,7 +301,6 @@ RTT~的算法一般是在片段着色器（Fragment Shader）中完成，有时�
 如代码~\ref{shader:pingpong}~中的片段着色器代码所示，用一个像素值保存法向的~$xyz$~坐标值和沿着该法向投影得到最大值，另外该像素的第四个分量保存该最大值点在输入点数组中的索引。
 算法将输入点分成~$x$~份，每次只处理一份，在当前渲染过程中，找出在该批点集中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复~$x$~次，
 当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。最后再通过~CPU~一次性从帧缓冲中读取所有法向的切点。
-
 \lstinputlisting[float=!ht, language={shader}, caption={基于乒乓技术算法着色器代码}, label=shader:pingpong]{shader_rrt_pingpong.frag}
 
 与~Z Buffer~算法相比，基于乒乓技术的算法在进行一次绘制操作能够得到沿着~$k$~个法向的局部（所有处理过的点集）最大值。为了充分利用~GPU~的并行计算能力，将每次处理点的数量设置为~GPU~硬件所支持的~OpenGL~中统一块（uniform
@@ -341,11 +339,11 @@ CUDA~程序可以由一系列的主机程序组成，主机程序能够并行地
 
 空间中的平面位置情况如图~\ref{fig:three-planes-intersection}~所示，可分为如下几种情况：
 \begin{inparaenum}[(1)]
-\item \textbf{无交点} 若3个平面互相平行则没有交点，如图~\ref{lbl:intersection-center-0}~；
-\item \textbf{1~条交线} 如图~\ref{lbl:intersection-center-1}~所示，3个平面相交于~1~条交线；
-\item \textbf{2~条交线} 当有两个平面互相平行，另一个平面与其相交时有2条交线，如图~\ref{lbl:intersection-center-2}~；
-\item \textbf{3~条交线} 如图~\ref{lbl:intersection-center-3}~所示，3个平面交于~3~条交线；
-\item \textbf{1~个交点} 最后一种情况是三个平面相交于1点的情况，如图~\ref{lbl:intersection-center-4}~所示。
+\item \textbf{无交点}，若3个平面互相平行则没有交点，如图~\ref{lbl:intersection-center-0}~所示；
+\item \textbf{1~条交线}， 如图~\ref{lbl:intersection-center-1}~所示，3个平面相交于~1~条交线；
+\item \textbf{2~条交线}， 当有两个平面互相平行，另一个平面与其相交时有2条交线，如图~\ref{lbl:intersection-center-2}~；
+\item \textbf{3~条交线}， 如图~\ref{lbl:intersection-center-3}~所示，3个平面交于~3~条交线；
+\item \textbf{1~个交点}， 最后一种情况是三个平面相交于1点的情况，如图~\ref{lbl:intersection-center-4}~所示。
 \end{inparaenum}
 
 一个凸多面体的每一个顶点都可看作是至少3个平面的交点。现在只需要枚举出所有3个平面相交于1点的所有情况即可得到$k$-CBP~的顶点，值得注意的是，并非所有交点都是多面体的顶点，交点在某个半空间的正方向上即在半空间相交区域的外部须排除。
@@ -381,7 +379,7 @@ CUDA~程序可以由一系列的主机程序组成，主机程序能够并行地
 \end{equation}
 
 令$(\bm{n_1} \cdot \bm{p_1}, \bm{n_2} \cdot \bm{p_2}, \bm{n_3} \cdot \bm{p_3})
-= (y_1, y_2, y_3) = \bm{y}$，则求解式（\ref{equa:three-planes-intersection}）相当于解线性方程组
+= (y_1, y_2, y_3) = \bm{y}$，则求解式(\ref{equa:three-planes-intersection})相当于解线性方程组
 $\bm{A} \bm{x}=\bm{y}$ 即 $(\bm{n_1},\bm{n_2}, \bm{n_3})^T \cdot \bm{x} = \bm{y}$， 令
 $\bm{n_i} = (a_{i1}, a_{i2}, a_{i3}), i=\{1,2,3\}$，则有：
 \begin{equation*}
@@ -631,9 +629,9 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
 \label{alg:enum_algortihm}
 \begin{algorithmic}[1]
 \Require
-平面：$planes$
+平面~$planes$
 \Ensure
-凸包围多面体：$k$-CBP
+凸包围多面体~$k$-CBP
 \Function{ConstructKCBP}{$planes$}
   \ForAll {$p_1 \in planes$}
     \State $Intersection \gets \emptyset $
@@ -643,7 +641,7 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
               \If{$ p_1 \nparallel p_2 \nparallel p_3$}
                   \If{$|A| \not= 0$}
                       \State $P = \Call{vec3}{x_1, x_2, x_3}$
-                      \Comment{按照公式（\ref{equa:solution:three-planes}）计算得到交点坐标值} 
+                      \Comment{按照公式(\ref{equa:solution:three-planes})计算得到交点坐标值} 
                       \If{\Call{validate}{P}}
                         \State \Comment{验证交点P是否都在半空间负方向上}
                         \State $Intersection \gets Intersection \cup P$
@@ -692,7 +690,7 @@ max\_point$~为截面法向与截面上的投影点~$max\_point$~的点积，此
 %\end{enumerate}
 
 综上，该方法总体复杂度为~$O(k\log k)$~。
-在利用这种对偶变化时需要注意约束条件即上述不等式中的~$d_i>0$，此时原点~$O(0,0,0)$~始终满足不等式（\ref{equa:halfspace:defition}），体现在算法输入上即原始模型需要包含原点。当原始模型不包含原点时，可以先对模型做一定平移或者也可用另外的对偶变换进行求解，文献\onlinecite{Preparata1979Intersection}对此问题进行了详述的阐述。
+在利用这种对偶变化时需要注意约束条件即上述不等式中的~$d_i>0$，此时原点~$O(0,0,0)$~始终满足不等式(\ref{equa:halfspace:defition})，体现在算法输入上即原始模型需要包含原点。当原始模型不包含原点时，可以先对模型做一定平移或者也可用另外的对偶变换进行求解，文献\onlinecite{Preparata1979Intersection}对此问题进行了详述的阐述。
 
 \section{实验结果及分析}
 \label{sec:exper-kcbp}
@@ -762,18 +760,18 @@ n)$一致，截面求交过程利用第~\ref{subsec:intersection-dual-mapping}~�
 Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用中当模型规模较小时可直接用~CPU~计算即可。
 随着输入模型所含有点的数量规模的增加，CPU~和~GPU~运行时间之间的差距也越来越大。
 当多面体面数增加即~$k$~的增大时，在~Z Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所增加，而在基于乒乓技术的算法中，当点规模一定时，$k$~的变化对最后运行时间影响不明显，因此当较大的~$k$~时，这种算法更快。
-
 \begin{table}[htbp]
 \centering
 \caption{基于着色器并行算法加速比}
 \label{tab:exper:shadertime}
-\begin{minipage}[t]{0.8\textwidth}
+\begin{minipage}[c]{\textwidth}
+\begin{center}
   \begin{tabular}{p{1.5cm}<{\centering}cccc cccc} %p本身占一列
   \toprule[1.5pt]
-  \multirow{2}{*}{$k$} & \multicolumn{4}{c}{Apple模型(8118 个点)} &
-  \multicolumn{4}{c}{Bugatti~模型(1010815个点)}\\
+  \multirow{3}{*}{$k$} & \multicolumn{4}{c}{Apple模型(8118 个点)} & \multicolumn{4}{c}{Bugatti~模型(1010815个点)}\\
   \cmidrule(lr){2-5}\cmidrule(lr){6-9}
-  ~&cpu & Z buffer  & rtt\_pp & 加速比$^{(a)}$ & cpu  & Z buffer& rtt\_pp& 加速比 \\
+  & cpu & zbuffer  & rtt\_pp & \multirow{2}{*}{加速比$^{(a)}$} & cpu  & zbuffer& rtt\_pp & \multirow{2}{*}{加速比$^{(a)}$} \\
+  & (ms) & (ms)  & (ms) & & (ms)  & (ms) & (ms) \\
   \midrule[1pt]
  6	 & 6 	& 5 	& 41 &	1.20 &	26	& 17	&178  &	1.53 \\
 16	 & 16	& 13	& 43 &	1.23 &	70	& 48	&181  &	1.46 \\
@@ -790,8 +788,10 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 186	 & 177	& 110	& 43 &	4.12 &	861	& 474	&180  &	4.78 \\
 206	 & 194	& 123	& 49 &	3.96 &	962	& 533	&209  &	4.60 \\
   \bottomrule[1.5pt]
-\end{tabular}\\[2pt]
-  \footnotesize (a): 加速比=~cpu/$min$(Z buffer, rtt\_pp)
+\end{tabular}
+\end{center}\vspace{-0.5em}
+\hspace{1em}
+\footnotesize (a): 加速比=~cpu/$min$(zbuffer, rtt\_pp)
 \end{minipage}
 \end{table}
 
@@ -810,7 +810,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \multirow{2}{*}{$k$} & \multicolumn{3}{c}{Apple模型(8118个点)} &
 \multicolumn{3}{c}{Bugatti~模型(1010815个点)}\\
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
-~&SSE\cite{karlsson2010parallel} & $k$-CBP &  加速比 & SSE\cite{karlsson2010parallel} & $k$-CBP &  加速比\\
+~&SSE\cite{karlsson2010parallel}(ms) & $k$-CBP(ms) &  加速比 & SSE\cite{karlsson2010parallel}(ms) & $k$-CBP(ms) &  加速比\\
 \midrule[1pt]
 6 & 0.4 & 0.12  & 3.20     & 24.2 & 3.20  & 7.56 \\
 16 & 0.9 & 0.26  & 3.43    & 44.5 & 8.44  & 5.27 \\
@@ -837,7 +837,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \subsection{凸包围多面体紧致程度}
 \label{subsec:exper:tightness}
 
-凸包围多面体的质量用公式（\ref{equa:judge:tightness}）衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
+凸包围多面体的质量用公式(\ref{equa:judge:tightness})衡量即通过凸包与凸包围多面体的体积之比来量化包围体的紧致程度。
 文献~\onlinecite{abenchmarking2007}~是基于~$k$-DOP~实现的层次结构的包围体，其顶层的~$k$-DOP~与本文算法生成的~$k$-CBP~的紧致程度对比如图~\ref{chart:exps:tightness}~所示，
 图中横坐标~$k$~为凸包围多面体的面数，纵坐标为紧致程度，曲线~$k$-DOP~和~$k$-CBP~分别为文献~\onlinecite{abenchmarking2007}~和本文的方法，由图可知，
 对于不同模型，本文构造的凸包围多面体紧致程度均有所提升，如~Alice~模型提升了12.08\%，~Dinasour~模型提升了34.0\%。

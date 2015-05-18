@@ -31,7 +31,7 @@
 %\usepackage{pgfplots} 
 
 \usepackage{algorithm} %%format of the algorithm
-\usepackage{algorithmicx} %%format of the algorithm
+%\usepackage{algorithmicx} %%format of the algorithm
 \usepackage{algpseudocode}
 \floatname{algorithm}{算法}
 \renewcommand{\algorithmicrequire}{\textbf{输入:}} %%Use Input in the format of Algorithm
@@ -43,15 +43,17 @@
 \renewcommand\lstlistingname{代码}
 \renewcommand\lstlistlistingname{代码}
 
-\lstset{framexleftmargin=1.4em, basicstyle=\ttfamily\small,
+\lstset{framexleftmargin=1.4em, 
+        xleftmargin=1.8em, 
+        basicstyle=\ttfamily\small,
         %frame=shadowbox, numberstyle=\tiny, breaklines=true,
         frame=single,
         numberstyle=\tiny, breaklines=true,
         keywordstyle=\color{blue!70}\bfseries,
         %commentstyle=\color{red!50!green!50!blue!50},
         rulesepcolor=\color{red!20!green!20!blue!20},
-        xleftmargin=1.8em, numbers=none,fontadjust=true}
-\lstdefinelanguage{shader}{morekeywords={uniform, layout, uniform, vec2, vec3, vec4, in, out, gl_Position, dot, flat, int ,float, gl_VertexID, xyz, w, x, y, z, location, version, sampler2DRect, bgr, gl_FragData, texture2DRect, gl_TexCoord},morecomment=[l]{//}}
+        numbers=none,fontadjust=true}
+\lstdefinelanguage{shader}{morekeywords={uniform, layout, uniform, vec2, vec3, vec4, in, out, gl_Position, dot, flat, int ,float, gl_VertexID, xyz, w, x, y, z, location, version, sampler2DRect, bgr, gl_FragData, texture2DRect, gl_TexCoord,for,xy},morecomment=[l]{//}}
 
 \usepackage{placeins}
 \makeatletter
