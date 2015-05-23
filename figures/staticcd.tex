@@ -9,7 +9,7 @@
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
 
-\selectcolormodel{gray}  
+%\selectcolormodel{gray}  
 
 \pgfplotsset{
   legend style={font=\footnotesize}
@@ -484,5 +484,27 @@
 \addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.hand.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
+
+
+%page 17
+\begin{tikzpicture}
+\begin{axis}
+[
+    scale only axis, 
+    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    legend pos=north west,
+    legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-DOP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-DOP)(GJK)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[black, thick, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.dinosaur.k24.csv};
+\addplot[green, thick, mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.dinosaur.k24.csv};
+\addplot[gray, thick, mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.dinosaur.k24.csv};
+\addplot[black, thick, dashed, mark=o] table [x=n, y=DT(k-DOP)] {experiments/staticcd.dinosaur.k46.csv};
+\addplot[green, thick, dashed,mark=*] table [x=n, y=DT(k-CBP-AABB)] {experiments/staticcd.dinosaur.k46.csv};
+\addplot[gray, thick, dashed,mark=x] table [x=n, y=DT(k-CBP-GJK)] {experiments/staticcd.dinosaur.k46.csv};
+\end{axis}
+\end{tikzpicture}
+
+
 \end{document}
 

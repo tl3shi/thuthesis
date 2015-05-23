@@ -9,12 +9,13 @@
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
 
-\selectcolormodel{gray}  
+%\selectcolormodel{gray}  
 
 \pgfplotsset{
   legend style={font=\footnotesize}
 }
 
+% page 1
 \begin{tikzpicture}
 \begin{axis}
 [
@@ -30,6 +31,7 @@
 \end{axis}
 \end{tikzpicture}
 
+% page 2
 \begin{tikzpicture}
 \begin{axis}
 [
@@ -47,6 +49,7 @@
 \end{tikzpicture}
 
 
+% page 3
 %% 双纵坐标轴，比较混乱以下
 \begin{tikzpicture}
 \begin{axis}
@@ -80,6 +83,7 @@
 
 
 
+% page 4
 \begin{tikzpicture}
 \begin{axis}
 [
@@ -96,6 +100,7 @@
 \end{axis}
 \end{tikzpicture}
 
+% page 5
 \begin{tikzpicture}
 \begin{axis}
 [
@@ -113,6 +118,7 @@
 \end{tikzpicture}
 
 
+% page 6
 \begin{tikzpicture}
 \begin{axis}
 [
@@ -315,6 +321,26 @@
 \end{tikzpicture}
 
 
+%page=17
+\begin{tikzpicture}
+\begin{axis}
+[
+    scale only axis, 
+    %axis y line*=left,
+    xlabel=$moves$, ylabel=时间(ms),
+    legend pos=north west,
+    %legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($24$-CBP)(AABB), DT($24$-DOP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-DOP)(GJK), DT($46$-DOP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
+\addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
+\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
+\addplot[black, thick, dashed, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
+\addplot[green, thick, dashed,mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
+\addplot[gray, thick, dashed,mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
+\end{axis}
+\end{tikzpicture}
 
 \end{document}
 
