@@ -9,7 +9,7 @@
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
 
-%\selectcolormodel{gray}  
+%\selectcolormodel{brown}  
 
 \pgfplotsset{
   legend style={font=\footnotesize}
@@ -21,7 +21,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=DP,
+    xlabel=$frames$, ylabel=DP,
     legend pos=north west,
     legend entries={DP($k$-CBP),DP(Model)}
 ]
@@ -37,14 +37,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k24.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k24.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.bunny.k24.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -56,7 +56,7 @@
 [
     scale only axis, 
     axis y line*=right,
-    xlabel=$moves$, ylabel=DP,
+    xlabel=$frames$, ylabel=DP,
     legend pos=north west,
     legend entries={DP($k$-CBP),DP(Model)}
 ]
@@ -74,9 +74,9 @@
 ]
 \addlegendimage{/pgfplots/refstyle=plot:dpkcbp}\addlegendentry{DP($k$-CBP)}
 \addlegendimage{/pgfplots/refstyle=plot:dpmodel}\addlegendentry{DP(Model)}
-\addplot[black, thick, mark=o] table [x=moves,y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.csv};\addlegendentry{DT($k$-DOP)}
+\addplot[black, thick, mark=diamond*] table [x=moves,y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.csv};\addlegendentry{DT($k$-DOP)}
 \addplot[green, thick, mark=*] table [x=moves,y=CDtime(AABB)]  {experiments/dynamiccd.bunny.k24.csv};\addlegendentry{DT($k$-CBP)(AABB)}
-\addplot[gray, thick, mark=x] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.bunny.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
+\addplot[brown, thick, mark=star] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.bunny.k24.csv};\addlegendentry{DT($k$-CBP)(GJK)}
 \end{axis}
 \end{tikzpicture}
 
@@ -89,14 +89,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k24.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k24.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.apple.k24.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k24.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k24.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -106,14 +106,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.budda.k24.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.budda.k24.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.budda.k24.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.budda.k24.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.budda.k24.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -124,14 +124,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k24.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k24.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.dinosaur.k24.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k24.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k24.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -139,72 +139,74 @@
 
 %m=10
 
+% page 7
 \begin{tikzpicture}
 \begin{axis}
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.bunny.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.m10.csv};
 \end{axis}
 \end{tikzpicture}
 
+% page 8
 \begin{tikzpicture}
 \begin{axis}
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.apple.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k24.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k24.m10.csv};
 \end{axis}
 \end{tikzpicture}
 
+% page 9
 \begin{tikzpicture}
 \begin{axis}
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.budda.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.budda.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.budda.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.budda.k24.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.budda.k24.m10.csv};
 \end{axis}
 \end{tikzpicture}
 
 
+% page 10
 \begin{tikzpicture}
 \begin{axis}
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
 \end{axis}
 \end{tikzpicture}
-
-
 
 
 
@@ -215,18 +217,18 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    %legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
-    legend entries={DT($24$-CBP)(AABB), DT($24$-DOP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-DOP)(GJK), DT($46$-DOP)}
+    %legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
+    legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.bunny.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.m10.csv};
-\addplot[black, thick, dashed, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k46.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k24.m10.csv};
+\addplot[black, thick, dashed, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.bunny.k46.m10.csv};
 \addplot[green, thick, dashed,mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.bunny.k46.m10.csv};
-\addplot[gray, thick, dashed,mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k46.m10.csv};
+\addplot[brown, thick, dashed,mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.bunny.k46.m10.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -236,17 +238,17 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($24$-CBP)(AABB), DT($24$-DOP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-DOP)(GJK), DT($46$-DOP)}
+    legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.apple.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k24.m10.csv};
-\addplot[black, thick, dashed, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k46.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k24.m10.csv};
+\addplot[black, thick, dashed, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.apple.k46.m10.csv};
 \addplot[green, thick, dashed,mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.apple.k46.m10.csv};
-\addplot[gray, thick, dashed,mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k46.m10.csv};
+\addplot[brown, thick, dashed,mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.apple.k46.m10.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -258,14 +260,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.happyBuddha.k24.m2.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.happyBuddha.k24.m2.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.happyBuddha.k24.m2.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.happyBuddha.k24.m2.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.happyBuddha.k24.m2.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -275,14 +277,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -292,14 +294,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.hand.k24.m2.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.hand.k24.m2.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.hand.k24.m2.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.hand.k24.m2.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.hand.k24.m2.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -309,14 +311,14 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
+    legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.hand.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.hand.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.hand.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.hand.k24.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.hand.k24.m10.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -327,18 +329,39 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$moves$, ylabel=时间(ms),
+    xlabel=$frames$, ylabel=时间(ms),
     legend pos=north west,
-    %legend entries={DT($k$-CBP)(AABB), DT($k$-DOP)(GJK), DT($k$-DOP)}
-    legend entries={DT($24$-CBP)(AABB), DT($24$-DOP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-DOP)(GJK), DT($46$-DOP)}
+    %legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
+    legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[black, thick, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
 \addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
-\addplot[gray, thick, mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
-\addplot[black, thick, dashed, mark=o] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k24.m10.csv};
+\addplot[black, thick, dashed, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
 \addplot[green, thick, dashed,mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
-\addplot[gray, thick, dashed,mark=x] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
+\addplot[brown, thick, dashed,mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.dinosaur.k46.m10.csv};
+\end{axis}
+\end{tikzpicture}
+
+%page=18
+\begin{tikzpicture}
+\begin{axis}
+[
+    scale only axis, 
+    %axis y line*=left,
+    xlabel=$frames$, ylabel=时间(ms),
+    legend pos=north west,
+    %legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
+    legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot[black, thick, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
+\addplot[green, thick, mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
+\addplot[brown, thick, mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.happyBuddha.k24.m10.csv};
+\addplot[black, thick, dashed, mark=diamond*] table [x=moves, y=CDtime(AABB)] {experiments/dynamiccd.happyBuddha.k46.m10.csv};
+\addplot[green, thick, dashed,mark=*] table [x=moves, y=CDtime(GJK)] {experiments/dynamiccd.happyBuddha.k46.m10.csv};
+\addplot[brown, thick, dashed,mark=star] table [x=moves,  y=CD(kDOPTree)] {experiments/dynamiccd.happyBuddha.k46.m10.csv};
 \end{axis}
 \end{tikzpicture}
 

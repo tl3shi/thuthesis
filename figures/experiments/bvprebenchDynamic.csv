@@ -1,0 +1,7 @@
+model	point	triangle	CT(kDop)	CT(kCBP)	CT(Convexhull)	init(AABB)	CD(kDop)	CD(kCBP)	CD(Convexhull)	hitRate(kDop)	hitRate(kCBP)	hitRate(Convexhull)	DP(model)
+Bunny	2503	4968	0.8	2.2	6.8	11.8	7.64	6.36	6.08	57.14	84.21	94.12	16
+Apple	8118	9380	2	3.6	9.6	23.6	26.6	24.84	23.32	77.27	84.21	94.12	16
+HappyBuddha	24810	50000	5.2	5.6	24.8	154	12.44	10.12	5.28	46.67	63.64	100	7
+Dinosaur	40277	80554	8	10.2	41.2	255.2	1.04	0.76	0.92	16.67	33.33	50	1
+Hand	64349	128314	12.6	11.8	82.2	494.8	5.2	4.64	4.84	54.55	66.67	75	6
+Dragon	87257	174281	17	15.8	76.8	728.8	5.84	5.16	5.6	53.33	72.73	88.89	8

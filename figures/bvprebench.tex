@@ -9,94 +9,251 @@
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 %use xelatex compile
 
-\selectcolormodel{gray}  
-
 \begin{document}
 
-%\pgfplotsset{footnotesize}
+%\selectcolormodel{gray}  
+\pgfplotsset{
+  legend style={font=\footnotesize}
+}
+
+% page1
 \begin{tikzpicture}
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
+     ylabel=时间(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
-    legend entries={$k$-DOP,$k$-CBP}
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    legend entries={CT(Sphere),CT(Box),CT($k$-Dop),CT($k$-CBP),CT(CHull)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {apple.volume.csv};
-\addplot table [x=k, y=k-CBP] {apple.volume.csv};
+\addplot table [x=model, y=CT(Sphere)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=CT(Box)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=CT(kDop)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=CT(kCBP)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=CT(Convexhull)] {experiments/bvprebench.csv};
 \end{axis}
 \end{tikzpicture}
+ 
 
-
+% page 2
 \begin{tikzpicture}
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
-%    legend style={anchor=north east},
+     ylabel=时间(ms),
+    stack plots=y,
+    area style,
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
     legend pos=north west,
-    legend entries={$k$-DOP,$k$-CBP}
+    legend entries={CT(Sphere),CT(Box),CT($k$-DOP),CT($k$-CBP),CT(CHull)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {budda.volume.csv};
-\addplot table [x=k, y=k-CBP] {budda.volume.csv};
+\addplot table [x=model, y=CT(Sphere)] {experiments/bvprebench.csv}\closedcycle;
+\addplot table [x=model, y=CT(Box)] {experiments/bvprebench.csv} \closedcycle;
+\addplot table [x=model, y=CT(kDop)] {experiments/bvprebench.csv}\closedcycle;
+\addplot table [x=model, y=CT(kCBP)] {experiments/bvprebench.csv}\closedcycle;
+\addplot table [x=model, y=CT(Convexhull)] {experiments/bvprebench.csv}\closedcycle;
 \end{axis}
 \end{tikzpicture}
 
 
-
+% page 3
 \begin{tikzpicture}
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
-%    legend style={anchor=north east},
+     ylabel=命中率(\%),
     legend pos=north west,
-    legend entries={$k$-DOP,$k$-CBP}
+    ymax=140,
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    legend style={legend columns=2,font=\footnotesize},
+    legend entries={$r$(Sphere),$r$(Box),$r$($k$-DOP),$r$($k$-CBP),$r$(CHull)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {dinasour.volume.csv};
-\addplot table [x=k, y=k-CBP] {dinasour.volume.csv};
+\addplot table [x=model, y=hitRate(Sphere)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=hitRate(Box)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=hitRate(kDop)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=hitRate(kCBP)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=hitRate(Convexhull)] {experiments/bvprebench.csv};
 \end{axis}
 \end{tikzpicture}
 
+
+% page 4
 \begin{tikzpicture}
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
-%    legend style={anchor=north east},
-    legend pos=north west,
-    legend entries={$k$-DOP,$k$-CBP}
+     ylabel=命中率(\%),
+    stack plots=y,
+    area style,
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    enlarge x limits=false,
+    %legend style={at={(0.5,-0.15)}, anchor=north, legend columns=2, font=\scriptsize},
+    %legend pos = outer north east,
+    legend pos=north east,
+    legend style={legend columns=2,font=\scriptsize},
+    legend entries={$r$(Sphere),$r$(Box),$r$($k$-DOP),$r$($k$-CBP),$r$(CHull)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {alice.volume.csv};
-\addplot table [x=k, y=k-CBP] {alice.volume.csv};
+\addplot table [x=model, y=hitRate(Sphere)] {experiments/bvprebench.csv}\closedcycle;
+\addplot table [x=model, y=hitRate(Box)] {experiments/bvprebench.csv} \closedcycle;
+\addplot table [x=model, y=hitRate(kDop)] {experiments/bvprebench.csv}\closedcycle;
+\addplot table [x=model, y=hitRate(kCBP)] {experiments/bvprebench.csv}\closedcycle;
+\addplot table [x=model, y=hitRate(Convexhull)] {experiments/bvprebench.csv}\closedcycle;
 \end{axis}
 \end{tikzpicture}
 
 
+% page 5
+\begin{tikzpicture}
+\begin{axis}
+[
+    ybar,
+    ybar interval=0.5,
+     ylabel=命中率(\%),
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    %legend style={at={(0.5,-0.15)}, anchor=north, legend columns=2, font=\scriptsize},
+    %legend pos = outer north east,
+    legend pos=north east,
+    legend style={legend columns=2,font=\scriptsize},
+    legend entries={$r$(Sphere),$r$(Box),$r$($k$-DOP),$r$($k$-CBP),$r$(CHull)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x=model, y=hitRate(Sphere)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=hitRate(Box)] {experiments/bvprebench.csv}; 
+\addplot table [x=model, y=hitRate(kDop)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=hitRate(kCBP)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=hitRate(Convexhull)] {experiments/bvprebench.csv};
+\end{axis}
+\end{tikzpicture}
+
+
+
+% page 6
 \begin{tikzpicture}
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
+     ylabel=时间(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
-    legend entries={$k$-DOP,$k$-CBP}
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    legend entries={init(Sphere),init(Box),init($k$-DOP),init($k$-CBP),init(CHull)}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {Bugatti_veron.volume.csv};
-\addplot table [x=k, y=k-CBP] {Bugatti_veron.volume.csv};
+\addplot table [x=model, y=init(Sphere)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=init(Box)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=init(kDop)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=init(kCBP)] {experiments/bvprebench.csv};
+\addplot table [x=model, y=init(Convexhull)] {experiments/bvprebench.csv};
 \end{axis}
 \end{tikzpicture}
 
-\end{document}
+% page 7
+\begin{tikzpicture}
+\begin{axis}
+[
+    %title=Apple model(8118 points),
+     ylabel=时间(ms),
+    stack plots=y,
+    area style,
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    %axis x line=bottom, axis y line=left,
+    enlarge x limits=false,
+    legend pos=north west,
+    legend entries={init(Sphere),init(Box),init($k$-DOP),init($k$-CBP),init(CHull)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x index=2, y=init(Sphere)] {experiments/bvprebench.csv} \closedcycle;
+\addplot table [x index=2, y=init(Box)] {experiments/bvprebench.csv} \closedcycle;
+\addplot table [x index=2, y=init(kDop)] {experiments/bvprebench.csv} \closedcycle;
+\addplot table [x index=2, y=init(kCBP)] {experiments/bvprebench.csv} \closedcycle;
+\addplot table [x index=2, y=init(Convexhull)] {experiments/bvprebench.csv} \closedcycle;
+\end{axis}
+\end{tikzpicture}
 
 
+% page 8
+\begin{tikzpicture}
+\begin{axis}
+[
+      %title=Apple model(8118 points),
+     ylabel=时间(ms),
+%    legend style={anchor=north east},
+    legend pos=north east,
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    legend style={legend columns=1,font=\scriptsize},
+    legend entries={CD(Sphere),CD(Box),CD($k$-Dop),CD($k$-CBP),CD(CHull)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x index=2, y=CD(Sphere)] {experiments/bvprebench.csv} ;
+\addplot table [x index=2, y=CD(Box)] {experiments/bvprebench.csv}; 
+\addplot table [x index=2, y=CD(kDop)] {experiments/bvprebench.csv} ;
+\addplot table [x index=2, y=CD(kCBP)] {experiments/bvprebench.csv} ;
+\addplot table [x index=2, y=CD(Convexhull)] {experiments/bvprebench.csv} ;
+\end{axis}
+\end{tikzpicture}
 
+
+% page 9
+\begin{tikzpicture}
+\begin{axis}
+[
+      %title=Apple model(8118 points),
+     ylabel=时间(ms),
+%    legend style={anchor=north east},
+    legend pos=north east,
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    %legend entries={CDAfterBox($k$-Dop),CDAfterBox($k$-CBP),CDAfterBox(CHull)}
+    legend entries={CD($k$-Dop),CD($k$-CBP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x index=2, y=CDAfterBox(kDop)] {experiments/bvprebench1.csv} ;
+\addplot table [x index=2, y=CDAfterBox(kCBP)] {experiments/bvprebench1.csv} ;
+\end{axis}
+\end{tikzpicture}
+
+
+% page 9
+\begin{tikzpicture}
+\begin{axis}
+[
+      %title=Apple model(8118 points),
+     ylabel=时间(ms),
+%    legend style={anchor=north east},
+    legend pos=north east,
+    symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon},
+    xtick=data,
+    x tick label style={rotate=30, font=\scriptsize},
+    %legend entries={CDAfterBox($k$-Dop),CDAfterBox($k$-CBP),CDAfterBox(CHull)}
+    legend entries={CD($k$-Dop),CD($k$-CBP)}
+]
+\pgfplotstableset{col sep = tab}
+\addplot table [x=model, y=CD(kDop)] {experiments/bvprebenchDynamic.csv} ;
+\addplot table [x=model, y=CD(kCBP)] {experiments/bvprebenchDynamic.csv} ;
+\end{axis}
+\end{tikzpicture}
 
 
 
