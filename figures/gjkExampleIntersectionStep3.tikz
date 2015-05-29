@@ -48,5 +48,6 @@
       \node at (0, 0) {\textbullet};
       \node at (D1) {\textbullet};
       \node at (H2) {\textbullet};
+      \node at (H1) {\textbullet};
 
 \end{tikzpicture}
