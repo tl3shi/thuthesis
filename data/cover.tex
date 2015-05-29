@@ -95,18 +95,18 @@ Bounding box is widely applied to computer-aided design, computer animation, com
 Basing on the property that bounding box is simpler than the original model, the calculations between original models can be pruned if the precomputed bounding boxes do not intersect, so that the efficiency of the algorithms, such as geometry intersection, ray tracing, collision detection and etc., can be increased.
 Convex bounding polyhedron, a generalization of bounding box,  can approximate a model with higher tightness compared to the corresponding bounding box in usual cases, which can be used to prune more calculations.
 
-This paper proposes a method to construct the convex bounding polyhedron which is made of given $k$ faces (k-Convex Bounding Polyhedron, $k$-CBP for short) from a point set.
+This thesis proposes a method to construct the convex bounding polyhedron which is made of given $k$ faces (k-Convex Bounding Polyhedron, $k$-CBP for short) from a point set.
 At first, an algorithm with linear time complexity is used to get an approximate convex hull from the input point set, 
 then the algorithm generates $k$ normals by $k$-means algorithm from the normals of the approximate convex hull,  
 moreover, it searches the tangent point to generate a cutting plane along each normal,
 and at last it constructs the convex bounding polyhedron by getting the intersection of the cutting planes. 
 It is easy to use GPU to accelerate the searching process of the cutting planes which is independent between each other parallelly.
-This paper provides methods on both OpenGL Shading Language(GLSL) and Compute Unified Device Architecture(CUDA) platform in order to parallelize the proposal. 
+This thesis provides methods on both OpenGL Shading Language(GLSL) and Compute Unified Device Architecture(CUDA) platform in order to parallelize the proposal. 
 Technology of duality mapping in computational geometry is used to accelerate the process of getting the intersection of cutting planes. 
 Experiments show that the algorithm can construct tighter convex bounding polyhedron faster in comparison to the related algorithms from the given point set.
 
 Collision detection has always been a hot topic in the field of computer animation and computer graphics. 
-This paper proposes a method in which the constructed $k$-CBP is used to avoid redundant operations between models if their $k$-CBPs do not intersect with each other based on the bounding volume hierarchies.
+This thesis proposes a method in which the constructed $k$-CBP is used to avoid redundant operations between models if their $k$-CBPs do not intersect with each other based on the bounding volume hierarchies.
 This method first constructs the bounding box of models, the models that run the intersection test should first pass the pruning intersection test of bounding boxes and then the intersection test of $k$-CBPs. 
 Bounding box hierarchy and a method used to calculate the minimized distance between two convex objects are used during the process of intersection test between $k$-CBPs. 
 Experiments illustrate that this method can achieve good pruning effects in both static and dynamic environments so that the method will be able to speed up the process of collision detection.
