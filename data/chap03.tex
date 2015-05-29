@@ -32,7 +32,8 @@ $k$-CBP~之间的相交测试以两种方法实现，一种是将构造的~$k$-C
 
 AABB~包围体是碰撞检测算法过程中一种最常用的包围体，构造模型的~AABB~包围体树能够有效提高模型的求交或碰撞检测过程。
 本文将~$k$-CBP~视为普通的三角网格模型，采取一种自上而下的构造~AABB~包围体树的方法，顶层包围体为所有三角网格的包围体的并集，然后按照包围体跨度最大的维度进行划分成两个子节点，然后再对每个子节点进行递归划分，
-具体算法如算法~\ref{alg:aabbtree:build}~所示。
+具体算法如算法~\ref{alg:aabbtree:build}~所示，该算法是一个递归算法，%输入为模型的三角网格数组~$primitives$~和对应递归调用的上下限~$first,last$，
+其中节点的~$primitives,box,left,right$~分别表示该节点所包含的三角网格、AABB~包围体和左右孩子节点。
 
 \begin{algorithm}[htbp]
 \small
@@ -42,7 +43,7 @@ AABB~包围体是碰撞检测算法过程中一种最常用的包围体，构造
 \Require
 原始三角网格数组~$primitives$~和对应数组下标~$first, last$
 \Ensure
-AABB~树的根节点~$root$
+构造~AABB~树并返回其根节点~$root$
 
 \Function{ConstructAABBTree}{$primitives, first, last$}
   \State $root \gets \Call{constructNode()}{}$ 
@@ -52,7 +53,6 @@ AABB~树的根节点~$root$
       \State $root.box \gets root.box \cup primitives[i].box$
       \Comment{求每个三角网格的~AABB~的并集}
   \EndFor
-
   \State $size \gets primitives.size$  
   \If {$size = 1$}
   \State \Return $root$
@@ -62,7 +62,6 @@ AABB~树的根节点~$root$
   \Comment {计算包围体跨度最大的轴}
   \State {$\Call{sort}{primitives, axis}$}
   \Comment {按照 $axis$ 对 $primitives$ 排序}
-  
   \If {$size = 2 $}
       \State  {$root.left \gets \Call{constructNode()}{}$}
       \State  {$root.left.primitives \gets primitives[0]$}
@@ -81,7 +80,7 @@ AABB~树的根节点~$root$
 \end{algorithmic}
 \end{algorithm}
 
-为了使生成的~AABB~包围体树更加平衡，因此划分策略为两个子节点包含相同数量的三角网格。划分轴采用沿着坐标轴方向节点跨度最大的轴进行划分，在对三角网格进行排序时，通常可选择三角网格中心位置的某轴向坐标值进行排序，
+为了使生成的~AABB~包围体树更加平衡，因此划分策略为两个子节点包含相同数量的三角网格。划分轴采用沿着坐标轴方向节点跨度最大的轴（即包围盒三个轴长度最长的轴）进行划分，在对三角网格进行排序时，通常可选择三角网格中心位置的某轴向坐标值进行排序，
 因为本文的策略为平衡二叉树策略，两个孩子节点包含三角网格数量一致，因此该点的选择不会对总体划分产生较大影响，只会影响划分轴边缘的三角网格，因此本文仅仅简单选择三角网格第一个坐标点的轴向坐标轴进行排序。
 
 算法~\ref{alg:aabbtree:build}~的叶子节点为单个的三角网格，根据实际需要可以设置~AABB~树的最大深度，将达到最大深度的全部三角网格结合构成一个叶子节点。
@@ -90,12 +89,9 @@ AABB~树的根节点~$root$
   T(n) = O(n \log n ) + 2T(\frac{n}{2}),
 \label{equa:aabbtree:build}
 \end{equation}
-公式(\ref{equa:aabbtree:build}）中~$O(n \log n)$~为算法中根据某坐标轴排序的耗费，根据主定理得此构造包围体树的整体算法时间复杂度~$T(n)=O(n\log^2n)$~，文献~\onlinecite{ericson2005real}~中提到可以用一种~$O(n)$~的算法替代其中的排序操作，使得整体复杂度为~$O(n\log n)$。
+公式(\ref{equa:aabbtree:build})中~$O(n \log n)$~为算法中根据某坐标轴排序的耗费，根据主定理得此构造包围体树的整体算法时间复杂度~$T(n)=O(n\log^2n)$~，文献~\onlinecite{ericson2005real}~中提到可以用一种~$O(n)$~的算法替代其中的排序操作，使得整体复杂度为~$O(n\log n)$。
 
-生成两个~$k$-CBP~的~AABB~包围体树后，当进行碰撞检测时，将采用算法~\ref{alg:aabbtree:traverse:iterator}~的迭代算法进行遍历判断。
-从顶层~AABB~节点开始，若两个节点的~AABB~包围体相交，则进行深度优先遍历其孩子节点，当到达叶子节点时，再进行原生几何（本文中的~$k$-CBP~多边形网格，为了统一转化成与输入模型一致的三角网格）进行相交测试的判断，$k$-CBP~相交后，进行真实模型的相交测试也通过此方法进行。
-
-\begin{algorithm}[htbp]
+\begin{algorithm}[!ht]
 \small
 \caption{基于AABB~树碰撞检测迭代算法}
 \label{alg:aabbtree:traverse:iterator}
@@ -150,6 +146,9 @@ AABB~树的根节点~$root$
 \end{algorithmic}
 \end{algorithm}
 
+生成两个~$k$-CBP~的~AABB~包围体树后，当进行碰撞检测时，将采用算法~\ref{alg:aabbtree:traverse:iterator}~的迭代算法进行遍历判断。
+从顶层~AABB~节点开始，若两个节点的~AABB~包围体相交，则进行深度优先遍历其孩子节点，当到达叶子节点时，再进行原生几何（本文中的~$k$-CBP~多边形网格，为了统一转化成与输入模型一致的三角网格）进行相交测试的判断，$k$-CBP~相交后，进行真实模型的相交测试也通过此方法进行。
+
 算法~\ref{alg:aabbtree:traverse:iterator}~中，底层叶子节点包含的原始三角网格数量与树的高度相关，对于相同的模型，树的高度越低，叶子节点包含三角网格数量也就越多，
 且叶子节点测试的时间复杂度为~$O(m^2)$，$m$~为叶子节点包含的三角网格数量，一般而言在存储允许的情况下都尽量使得最底层叶子节点仅包含1个或少数几个三角形，以减少底层叶子节点三角网格两两测试的时间复杂度。
 
@@ -166,7 +165,8 @@ GJK~算法需要用到闵科夫斯基和（Minkowski Sum）的概念如下定义
 %  \label{}
 %\end{equation}
 ~$\mathbb{A} + \mathbb{B} = \{ \bm{a} + \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\}$， 
-将相应的加号改为减号得到~Minkowski~差，即~$\mathbb{A} - \mathbb{B} = \{ \bm{a} - \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\} $，GJK~算法的核心基础在于若两个凸体相交，则其~Minkowski~差必包含原点，因为若~$\mathbb{A}$~和
+将相应的加号改为减号得到~Minkowski~差，即~$\mathbb{A} - \mathbb{B} = \{ \bm{a} - \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\} $。
+GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点，因为若~$\mathbb{A}$~和
 ~$\mathbb{B}$~相交即~$\mathbb{A}$~和~$\mathbb{B}$~必含有公共交集，
 即至少含有一点同时属于~$\mathbb{A}$~和~$\mathbb{B}$~，该点的~Minkowski~差即为原点~$\bm{O}(0, 0)$，
 更加详细的原理和证明过程可以参考文献~\onlinecite{gilbert1988fast,bergen1999fast}。下面将以一个二维例子阐述此思想。
@@ -196,9 +196,9 @@ GJK~算法需要用到闵科夫斯基和（Minkowski Sum）的概念如下定义
 %  \end{array}
 %    \right\}  
 %\end{equation}
-其~Minkowski~差为~$\Box_{DEFG} - \bigtriangleup_{ABC} = \{  (0.5, 1),  (-1.5, 0.5),  (0.5, 2.5), (-1, 2.5),  (-3, -1),$\\$ (-1, -1),  (0.5, 0.5), (-1, 1),  (-3, 0.5),(0.5, -1), (-1.5, -1), (-1, 0.5) \}$，
-四边形~$DEFG$~与三角形~$ABC$~相交，该~Minkowski~差构成的多边形~$H_1H_2H_3H_4H_5$~包含原点~$\bm{O}$。
-而在图~\ref{fig:gjk:example:nonIntersection}~中，三角形坐标变为~$A'(-3, 1), B'(-1, 1), C'(-1,3)$，四边形~$DEFG$~坐标不变，
+它们顶点之间的~Minkowski~差的结果构成的点集为~$\Box_{DEFG} - \bigtriangleup_{ABC} = \{  (0.5, 1),  (-1.5, $\\$0.5),  (0.5, 2.5), (-1, 2.5),  (-3, -1), (-1, -1),  (0.5, 0.5), (-1, 1),  (-3, 0.5),  (0.5, -1), (-1.5, $\\$-1), (-1, 0.5) \}$，
+四边形~$DEFG$~与三角形~$ABC$~相交，该~Minkowski~差所围成的多边形~$H_1H_2H_3H_4H_5$~包含原点~$\bm{O}$。
+而在图~\ref{fig:gjk:example:nonIntersection}~中，三角形坐标变为~$A'(-3, 1), B'(-1, 1), C'(-1,3)$，四边形~$DEFG$~的坐标不变，
 %其~Minkowski~差如式(\ref{equa:gjk:example:mink:diff2})所示，
 %\begin{equation}
 %\label{equa:gjk:example:mink:diff2}
@@ -210,8 +210,8 @@ GJK~算法需要用到闵科夫斯基和（Minkowski Sum）的概念如下定义
 %  \end{array}
 %  \right\}  
 %\end{equation}
-其~Minkowski~差为~$\Box_{DEFG} - \bigtriangleup_{A'B'C'} = \{  (0.5, 1), (-1.5, 1),  (0.5, 2.5)  , (-1.5, -1),  (-1, 2.5),$\\$(-3, 2.5),  (-1.5, 2.5), (-3, 1), (-1.5, 0.5), (-3, 0.5), (-1, 1),(-3, -1) \}$，
-四边形~$DEFG$~与三角形~$A'B'C'$~不相交，该~Minkowski~差构成的多边形~$H_1'H_2'H_3'H_4'H_5'$不包含原点~$\bm{O}$。
+它们顶点之间的~Minkowski~差为~$\Box_{DEFG} - \bigtriangleup_{A'B'C'} = \{  (0.5, 1), (-1.5, 1),  (0.5, 2.5)  , (-1.5, -1),  (-1, 2.5), $\\$ (-3, 2.5),  (-1.5, 2.5), (-3, 1), (-1.5, 0.5), (-3, 0.5), (-1, 1),(-3, -1) \}$，
+四边形~$DEFG$~与三角形~$A'B'C'$~不相交，该~Minkowski~差围成的多边形~$H_1'H_2'H_3'H_4'H_5'$不包含原点~$\bm{O}$。
 
 通过该方法可将两个凸多边形或多面体是否相交转化为其~Minkowski~差是否包含原点，假设两个凸多边形或多面体分别有~$m$~和~$n$~个点，则直接计算其~Minkowski~差的时间复杂度为~$O(m \cdot n)$。
 GJK~算法并不直接计算其~Minkowski~差，而是采取一种迭代的算法计算其~Minkowski~差一步一步向原点逼近，在有限步内若包含原点则原凸多边形或凸多面体相交反之不相交，文献~\onlinecite{bergen1999fast}~证明了该迭代过程能在有限步内完成。
@@ -355,13 +355,13 @@ $  Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\mat
 判断原点是否被阴影部分面积所覆盖的过程如下：\\ \indent
 %\begin{enumerate}[(1)]
 \begin{inparaenum}[(1)]
-  \item 通过$\bm{d}_3'$~得到的支持点$\bm{D}_3$中，$\bm{d}_3' \cdot \overrightarrow{OD_3} = (5, -8.75) \cdot (0.5, -1) = 11.25 > 0$~表明通过~$\bm{d}_3'$~方向到支持点的方向覆盖了原点，
+  \item 通过$\bm{d}_3'$~得到的支持点$\bm{D}_3$中，$\bm{d}_3' \cdot \overrightarrow{OD_3} = (5, -8.75) \cdot (0.5, -1) = 11.25 > 0$，表明通过~$\bm{d}_3'$~方向到支持点的方向覆盖了原点，
     即原点在线段~$\overline{D_1D_2}$~线段的右下方；\\ \indent
   \item $\overrightarrow{D_3D_1}$~垂直并指向阴影部分面积方向为~$\overrightarrow{P_{D3D1}}=\overrightarrow{D_3D_1} \times \overrightarrow{D_3D_2} \times \overrightarrow{D_3D_1} = (-14, 0)$，此时，
-    $\overrightarrow{P_{D3D1}} \cdot \overrightarrow{D_3O} = (-14, 0) \cdot (-0.5, 1) = 7 < 0$~表明原点~$\bm{O}$~在~$\overrightarrow{P_{D3D1}}$~的正方向即线段~$\overline{D_3D_1}$~的左边；\\ \indent
+    $\overrightarrow{P_{D3D1}} \cdot \overrightarrow{D_3O} = (-14, 0) \cdot (-0.5, 1) = 7 < 0$，表明原点~$\bm{O}$~在~$\overrightarrow{P_{D3D1}}$~的正方向即线段~$\overline{D_3D_1}$~的左边；\\ \indent
   \item 同时，$\overrightarrow{D_3D_2}$~垂直并指向阴影部分面积方向为~$\overrightarrow{P_{D3D2}}=\overrightarrow{D_3D_2}
 \times \overrightarrow{D_3D_1} \times \overrightarrow{D_3D_2} = (0, 24.5)$
-且~$\overrightarrow{P_{D3D1}} \cdot D_3O = (0, 24.5) \cdot (-0.5, 1) = 24.5 > 0$~表明原点~$\bm{O}$~在~$\overrightarrow{P_{D3D2}}$的正方向即线段~$\overline{D_3D_2}$~的上边。\\ \indent
+且~$\overrightarrow{P_{D3D1}} \cdot D_3O = (0, 24.5) \cdot (-0.5, 1) = 24.5 > 0$，表明原点~$\bm{O}$~在~$\overrightarrow{P_{D3D2}}$的正方向即线段~$\overline{D_3D_2}$~的上边。\\ \indent
 %\end{enumerate}
 \end{inparaenum}
 以上三个条件全部满足，即原点~$\bm{O}$~被阴影部分所覆盖，即~$\mathbb{A}$~和~$\mathbb{B}$~的~Minkowski~差包含原点即可确定~$\mathbb{A}$~和~$\mathbb{B}$~相交，结束迭代。
@@ -379,12 +379,9 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 上一步通过~$\bm{d}_3'$~得到的支持点为~$D_3'(-1.5, -1)$，且$\overrightarrow{D_3'D_1'}$~垂直并指向阴影部分面积方向为~$\overrightarrow{P_{D_3'D_1'}}
 \times \overrightarrow{D_3'D_2'} \times \overrightarrow{D_3'D_1'} =
 (-2,-2)*(-3) + 8*(-1.5, 0) = (-6, 6)$，此时
-~$\overrightarrow{P_{D3'D1'}} \cdot \overrightarrow{D_3'O} = (-6, 6) \cdot (1.5, 1) = -3 < 0$~表明下一次迭代方向需要以~$\overrightarrow{P_{D3'D1'}}$~的反方向开始，此时点~$D_2'$~可以规约掉，
+~$\overrightarrow{P_{D3'D1'}} \cdot \overrightarrow{D_3'O} = (-6, 6) \cdot (1.5, 1) = -3 < 0$，表明下一次迭代方向需要以~$\overrightarrow{P_{D3'D1'}}$~的反方向开始，此时点~$D_2'$~可以规约掉，
 即~$\bm{d}_4'= (6, -6)$，以此方向得到的支持点~$D_1'(0.5, 1)$，
-此时，$\bm{d}_4' \cdot \overrightarrow{OD_1} = (6, -6) \cdot (0.5, 1) = -3 < 0 $ 表明通过~$\bm{d}_4'$~方向到支持点覆盖的区域没有包含原点，即可排除相交。
-
-具体的算法如算法~\ref{alg:gjk}~所示，文献~\onlinecite{bergen1999fast}~证明了集合~$\bm{S}$~中在三维空间最多只包含4个点，且算法最终会收敛。
-在实际实现过程中可以根据需求设定最大迭代次数，达到后或者认为没找到相交点或者采取保守态度进行下一步验证。
+此时，$\bm{d}_4' \cdot \overrightarrow{OD_1} = (6, -6) \cdot (0.5, 1) = -3 < 0 $，表明通过~$\bm{d}_4'$~方向到支持点覆盖的区域没有包含原点，即可排除相交。
 
 \begin{algorithm}[htbp]
 \small
@@ -416,6 +413,8 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 \end{algorithmic}
 \end{algorithm}
 
+具体的算法如算法~\ref{alg:gjk}~所示，文献~\onlinecite{bergen1999fast}~证明了集合~$\bm{S}$~中在三维空间最多只包含4个点，且算法最终会收敛。
+在实际实现过程中可以根据需求设定最大迭代次数，达到后或者认为没找到相交点或者采取保守态度进行下一步验证。
 算法~\ref{alg:gjk}~第~12~行~CHECKCONTAINUPDATE~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
 具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
 
@@ -483,9 +482,6 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 同理可得~$\bm{I}_2$~的参数~$t_2$，三角形~$T_2$~用相同的方法也能得到区间的参数，即可判断两个区间线段是否相交，进而可得该非共面的两个三角形是否相交。
 完整的算法如算法~\ref{alg:triangles:intersection}~所示。
 
-算法~\ref{alg:triangles:intersection}~第~10~行~在方法~EDGEEDGETEST~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
-在实际实现过程中，往往需要引入容差以提高算法的稳定性。文献~\onlinecite{Moller1997}~介绍了更多的优化技巧。
-
 \begin{algorithm}[htbp]
 \small
 \caption{两个三角网格的相交测试算法}
@@ -527,6 +523,9 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+算法~\ref{alg:triangles:intersection}~第~10~行~在方法~EDGEEDGETEST~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
+在实际实现过程中，往往需要引入容差以提高算法的稳定性。文献~\onlinecite{Moller1997}~介绍了更多的优化技巧。
 
 \FloatBarrier
 \section{基于 $k$-CBP 的碰撞检测算法}
@@ -660,7 +659,7 @@ AABB~包围盒~$box$，
 变换之后的包围盒~$box'$
 
 \Function{TransformBox}{$box, \bm{M}$}
-    \State $vertices \gets \Call{GetAABBVertices}{box}$ 
+    \State $vertices \gets \Call{GetAABBVertices}{box}$ \Comment{获取~AABB~的8个顶点}
     \State $box' \gets \emptyset$
     \ForAll {$\bm{v} \in vertices$} \Comment{遍历~$box$~的8个顶点}
         \State {$\bm{v'}= \bm{M} \cdot \bm{v}$} \Comment{计算变换后的点坐标}
@@ -679,7 +678,7 @@ AABB~包围盒~$box$，
 \begin{algorithmic}[1]
 \Require
 两个模型~AABB~树的根节点~$root_0, root_1$ 及
-~平移旋转变换矩阵~$\bm{M}$
+平移旋转变换矩阵~$\bm{M}$
 \Ensure
 模型是否相交 
 

@@ -183,9 +183,9 @@ $k$~个法向~$normals$
     \ForAll {$c \in init$}
     \State $result \gets \Call{update}{c}$ 
         \Comment{按照公式(\ref{equ:kmeans-update-center})更新中心点}
+        \State \Comment{检测继续迭代条件是否满足，中心点容差范围内不再变化或迭代次数超过最大迭代次数}
         \If{$ \Call{checkState}{result, init, iter}$}
         \State \Return {$result$}
-        \State \Comment{检测迭代条件是否满足，中心点容差范围内不在变化或迭代次数超过最大迭代次数}
     \Else
         \State $init \gets result $
         \State $iter \gets iter+1 $
@@ -196,7 +196,7 @@ $k$~个法向~$normals$
 \end{algorithmic}
 \end{algorithm}
 
-算法~\ref{alg:kmeans-determine-normals}~中第7行~$UPDATE$~方法作用是聚类迭代更新每类的中心点，
+算法~\ref{alg:kmeans-determine-normals}~中第7行~UPDATE~方法作用是聚类迭代更新每类的中心点，
 本文更新中心点时将每个法向对应的面片的面积作为权重即
 \begin{equation}
 \label{equ:kmeans-update-center}
@@ -226,8 +226,8 @@ $k$~个法向~$normals$
 
 在确定构成~$k$-CBP~的法向后，只需要搜索空间上的一个点即可确定
 ~$k$-CBP~的截面，搜索截面等效于寻找沿着法向上的最大投影值，即对每个法向~$\bm{n_i}$，从输入模型的所有点中寻找最大投影值的点作为切点进而确定法向~$\bm{n_i}$~对应的截面。
-具体算法如算法~\ref{alg:search-plans-cpu}~所示，该过程的时间复杂度为~$O(k\cdot
-n)$， 其中~$k$~为法向数量，$n$~为模型点的数量。
+具体算法如算法~\ref{alg:search-plans-cpu}~所示，算法输入为第~\ref{sec:gen-normals}得到的截面法向~$normals$~和模型所包含的点集$points$，算法结束返回多面体的截面~$planes$，
+每个截面都是由法向和沿该法向上最大投影值的点构成的，该过程的时间复杂度为~$O(k\cdot n)$，其中~$k$~为法向数量，$n$~为模型点的数量。
 
 \begin{algorithm}[htbp]
 \small
@@ -625,7 +625,7 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
 
 \begin{algorithm}[htbp]
 \small
-\caption{枚举算法}
+\caption{截面求交枚举算法}
 \label{alg:enum_algortihm}
 \begin{algorithmic}[1]
 \Require
@@ -660,7 +660,8 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
 \end{algorithmic}
 \end{algorithm}
 
-完整的算法如算法~\ref{alg:enum_algortihm}~所示，枚举遍历所有平面的组合，搜索出三个平面交于一点的情况，排除在半空间外部的交点即可得到~$k$-CBP~的顶点，算法复杂度为~$O(k^3)$，此算法思想简单易于理解和实现，但当平面数量较多（即~$k$~值较大）时，会耗费很多时间，与枚举法相比基于对偶映射的算法实现较复杂但其时间复杂度为~$O(k \log k)$，效率更高。
+完整的算法如算法~\ref{alg:enum_algortihm}~所示，算法输入为第~\ref{sec:search:planes}节中得到的截面$planes$，输出为~$k$-CBP~，每个~$k$-CBP~的多边形截面由围成多边形的交点和多边形所在平面构成。
+算法枚举遍历所有平面的组合，搜索出三个平面交于一点的情况，排除在半空间外部的交点即可得到~$k$-CBP~的顶点，算法复杂度为~$O(k^3)$，此算法思想简单易于理解和实现，但当平面数量较多（即~$k$~值较大）时，会耗费很多时间，与枚举法相比基于对偶映射的算法实现较复杂但其时间复杂度为~$O(k \log k)$，效率更高。
 
 \subsection{对偶映射算法}
 \label{subsec:intersection-dual-mapping}
@@ -704,7 +705,7 @@ i5-2320 CPU @ 3.2GHz 8G RAM NVIDIA GeForce GTX
 \subsection{凸包围多面体生成效率}
 \label{subsec:exper:efficiency}
 
-如图~\ref{fig:chart:exps:cputime}~所示为本文算法（CUDA）与传统的~CPU~算法对比结果，图中横纵坐标分别代表多面体面数和运行时间，其中实线~CPU\rm{'}~和$k$-CBP{'}分别表示用传统~CPU~方法和本文~CUDA~算法构造凸包围多面体总体耗时，虚线~CPU~和$k$-CBP~分别代表各自算法搜索截面的过程。
+如图~\ref{fig:chart:exps:cputime}~所示为本文算法（CUDA）与传统的~CPU~算法对比结果，图中横纵坐标分别代表多面体面数和运行时间，其中实线~CPU$\rm{'}$~和$k$-CBP$\rm{'}$分别表示用传统~CPU~方法和本文~CUDA~算法构造凸包围多面体总体耗时，虚线~CPU~和$k$-CBP~分别代表各自算法搜索截面的过程。
 从中可以看出，当模型点数量较大时，搜索截面的过程占据了算法绝大多数时间，且随着凸包围多面体的面数~$k$~值增加而线性增长，这与搜索截面时间复杂度~$O(k\cdot
 n)$一致，截面求交过程利用第~\ref{subsec:intersection-dual-mapping}~节中的对偶映射法，其时间复杂度为~$O(k\log k)$，
 当点数量极大时，如图~\ref{fig:exp:cpu:buggatti}~所示，实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略。
@@ -957,13 +958,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \label{fig:kdop:kcbp:ui}
 \end{figure}
 
-本文算法利用近似凸包与精确凸包的相似性，从近似凸包的众多面片对应的法向中通过~$k$-means~聚类算法生成~$k$~个法向。
-表~\ref{tab:exp:ach:ch:tightness}~为利用~Alice~模型的近似凸包和精确凸包分别聚类生成法向构造~$k$-CBP~的紧致程度对比。
-可以看出，一方面，利用精确凸包构造的~$k$-CBP~并不一定比近似凸包构造的结果更紧致，但由于近似凸包与精确凸包的外观的近似性因此二者得到的结果相差并不大(5\%以内)；
-另一方面，因近似凸包的时间复杂度为线性，而精确凸包为~$O(n\log n)$，
-因此本文利用近似凸包聚类生成法向。示例中构造近似凸包耗费时间仅为~0.88ms~，而精确凸包为~79.31ms~。
-
-\begin{table}[!ht]   
+\begin{table}[H]   
 \centering
 \caption{用近似凸包与精确凸包构造~$k$-CBP~紧致程度对比}
 \label{tab:exp:ach:ch:tightness}
@@ -983,74 +978,13 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 \end{tabular}
 \end{table}
 
-\begin{table}[htbp] 
-\centering
-\caption{$k$-CBP~与~QuickHull~凸包算法比较}
-\label{tab:exp:cgal}
-\begin{tabular}{lcccccl}
-\toprule[1.5pt]
- Model & $f$(CHull)& $f$($k$-CBP) & $\tau$ ($k$-CBP)(\%) & $t$(CHull)(ms) & $t$($k$-CBP)(ms)\\ % 后面重新跑的, KCBP加上了近似凸包及求交时间的总和, 和近似凸包的分组时间也加了.
-\midrule[1.0pt]
-  Apple	& 499 & 30 & 93.67 & 5.5 & 1.30 \\ % apple3  自己电脑跑的数据, 之前是用的chengxianyu的电脑.
-  Budda	& 1608 & 46 & 92.39 & 21.3 & 2.86 \\ %  1.0+0.86+1
-  Dinosaur	& 1240 & 44 & 93.34 & 22.6 & 1.99 \\  % 1.0+0.98+0.1
-  Alice	& 1332 & 44 & 93.92 & 85.8 & 8.47\\ % 2+6.48
-  Bugatti & 24654 & 44 & 95.06 & 688.7 & 25.41 \\
-\bottomrule[1.5pt]
-\end{tabular}
-\end{table}
+本文算法利用近似凸包与精确凸包的相似性，从近似凸包的众多面片对应的法向中通过~$k$-means~聚类算法生成~$k$~个法向。
+表~\ref{tab:exp:ach:ch:tightness}~为利用~Alice~模型的近似凸包和精确凸包分别聚类生成法向构造~$k$-CBP~的紧致程度对比。
+可以看出，一方面，利用精确凸包构造的~$k$-CBP~并不一定比近似凸包构造的结果更紧致，但由于近似凸包与精确凸包的外观的近似性因此二者得到的结果相差并不大(5\%以内)；
+另一方面，因近似凸包的时间复杂度为线性，而精确凸包为~$O(n\log n)$，
+因此本文利用近似凸包聚类生成法向。示例中构造近似凸包耗费时间仅为~0.88ms~，而精确凸包为~79.31ms~。
 
-
-%\begin{figure}[htbp] 
-%\centering
-%\subcaptionbox{Dinasour(44-CBP)\label{fig:exp:dinosaur}}
-%{
-%    \rotatebox{0}{\includegraphics[width=0.38\textwidth]{dinosaur-44-w-n.png}}
-%}
-%\subcaptionbox{Dinosaur(CHull)\label{fig:exp:ch:dinosaur}}
-%{  
-%    \rotatebox{0}{\includegraphics[width=0.40\textwidth]{dinosaur-convexhull.png}}
-%}
-%\linebreak
-%\subcaptionbox{Bugatti(44-CBP)\label{fig:exp:buggati}}
-%{  
-%   \includegraphics[width=0.40\textwidth]{buggati-44-w-n.png}
-%}
-%\subcaptionbox{Bugatti(CHull)\label{fig:exp:ch:buggati}}
-%{  
-%   \includegraphics[width=0.40\textwidth]{bugatti-convexhull.png}
-%}
-%\linebreak
-%\subcaptionbox{Alice(44-CBP)\label{fig:exp:alice}}
-%{  
-%   \includegraphics[width=0.25\textwidth]{alice-44-w-n.png}
-%}
-%\subcaptionbox{Apple(30-KCBP)\label{fig:exp:apple}}
-%{
-%    \includegraphics[width=0.35\textwidth]{apple-30-w-n.png}
-%}
-%\subcaptionbox{Budda(46-CBP)\label{fig:exp:budda}}
-%{  
-%   \includegraphics[width=0.25\textwidth]{budda-46-w-n.png}
-%}
-%\linebreak
-%\subcaptionbox{Alice(CHull)\label{fig:exp:ch:alice}}
-%{  
-%   \includegraphics[width=0.25\textwidth]{alice-convexhull.png}
-%}
-%\subcaptionbox{Apple(CHull)\label{fig:exp:ch:apple}}
-%{
-%    \includegraphics[width=0.34\textwidth]{apple-convexhull.png}
-%}
-%\subcaptionbox{Budda(CHull)\label{fig:exp:ch:budda}}
-%{  
-%   \includegraphics[width=0.25\textwidth]{budda-convexhull.png}
-%}
-%\caption{~$k$-CBP~与凸包对比}
-%\label{pic:exps:ch-kcbp}
-%\end{figure}
-
-\begin{figure}[htbp] 
+\begin{figure}[H] 
 \centering
 \subcaptionbox{Alice(44-CBP)\label{fig:exp:alice}}
 {  
@@ -1098,7 +1032,23 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 \label{pic:exps:ch-kcbp}
 \end{figure}
 
-\clearpage
+\begin{table}[H] 
+\centering
+\caption{$k$-CBP~与~QuickHull~凸包算法比较}
+\label{tab:exp:cgal}
+\begin{tabular}{lcccccl}
+\toprule[1.5pt]
+ Model & $f$(CHull)& $f$($k$-CBP) & $\tau$ ($k$-CBP)(\%) & $t$(CHull)(ms) & $t$($k$-CBP)(ms)\\ % 后面重新跑的, KCBP加上了近似凸包及求交时间的总和, 和近似凸包的分组时间也加了.
+\midrule[1.0pt]
+  Apple	& 499 & 30 & 93.67 & 5.5 & 1.30 \\ % apple3  自己电脑跑的数据, 之前是用的chengxianyu的电脑.
+  Budda	& 1608 & 46 & 92.39 & 21.3 & 2.86 \\ %  1.0+0.86+1
+  Dinosaur	& 1240 & 44 & 93.34 & 22.6 & 1.99 \\  % 1.0+0.98+0.1
+  Alice	& 1332 & 44 & 93.92 & 85.8 & 8.47\\ % 2+6.48
+  Bugatti & 24654 & 44 & 95.06 & 688.7 & 25.41 \\
+\bottomrule[1.5pt]
+\end{tabular}
+\end{table}
+
 本文算法与~CGAL~库中利用~QuickHull~算法构造的凸包进行比较的结果如表~\ref{tab:exp:cgal}~所示，
 其中~$f$(CHull)~和~$f$($k$-CBP)~分别表示凸包的面数和凸包围多面体的面数，$\tau$($k$-CBP)~为凸包围多面体的紧致程度，$t$(CHull)~和~$t$($k$-CBP)~分别表示凸包和~$k$-CBP~构造所花费的时间。
 相应模型的可视化结果如图~\ref{pic:exps:ch-kcbp}~所示。
