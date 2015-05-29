@@ -27,13 +27,14 @@
           \node at \Point {$\circ$};
       }
       \coordinate [label = {left: \scriptsize{$D_2(H_1)$}}](H1) at (-3, -1);
+      \coordinate [label = {below: \scriptsize{$(-3, -1)$}}](H1) at (-3, -1);
       \coordinate [label = {right: \scriptsize{$H_2$}}](H2) at (0.5, -1);
       \coordinate [label = {right: \scriptsize{$H_3$}}](H3) at (.5, 2.5);
       \coordinate [label = {above right: \scriptsize{$H_4$}}](H4) at (-1, 2.5);
       \coordinate [label = {left: \scriptsize{$H_5$}}](H5) at (-3, 0.5);
       \draw [dashed] (H1) -- (H2) -- (H3) -- (H4) -- (H5) -- cycle ;
 
-      \coordinate [label = {right: \scriptsize{$D_1$}}](D1) at (1/2, 1);
+      \coordinate [label = {right: \scriptsize{$D_1(0.5, 1)$}}](D1) at (0.5, 1);
       %\draw [thick] (D1) -- (H1);
       %\coordinate [label = {left: \scriptsize{$I$}}](I) at (-4/13, 7/13);
       %\draw [dashed] (O) -- (I);

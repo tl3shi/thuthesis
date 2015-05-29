@@ -29,14 +29,17 @@
       }
 
       \coordinate [label = {left: \scriptsize{$D_2'(H_1')$}}](H1) at (-3, -1);
+      \coordinate [label = {below: \scriptsize{$(-3, -1)$}}](H1) at (-3, -1);
       \coordinate [label = {right: \scriptsize{$D_3'(H_2')$}}](H2) at (-1.5, -1);
-      \coordinate [label = {right: \scriptsize{$D_1'(H_3')$}}](H3) at (.5, 1);
+      \coordinate [label = {below: \scriptsize{$(-1.5, -1)$}}](H2) at (-1.5, -1);
+      \coordinate [label = {right: \scriptsize{$D_1'(H_3')$}}](H3) at (0.5, 1);
+      \coordinate [label = {above: \scriptsize{$(0.5, 1)$}}](H3) at (0.5, 1);
       \coordinate [label = {right: \scriptsize{$H_4'$}}](H4) at (.5, 2.5);
       \coordinate [label = {left: \scriptsize{$H_5'$}}](H5) at (-3, 2.5);
       \draw [dashed] (H1) -- (H2) -- (H3) -- (H4) -- (H5) -- cycle ;
 
       \draw [thick] (H3) -- (H1);
-      \coordinate [label = {left: \scriptsize{$I$}}](I) at (-4/13, 7/13);
+      \coordinate [label = {above: \scriptsize{$I(-4/13, 7/13)$}}](I) at (-4/13, 7/13);
       \draw [dashed] (O) -- (I);
       \draw [fill=gray!80] (I) circle (0.08);
       

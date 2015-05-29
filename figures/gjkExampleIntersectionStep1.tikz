@@ -33,7 +33,7 @@
       \coordinate [label = {left: \scriptsize{$H_5$}}](H5) at (-3, 0.5);
       \draw [dashed] (H1) -- (H2) -- (H3) -- (H4) -- (H5) -- cycle ;
 
-      \coordinate [label = {right: \scriptsize{$D_1$}}](D1) at (1/2, 1);
+      \coordinate [label = {right: \scriptsize{$D_1(0.5, 1)$}}](D1) at (0.5, 1);
       
       \draw [thick, ->] (-4, 1.5) -- (-1, 1.5);
       \coordinate [label={above: \scriptsize{$\bm{d_1}$}}](N1) at (-2.5, 1.5);
