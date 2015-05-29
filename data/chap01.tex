@@ -118,7 +118,7 @@ Directions Hull，简称~$k$-FDH）\cite{weiyingmei2001}。
   \label{fig:8dop-bunny}
 \end{figure}
 
-对于$k$-DOP~中的每一个方向，可以由相应边（面）的法向决定，其数据结构一般用~$k/2$~对半平面的法向，再加上模型在各个方向上的投影的极值即可。因为~$k$-DOP~的方向固定，$k$~值确定后，相应的法向也随即确定，所以只需要存储各个方向的极值即可。当~$k$-DOP~用于碰撞检测或可视化时，还需要存储包围体的各个顶点。
+对于$k$-DOP~中的每一个方向，可以由相应边（面）的法向决定，其数据结构一般用~$k/2$~对半平面的法向，再加上模型在各个方向上的投影的极值即可。因为~$k$-DOP~的方向固定，$k$~值确定后，相应的法向也随即确定，所以只需要存储各个方向的极值即可。当~$k$-DOP~用于运动场景的碰撞检测或可视化时，还需要计算并存储包围体的各个顶点。
 
 \begin{algorithm}
 \caption{$k$-DOP~相交测试算法}
@@ -219,7 +219,7 @@ soups~）模型之间（如简单多边形，样条曲面构成的模型）的�
 J.Guibas~\cite{Guibas2003Zonotopes}等人在2003 年提出了一种利用对偶的方法用线段表示三维包围盒的隐式表达法，称其为~Zonotopes（二维称为~Zonogon），这种方法不用显示描述记录构成包围盒的多面体的每个面，节省存储且同样能够在较快的时间内进行碰撞检测等。\\
 \indent
 \item \textbf{其他}
-还有如图~\ref{fig:subfig-bv-cylinder}~所示的圆柱形\cite{Schomer2000Smallest}、图~\ref{fig:subfig-bvcone}~所示的圆锥形\cite{held1997erit}和如图~\ref{fig:subfig-bv-ellipse}~所示的椭球形\cite{Wang2004Efficient}等等包围体。
+还有如图~\ref{fig:subfig-bv-cylinder}~所示的圆柱形\cite{Schomer2000Smallest}、图~\ref{fig:subfig-bvcone}~所示的圆锥形\cite{held1997erit}和如图~\ref{fig:subfig-bv-ellipse}~所示的椭球形\cite{Wang2004Efficient,hebing2009}等等包围体。
 \end{inparaenum}
 
 \subsection{包围体的应用}
@@ -294,7 +294,8 @@ Solid Geometry，简称~CSG）模型，隐式方程或者参数表达曲面模�
 
 随着~3D~扫描仪的出现，近年来也出现了一些基于点云的碰撞检测算法。Klein Jan~等人\cite{klein2004point}首次在~EuroGraphics 04~上提出了点云的碰撞检测概念，同样利用了层次结构包围体进行加速检测，并提出了一个给定容差的判断点云模型之间是否相交的算法。
 文献~\onlinecite{figueiredo2010efficient}将~AABB~包围体和~R~树结合起来，并从~OAABB（Overlapped AABB）中找出是否含有一个模型的点在容差范围内逼近另外一个点云模型以此判断是否发生相交。
-随着计算机图形卡的产生，又不断涌现出基于~GPU~的碰撞检测并行算法，如文献\onlinecite{Zhang2007Interactive,hebing2009}等，利用~GPU~多线程技术提高碰撞检测的效率。
+随着计算机图形卡的产生，又不断涌现出基于~GPU~的碰撞检测并行算法，如文献\onlinecite{Zhang2007Interactive}利用流式计算~AABB~用于可变形模型的碰撞检测，
+文献\onlinecite{Fan2011}提出了一种面向~GPU~的基于两层层次网格框架的空间划分技术用于可变形模型的碰撞检测，这些方法都是利用~GPU~多线程并行计算的技术来提高碰撞检测的效率。
 
 \subsection{基于包围体树的碰撞检测算法}
 \label{sec:cd-bvh}
