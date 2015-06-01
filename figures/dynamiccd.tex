@@ -1,3 +1,4 @@
+%\documentclass[a4paper,nofonts]{article}
 \documentclass[a4paper]{article}
 \usepackage{ctex}
 \usepackage{pgfplots}
@@ -5,6 +6,8 @@
 \pgfplotsset{compat=newest}
 \usepackage[graphics,tightpage,active]{preview}
 \usepackage{filecontents}
+
+%\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
@@ -37,7 +40,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -50,7 +53,7 @@
 
 
 % page 3
-%% À´◊›◊¯±Í÷·£¨±»ΩœªÏ¬““‘œ¬
+%% ÂèåÁ∫µÂùêÊ†áËΩ¥ÔºåÊØîËæÉÊ∑∑‰π±‰ª•‰∏ã
 \begin{tikzpicture}
 \begin{axis}
 [
@@ -69,7 +72,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = left, %avoid arrow 
-    ylabel=≈ˆ◊≤ºÏ≤‚ ±º‰(ms),
+    ylabel=Á¢∞ÊíûÊ£ÄÊµãÊó∂Èó¥(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:dpkcbp}\addlegendentry{DP($k$-CBP)}
@@ -89,7 +92,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -106,7 +109,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -124,7 +127,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -145,7 +148,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -162,7 +165,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -179,7 +182,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -197,7 +200,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -210,14 +213,14 @@
 
 
 
-%k24-k46 ∂‘±»
+%k24-k46 ÂØπÊØî
 %page=11
 \begin{tikzpicture}
 \begin{axis}
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     %legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
     legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}
@@ -238,7 +241,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}
 ]
@@ -260,7 +263,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -277,7 +280,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -294,7 +297,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -311,7 +314,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
 ]
@@ -329,7 +332,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     %legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
     legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}
@@ -350,7 +353,7 @@
 [
     scale only axis, 
     %axis y line*=left,
-    xlabel=$frames$, ylabel= ±º‰(ms),
+    xlabel=$frames$, ylabel=Êó∂Èó¥(ms),
     legend pos=north west,
     %legend entries={DT($k$-CBP)(AABB), DT($k$-CBP)(GJK), DT($k$-DOP)}
     legend entries={DT($24$-CBP)(AABB), DT($24$-CBP)(GJK), DT($24$-DOP),DT($46$-CBP)(AABB), DT($46$-CBP)(GJK), DT($46$-DOP)}

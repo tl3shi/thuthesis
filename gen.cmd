@@ -1,4 +1,1 @@
-::make thesis
-xelatex main.tex
-bibtex main.aux
-xelatex main.tex
+xelatex -output-driver="xdvipdfmx -V 5" main.tex

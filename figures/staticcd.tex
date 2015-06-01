@@ -1,10 +1,12 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,nofonts]{article}
 \usepackage{ctex}
 \usepackage{pgfplots}
 \usepgfplotslibrary{colormaps}
 \pgfplotsset{compat=newest}
 \usepackage[graphics,tightpage,active]{preview}
 \usepackage{filecontents}
+
+\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
@@ -21,7 +23,7 @@
     %title=appleNew model(8118 points),
     scale only axis, 
     %axis y line*=left,
-    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    xlabel=$n$, ylabel=æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -37,7 +39,7 @@
     %title=appleNew model(8118 points),
     scale only axis, 
     %axis y line*=left,
-    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    xlabel=$n$, ylabel=æ—¶é—´(ms),
     legend pos=north west,
     legend entries={DT($k$-DOP), DT($k$-CBP)(AABB),DT($k$-CBP)(GJK)}
 ]
@@ -56,7 +58,7 @@
     %title=appleNew model(8118 points),
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -69,7 +71,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -85,7 +87,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -98,7 +100,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -116,7 +118,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -129,7 +131,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -145,7 +147,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -158,7 +160,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -176,7 +178,7 @@
     %title=appleNew model(8118 points),
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -189,7 +191,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -205,7 +207,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -219,7 +221,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -237,7 +239,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -259,7 +261,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -284,7 +286,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -305,7 +307,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -326,7 +328,7 @@
 \end{tikzpicture}
 
 
-%k=24  k=46 ¶Ô±È
+%k=24  k=46 å¯¹æ¯”
 
 %page 11
 \begin{tikzpicture}
@@ -335,7 +337,7 @@
     %title=appleNew model(8118 points),
     scale only axis, 
     %axis y line*=left,
-    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    xlabel=$n$, ylabel=æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT(24-CBP),CT(46-CBP),CT(24-DOP),CT(46-DOP)}
 ]
@@ -354,7 +356,7 @@
     %title=appleNew model(8118 points),
     scale only axis, 
     %axis y line*=left,
-    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    xlabel=$n$, ylabel=æ—¶é—´(ms),
     legend pos=north west,
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-CBP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-CBP)(GJK)}
 ]
@@ -375,7 +377,7 @@
     %title=appleNew model(8118 points),
     scale only axis, 
     %axis y line*=left,
-    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    xlabel=$n$, ylabel=æ—¶é—´(ms),
     legend pos=north west,
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-CBP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-CBP)(GJK)}
 ]
@@ -397,7 +399,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -411,7 +413,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -429,7 +431,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -442,7 +444,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -460,7 +462,7 @@
 [
     scale only axis, 
     axis y line*=left,
-    xlabel=$n$, ylabel=³õÊ¼»¯Ê±¼ä(ms),
+    xlabel=$n$, ylabel=åˆå§‹åŒ–æ—¶é—´(ms),
     legend pos=north west,
     legend entries={CT($k$-CBP),CT($k$-DOP)}
 ]
@@ -474,7 +476,7 @@
     scale only axis, 
     axis x line = none,
     axis y line* = right, %avoid arrow 
-    ylabel=Åö×²¼ì²âÊ±¼ä(ms),
+    ylabel=ç¢°æ’æ£€æµ‹æ—¶é—´(ms),
     legend pos=north west,
 ]
 \addlegendimage{/pgfplots/refstyle=plot:kcbp}\addlegendentry{CT($k$-CBP)}
@@ -491,7 +493,7 @@
 \begin{axis}
 [
     scale only axis, 
-    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    xlabel=$n$, ylabel=æ—¶é—´(ms),
     legend pos=north west,
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-CBP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-CBP)(GJK)}
 ]
@@ -511,7 +513,7 @@
 \begin{axis}
 [
     scale only axis, 
-    xlabel=$n$, ylabel=Ê±¼ä(ms),
+    xlabel=$n$, ylabel=æ—¶é—´(ms),
     legend pos=north west,
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-CBP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-CBP)(GJK)}
 ]
