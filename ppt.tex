@@ -5,7 +5,7 @@
 \usepackage{graphicx,wrapfig,fancybox}
 \usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
 \usepackage{beamerthemeTsinghua}
-\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage[backend=bibtex,style=IEEE,sorting=none]{biblatex} % [参考文献格式](https://www.sharelatex.com/blog/2013/07/31/getting-started-with-biblatex.html)
 \usepackage{array}
 \usepackage{bm}
 \usepackage{caption}
@@ -14,8 +14,9 @@
 \usepackage{booktabs}
 
 \defbibheading{bibliography}[\bibname]{} %avoid printbibliography 自动生成目录
-\addbibresource{resource/reference-utf8.bib}
-%\setbeamertemplate{bibliography item}{\insertbiblabel} %将默认的丑陋的icon 改成数字,或者下面这个也行
+\addbibresource{ref/papers-bib-in-google.bib}
+\addbibresource{ref/chinese-ref.bib}
+%\setbeamertemplate{bibliography item}{\insertbiblabel} %将列表中默认的丑陋的icon 改成数字,或者下面这个也行
 \setbeamertemplate{bibliography item}[text] % [ref](http://tex.stackexchange.com/questions/68080/beamer-bibliography-icon)
 
 \begin{document}
@@ -64,7 +65,7 @@
 
     \begin{figure}
     \centering
-    \includegraphics[width=2.5in]{resource/Teschner2005-bounding-volumes}
+    \includegraphics[width=2.5in]{figures/Teschner2005-bounding-volumes}
     \caption{各种各样的包围体\cite{teschner2005collision}}
     \label{Teschner2005-bounding-volumes}
     \end{figure}
@@ -106,12 +107,12 @@
        \frame{
        \frametitle{算法流程}
 
-        %\begin{figure}
-        %\centering
-        %\includegraphics[width=4.0in]{resource/N112014-00019-2.eps}
-        %\caption{算法流程图}
-        %\label{lbl:kcbp-algorithm-flowchart}
-        %\end{figure}
+        \begin{figure}
+        \centering
+        \includegraphics[width=4.0in]{figures/collision-detection-flowchart.eps}
+        \caption{算法流程图}
+        \label{lbl:kcbp-algorithm-flowchart}
+        \end{figure}
 
         \begin{description}
            \item[法向]结合近似内凸包和~$k$-means~
@@ -128,15 +129,15 @@
         \vspace{-3mm}
         \subfloat[]
         {
-           \includegraphics[width=0.28\textwidth]{resource/approximate-convexhull-step1.png}
+           \includegraphics[width=0.28\textwidth]{figures/approximate-convexhull-step1.pdf}
         }\hspace{2mm}
         \subfloat[]
         {
-            \includegraphics[width=0.28\textwidth]{resource/approximate-convexhull-step2.png}
+            \includegraphics[width=0.28\textwidth]{figures/approximate-convexhull-step2.pdf}
         }\hspace{2mm}
         \subfloat[]
         {
-           \includegraphics[width=0.28\textwidth]{resource/approximate-convexhull-step3.png}
+           \includegraphics[width=0.28\textwidth]{figures/approximate-convexhull-step3.pdf}
         }
         \caption{二维近似内凸包的构造}
         \label{lbl:ach-2d}
@@ -151,15 +152,15 @@
         \vspace{-5mm}
         \subfloat[]
         {
-           \includegraphics[width=0.28\textwidth]{resource/kmeans-init-normals-26.png}
+           \includegraphics[width=0.28\textwidth]{figures/kmeans-init-normals-26.png}
         }
         \subfloat[]
         {
-            \includegraphics[width=0.28\textwidth]{resource/kmeans-init-normals-26-for-bunny.png}
+            \includegraphics[width=0.28\textwidth]{figures/kmeans-init-normals-26-for-bunny.png}
         }
         \subfloat[]
         {
-           \includegraphics[width=0.28\textwidth]{resource/kmeans-cluster-normals-26-for-bunny.png}
+           \includegraphics[width=0.28\textwidth]{figures/kmeans-cluster-normals-26-for-bunny.png}
         }
         \vspace{-2mm}
         \caption{通过聚类确定法向}
@@ -179,7 +180,7 @@
 时间复杂度为~$O(k\cdot n)$, 其中~$k$~为法向数量, $n$~为模型所含点数. 各法向的计算相互独立, 借助~GPU~并行加速.
 
     \begin{figure}
-    \includegraphics[width=2.5in]{resource/N112014-00019-6.eps}
+    \includegraphics[width=2.5in]{figures/gpureduction.eps}
     \caption{并行规约求最大投影值}
     \label{lbl:reduction-getmax}
     \end{figure}
@@ -202,20 +203,20 @@
          \vspace{-5mm}
         \subfloat%[Budda(31232 points)]
         {  \label{fig:exp:cpu:budda}
-           \includegraphics[width=0.38\textwidth,page=2]{resource/N112014-00019-7.pdf}
+           \includegraphics[width=0.38\textwidth,page=2]{figures/cudatime.pdf}
         }
         \subfloat%[Dinosaur(40277 points)]
         {  \label{fig:exp:cpu:Dinasour}
-            \includegraphics[width=0.38\textwidth, page=3]{resource/N112014-00019-7.pdf}
+            \includegraphics[width=0.38\textwidth, page=3]{figures/cudatime.pdf}
         }\linebreak %强制换行
         \vspace{-5mm}%
        \subfloat%[Alice(224291 points)]
         {  \label{fig:exp:cpu:alice}
-           \includegraphics[width=0.38\textwidth, page=4]{resource/N112014-00019-7.pdf}
+           \includegraphics[width=0.38\textwidth, page=4]{figures/cudatime.pdf}
         }
         \subfloat%[Bugatti(1010815 points)]
         {  \label{fig:exp:cpu:buggatti}
-           \includegraphics[width=0.38\textwidth, page=5]{resource/N112014-00019-7.pdf}
+           \includegraphics[width=0.38\textwidth, page=5]{figures/cudatime.pdf}
         }
         \caption{本文算法与~CPU~算法对比\tiny Budda(31k),Dinosaur(40k),Alice(224k), Bugatti(1011k)}
         \label{chart:exps:cputime}
@@ -271,20 +272,20 @@
          \vspace{-5mm}
         \subfloat
         {  \label{fig:exp:cpu:budda}
-           \includegraphics[width=0.35\textwidth,page=1]{resource/N112014-00019-8.pdf}
+           \includegraphics[width=0.35\textwidth,page=1]{figures/tightness.pdf}
         }
         \subfloat
         {  \label{fig:exp:cpu:Dinasour}
-            \includegraphics[width=0.35\textwidth, page=2]{resource/N112014-00019-8.pdf}
+            \includegraphics[width=0.35\textwidth, page=2]{figures/tightness.pdf}
         }\linebreak %强制换行
         \vspace{-3mm}%
        \subfloat%[Alice(224291 points)]
         {  \label{fig:exp:cpu:alice}
-           \includegraphics[width=0.35\textwidth, page=3]{resource/N112014-00019-8.pdf}
+           \includegraphics[width=0.35\textwidth, page=3]{figures/tightness.pdf}
         }
         \subfloat%[Bugatti(1010815 points)]
         {  \label{fig:exp:cpu:buggatti}
-           \includegraphics[width=0.35\textwidth, page=4]{resource/N112014-00019-8.pdf}
+           \includegraphics[width=0.35\textwidth, page=4]{figures/tightness.pdf}
         }
         \caption{紧致程度对比: $k$-DOP v.s $k$-CBP \tiny Apple(8k), Budda(31k), Dinosaur(40k), Alice(224k)}
         \label{chart:exps:tightness}
@@ -323,7 +324,7 @@
 
     \frame{
 %          \begin{figure}
-%    \includegraphics[width=4.0in]{resource/N112014-00019-9}
+%    \includegraphics[width=4.0in]{figures/N112014-00019-9}
 %    \caption{$k$-CBP~与凸包对比: \tiny (a) Apple (30-CBP); (b) Budda (46-CBP); (c) Dina-
 %sour (44-CBP); (d) Alice (44-CBP); (e) Bugatti (44-CBP); (f) Apple (CHull); (g) Budda (CHull); (h) Dinosaur (CHull);
 %(i) Alice (CHull); (j) Bugatti (CHull)}
@@ -331,7 +332,7 @@
 %    \end{figure}
 
     \begin{figure}
-    \includegraphics[width=4.0in]{resource/kcbp-convexhull.png}
+    \includegraphics[width=4.0in]{figures/kcbp-convexhull.png}
     \caption{$k$-CBP~与凸包对比}
     \label{pic:exps:ch-kcbp}
     \end{figure}
@@ -343,7 +344,7 @@
     \frame{
         \begin{figure}
         \centering
-        \includegraphics[width=3in]{resource/N112014-00019-10.eps}
+        \includegraphics[width=3in]{figures/bunny-box-kcbp-collsion-detection-example.png}
         \caption{~$k-$CBP~应用于碰撞检测示例}
         %\centerline{\bahao\bf 图 10\quad ~$k-$CBP~应用于碰撞检测示例}
         %\centerline{\footnotesize {\bf Figure 10}\quad  Example of collision detection using $k$-CBP}
