@@ -1,15 +1,15 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,nofonts]{article}
 \usepackage{pgfplots}
 \usepackage{ctex}
 \usepgfplotslibrary{colormaps}
 \pgfplotsset{compat=newest}
 \usepackage[graphics,tightpage,active]{preview}
 \usepackage{filecontents}
-
+\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 %use xelatex compile
 
-\selectcolormodel{gray}  
+%\selectcolormodel{gray}  
 
 \begin{document}
 
@@ -28,14 +28,14 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+    xlabel=$k$, ylabel=ç´§è‡´æ€§(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {apple.volume.csv};
-\addplot table [x=k, y=k-CBP] {apple.volume.csv};
+\addplot table [x=k, y=CollDet] {experiments/apple.volume.csv};
+\addplot table [x=k, y=k-CBP] {experiments/apple.volume.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -44,14 +44,14 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+    xlabel=$k$, ylabel=ç´§è‡´æ€§(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {budda.volume.csv};
-\addplot table [x=k, y=k-CBP] {budda.volume.csv};
+\addplot table [x=k, y=CollDet] {experiments/budda.volume.csv};
+\addplot table [x=k, y=k-CBP] {experiments/budda.volume.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -61,14 +61,14 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+    xlabel=$k$, ylabel=ç´§è‡´æ€§(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {dinasour.volume.csv};
-\addplot table [x=k, y=k-CBP] {dinasour.volume.csv};
+\addplot table [x=k, y=CollDet] {experiments/dinasour.volume.csv};
+\addplot table [x=k, y=k-CBP] {experiments/dinasour.volume.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -76,14 +76,14 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+    xlabel=$k$, ylabel=ç´§è‡´æ€§(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {alice.volume.csv};
-\addplot table [x=k, y=k-CBP] {alice.volume.csv};
+\addplot table [x=k, y=CollDet] {experiments/alice.volume.csv};
+\addplot table [x=k, y=k-CBP] {experiments/alice.volume.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -92,14 +92,14 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=½ôÖÂÐÔ(\%),
+    xlabel=$k$, ylabel=ç´§è‡´æ€§(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot table [x=k, y=CollDet] {Bugatti_veron.volume.csv};
-\addplot table [x=k, y=k-CBP] {Bugatti_veron.volume.csv};
+\addplot table [x=k, y=CollDet] {experiments/Bugatti_veron.volume.csv};
+\addplot table [x=k, y=k-CBP] {experiments/Bugatti_veron.volume.csv};
 \end{axis}
 \end{tikzpicture}
 
