@@ -1,0 +1,11 @@
+del ppt.aux
+del ppt.bbl
+del ppt.blg
+del ppt.log
+del ppt.nav
+del ppt.out
+del ppt.run.xml
+del ppt.snm
+del ppt.synctex.*
+del ppt.toc
+del ppt-blx.bib
