@@ -959,7 +959,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 \label{fig:kdop:kcbp:ui}
 \end{figure}
 
-\begin{table}[H]   
+\begin{table}[htbp]   
 \centering
 \caption{用近似凸包与精确凸包构造~$k$-CBP~紧致程度对比}
 \label{tab:exp:ach:ch:tightness}
@@ -985,7 +985,25 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 另一方面，因近似凸包的时间复杂度为线性，而精确凸包为~$O(n\log n)$，
 因此本文利用近似凸包聚类生成法向。示例中构造近似凸包耗费时间仅为~0.88ms~，而精确凸包为~79.31ms~。
 
-\begin{figure}[H] 
+
+\begin{table}[htbp] 
+\centering
+\caption{$k$-CBP~与~QuickHull~凸包算法比较}
+\label{tab:exp:cgal}
+\begin{tabular}{lcccccl}
+\toprule[1.5pt]
+ Model & $f$(CHull)& $f$($k$-CBP) & $\tau$ ($k$-CBP)(\%) & $t$(CHull)(ms) & $t$($k$-CBP)(ms)\\ % 后面重新跑的, KCBP加上了近似凸包及求交时间的总和, 和近似凸包的分组时间也加了.
+\midrule[1.0pt]
+  Apple	& 499 & 30 & 93.67 & 5.5 & 1.30 \\ % apple3  自己电脑跑的数据, 之前是用的chengxianyu的电脑.
+  Budda	& 1608 & 46 & 92.39 & 21.3 & 2.86 \\ %  1.0+0.86+1
+  Dinosaur	& 1240 & 44 & 93.34 & 22.6 & 1.99 \\  % 1.0+0.98+0.1
+  Alice	& 1332 & 44 & 93.92 & 85.8 & 8.47\\ % 2+6.48
+  Bugatti & 24654 & 44 & 95.06 & 688.7 & 25.41 \\
+\bottomrule[1.5pt]
+\end{tabular}
+\end{table}
+
+\begin{figure}[!ht] 
 \centering
 \subcaptionbox{Alice(44-CBP)\label{fig:exp:alice}}
 {  
@@ -1033,22 +1051,6 @@ $k$ &  $\tau$(ACHull)(\%) & $\tau$ (CHull)(\%)  & $k$ &  $\tau$ (ACHull)(\%) & $
 \label{pic:exps:ch-kcbp}
 \end{figure}
 
-\begin{table}[H] 
-\centering
-\caption{$k$-CBP~与~QuickHull~凸包算法比较}
-\label{tab:exp:cgal}
-\begin{tabular}{lcccccl}
-\toprule[1.5pt]
- Model & $f$(CHull)& $f$($k$-CBP) & $\tau$ ($k$-CBP)(\%) & $t$(CHull)(ms) & $t$($k$-CBP)(ms)\\ % 后面重新跑的, KCBP加上了近似凸包及求交时间的总和, 和近似凸包的分组时间也加了.
-\midrule[1.0pt]
-  Apple	& 499 & 30 & 93.67 & 5.5 & 1.30 \\ % apple3  自己电脑跑的数据, 之前是用的chengxianyu的电脑.
-  Budda	& 1608 & 46 & 92.39 & 21.3 & 2.86 \\ %  1.0+0.86+1
-  Dinosaur	& 1240 & 44 & 93.34 & 22.6 & 1.99 \\  % 1.0+0.98+0.1
-  Alice	& 1332 & 44 & 93.92 & 85.8 & 8.47\\ % 2+6.48
-  Bugatti & 24654 & 44 & 95.06 & 688.7 & 25.41 \\
-\bottomrule[1.5pt]
-\end{tabular}
-\end{table}
 
 本文算法与~CGAL~库中利用~QuickHull~算法构造的凸包进行比较的结果如表~\ref{tab:exp:cgal}~所示，
 其中~$f$(CHull)~和~$f$($k$-CBP)~分别表示凸包的面数和凸包围多面体的面数，$\tau$($k$-CBP)~为凸包围多面体的紧致程度，$t$(CHull)~和~$t$($k$-CBP)~分别表示凸包和~$k$-CBP~构造所花费的时间。
