@@ -255,7 +255,7 @@ $k$~个法向~$normals$
 \end{algorithm}
 
 从算法~\ref{alg:search-plans-cpu}~可以看出该搜索过程中各法向的计算相互独立，互不影响，因此可方便地借助~GPU~并行加速。
-本文将采用两种平台进行~GPU~加速，一种平台是基于~OpenGL~着色语言，另外一种是~CUDA~平台，下面将分别介绍这两种平台的实现。
+本文将采用着色器和基于~GPU~的通用计算框架两种较流行的并行平台进行~GPU~加速，具体而言为基于~OpenGL~着色语言和~CUDA~框架，下面将分别介绍这两种平台的实现。
 
 \subsection{基于着色器的并行算法}
 \label{subsec:determ-normals-by-shader}

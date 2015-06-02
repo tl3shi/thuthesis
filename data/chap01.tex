@@ -110,13 +110,13 @@ $O(n+1/\epsilon^{4.5})$~复杂度内计算出一个近似最小~OBB（$\epsilon$
 等人提出的用于解决光线追踪的问题，~$k$-DOP~术语是由~J.Klosowski~等人\cite{klosowski1998efficient}
 在1998 年用于解决碰撞检测问题时提出的，有学者也称~$k$-DOP~为固定方向凸包（$k$-Fixed
 Directions Hull，简称~$k$-FDH）\cite{weiyingmei2001}。
-在二维（三维）平面上，~k-DOP~就是一个由~$k/2$~对平行的固定方向的边（面）围成的凸多边形（多面体），其中~$k\in\mathbb{N}$，$k\geq4$（$k\geq6$）。如图~\ref{fig:8dop-bunny}所示，为平面图形~Bunny~的$8$-DOP。
 \begin{figure}[htbp] % use float package If you want it here
   \centering
   \includegraphics[width=1.8in]{bunny-2d-8DOP.eps}
   \caption{$k$-DOP 包围体（$k=8$）}
   \label{fig:8dop-bunny}
 \end{figure}
+在二维（三维）平面上，~k-DOP~就是一个由~$k/2$~对平行的固定方向的边（面）围成的凸多边形（多面体），其中~$k\in\mathbb{N}$，$k\geq4$（$k\geq6$）。如图~\ref{fig:8dop-bunny}所示，为平面图形~Bunny~的$8$-DOP。
 
 对于$k$-DOP~中的每一个方向，可以由相应边（面）的法向决定，其数据结构一般用~$k/2$~对半平面的法向，再加上模型在各个方向上的投影的极值即可。因为~$k$-DOP~的方向固定，$k$~值确定后，相应的法向也随即确定，所以只需要存储各个方向的极值即可。当~$k$-DOP~用于运动场景的碰撞检测或可视化时，还需要计算并存储包围体的各个顶点。
 
