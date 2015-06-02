@@ -315,7 +315,7 @@ CUDA~程序可以由一系列的主机程序组成，主机程序能够并行地
 
 如图~\ref{lbl:reduction-getmax}~所示，最大投影值的计算可采用如下规约方式：将输入点交给数量为~$t$~的线程计算点积得到投影值，
 线程~$i$~和~$i+t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。
-这种规约方式也很容易移植到开放计算语言（Open Computing Language，简称~OpenCL）等并行计算架构平台上\cite{gpgpuqiu}，在此不再赘述。
+这种规约方式也很容易移植到开放计算语言（Open Computing Language，简称~OpenCL）等并行计算框架平台上\cite{gpgpuqiu}，在此不再赘述。
 
 \begin{figure}[htbp] % use [htbp] to fix the position
 \centering

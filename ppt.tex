@@ -1,14 +1,16 @@
-﻿\documentclass[UTF8, xcolor=table]{beamer}
+\documentclass[UTF8, xcolor=table]{beamer}
 %\usepackage{fontspec}
 %\setsansfont{宋体}
 \usepackage[BoldFont,SlantFont]{xeCJK}
-\setCJKmainfont[BoldFont={SimHei},ItalicFont={KaiTi}]{SimSun}
+%\setCJKmainfont[BoldFont={SimHei},ItalicFont={KaiTi}]{SimSun}
+\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 
 \usepackage{latexsym,amssymb,amsmath,amsbsy,amsopn,amstext,xcolor,multicol}
 \usepackage{graphicx,wrapfig,fancybox}
 \usepackage{pgf,pgfarrows,pgfnodes,pgfautomata,pgfheaps,pgfshade}
 \usepackage{thubeamer}
-\usepackage[backend=bibtex,style=IEEE,sorting=none]{biblatex} % [参考文献格式](https://www.sharelatex.com/blog/2013/07/31/getting-started-with-biblatex.html)
+%\usepackage[backend=bibtex,style=IEEE,sorting=none]{biblatex} % [参考文献格式](https://www.sharelatex.com/blog/2013/07/31/getting-started-with-biblatex.html)
+\usepackage[backend=bibtex,sorting=none]{biblatex} % [参考文献格式](https://www.sharelatex.com/blog/2013/07/31/getting-started-with-biblatex.html) %mac IEEE not found
 \usepackage{array}
 \usepackage{bm}
 \usepackage{caption}
@@ -62,7 +64,7 @@
 
 \title{凸包围多面体生成算法及应用}
 %\author{唐磊}
-\author[唐磊]{(申请清华大学工学硕士学位论文答辩报告)\vskip 20pt研~究~生：唐~~~~~磊~~~~~\vskip 5pt 指导教师：雍~俊~海~教授}
+\author[唐磊]{(申请清华大学工学硕士学位论文答辩报告)\vskip 20pt学~~~~~~生：唐~~~~~磊~~~~~~~~\vskip 5pt 指导教师：雍~俊~海~教授}
 \institute[清华大学~软件学院~CG~\&~CAD~研究所]{\small \vskip 38pt计算机辅助设计图形学与可视化研究所}
 %\date{2015-06-07}
 \date{\small \vskip -17pt二〇一五年六月}
@@ -263,7 +265,7 @@
 }
 
 
-  \section{模型适应的凸包围多面体构造算法}
+  \section{凸包围体生成算法}
 
     \subsection{问题定义及算法流程}
 
@@ -337,15 +339,15 @@
         \frametitle{近似凸包的构造}
         \begin{figure}
         \vspace{-3mm}
-        \subfloat[]
+        \subfloat[分组]
         {
            \includegraphics[width=0.28\textwidth]{figures/approximate-convexhull-step1.pdf}
         }\hspace{2mm}
-        \subfloat[]
+        \subfloat[选极值点]
         {
             \includegraphics[width=0.28\textwidth]{figures/approximate-convexhull-step2.pdf}
         }\hspace{2mm}
-        \subfloat[]
+        \subfloat[连线]
         {
            \includegraphics[width=0.28\textwidth]{figures/approximate-convexhull-step3.pdf}
         }
@@ -353,48 +355,84 @@
         \label{lbl:ach-2d}
         \end{figure}
         \vspace{-4mm}
-        构造近似内凸包\cite{bentley1982approximation}, 算法复杂度为~$O(n+\xi)$, 扩展到三维为~$O(n+\xi^2\log\xi)$, 然后利用 $k$-means 聚类.
+        构造近似内凸包\cite{bentley1982approximation}，算法复杂度为~$O(n+\xi)$，扩展到三维为~$O(n+\xi^2\log\xi)$，然后利用$k$-means 聚类。
     }
     \frame{
         \frametitle{$k$-means 聚类}
-
-        \begin{figure}
-        \vspace{-5mm}
+      \begin{figure}
+        \vspace{-2mm}
         \subfloat[]
         {
-           \includegraphics[width=0.28\textwidth]{figures/kmeans-init-normals-26.png}
+           \includegraphics[width=0.28\textwidth]{kmeans-init-normals-26.png}
         }
         \subfloat[]
         {
-            \includegraphics[width=0.28\textwidth]{figures/kmeans-init-normals-26-for-bunny.png}
+            \includegraphics[width=0.28\textwidth]{kmeans-init-normals-26-for-bunny.png}
         }
         \subfloat[]
         {
-           \includegraphics[width=0.28\textwidth]{figures/kmeans-cluster-normals-26-for-bunny.png}
+           \includegraphics[width=0.28\textwidth]{kmeans-cluster-normals-26-for-bunny.png}
         }
         \vspace{-2mm}
         \caption{通过聚类确定法向}
         \label{lbl:gen-fixed-normals}
         \end{figure}
-
-        \vspace{-6mm}
-        \small
-        聚类初始方向(均匀分布). 距离度量(余弦), 聚类更新中心点时将面片的面积作为权重即$\bm{c_i}=\frac{\sum_{i=1}^{i=n} \omega_i \cdot \bm{n_i} } {\sum_{i=1}^{i=n} \omega_i}$, 其中$\bm{c_i}$ 为第~$i$~类的中心点, $\omega_i$~ 为法向~$\bm{n_i}$~所在面片对应的面积.
+        %\begin{block}{聚类关键}
+            \begin{description}
+             \item[初始方向：]均匀分布；
+             \item[聚类度量：]余弦；
+             \item[中心更新：]
+       中心点：$\bm{c_i}=\frac{\sum_{i=1}^{i=n} \omega_i \cdot \bm{n_i} } {\sum_{i=1}^{i=n} \omega_i}$，权重$\omega_i$为面片面积。
+            \end{description}
+       % \end{block}
     }
 
-  \subsection{搜索截面及求交}
-
+  \subsection{搜索截面}
     \frame{
     \frametitle{搜索截面}
-     \footnotesize 等效于寻找最大投影值, 即对每个法向~$\bm{n_i}$, 从输入模型的所有点中寻找最大投影值的点作为切点进而确定~$\bm{n_i}$~对应的截面.
-时间复杂度为~$O(k\cdot n)$, 其中~$k$~为法向数量, $n$~为模型所含点数. 各法向的计算相互独立, 借助~GPU~并行加速.
-
-    \begin{figure}
-    \includegraphics[width=2.5in]{figures/gpureduction.eps}
-    \caption{并行规约求最大投影值}
-    \label{lbl:reduction-getmax}
-    \end{figure}
+    \begin{block}{截面＝法向+点}
+     法向已得，求投影点：对每个法向~$\bm{n_i}$，从输入模型的所有点中寻找最大投影值的点作为切点。
+	时间复杂度为~$O(k\cdot n)$, 其中~$k$~为法向数量, $n$~为模型所含点数. 
+   \end{block}
+   \begin{block}{并行可行性}
+	各法向的计算相互独立， 借助~GPU~并行加速。
+	典型GPU并行平台：着色器（GLSL为例）和基于 GPU 的通用计算框架（CUDA为例）
+	\end{block}
     }
+    
+    \frame{
+    \frametitle{GLSL实现}
+	     \begin{columns}[onlytextwidth]
+     		 \begin{column}{0.5\textwidth}
+		 \begin{figure}
+	    		\includegraphics[width=\textwidth]{shader-z_buffer.eps}
+	    		\caption{基于Z Buffer算法流程图}
+		\end{figure}
+	    	\end{column}
+		
+		\hspace{1em}
+		
+		 \begin{column}{0.5\textwidth}
+		   	\begin{figure}
+		 	\includegraphics[width=\textwidth]{shader-rtt_pp.eps}
+	    		\caption{基于乒乓技术算法流程图}
+			\end{figure}	
+	    	\end{column}
+       	     \end{columns}
+   }
+    
+    \begin{frame}
+    \frametitle{CUDA实现}
+	    \begin{figure}
+	    \includegraphics[width=2.5in]{gpureduction.eps}
+	    \caption{并行规约求最大投影值}
+	    \label{lbl:reduction-getmax}
+	    \end{figure}
+	    \vspace{-0.5em}
+	    \small 
+	    将输入点交给数量为~$t$~的线程计算点积得到投影值，
+ 线程~$i$~和~$i+t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。OpenCL等并行计算框架类似。
+    \end{frame}
 
         \frame{
     \frametitle{求交算法}
