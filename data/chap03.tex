@@ -1100,7 +1100,6 @@ Hand	&506.98 &	7926.88 &	4478.18 &	39538.70 \\
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=15]{dynamiccd.pdf}
 }
-
 \caption{运动场景下本文算法与基于~$k$-DOP~树算法实验结果对比（$k=24,n=2$）}
 \label{fig:chart:exps:kdop:kcbp:k24:dynamic}
 \end{figure}
@@ -1145,42 +1144,41 @@ Hand	&506.98 &	7926.88 &	4478.18 &	39538.70 \\
 \centering
 \subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:dynamic:m10:bunny}}
 {  
-   \includegraphics[width=0.43\textwidth,page=7]{dynamiccd.pdf}
+   \includegraphics[width=0.42\textwidth,page=7]{dynamiccd.pdf}
 }
 %\subcaptionbox{Apple(8040个三角网格)\label{fig:exp:dynamic:m10:apple}}
 %{  
-%    \includegraphics[width=0.43\textwidth, page=8]{dynamiccd.pdf}
+%    \includegraphics[width=0.42\textwidth, page=8]{dynamiccd.pdf}
 %}\linebreak %强制换行
 \subcaptionbox{HappyBuddha(50000个三角网格)\label{fig:exp:dynamic:m10:happyBuddha}}
 {  
-   \includegraphics[width=0.43\textwidth, page=14]{dynamiccd.pdf}
+   \includegraphics[width=0.42\textwidth, page=14]{dynamiccd.pdf}
 }\linebreak %强制换行
 \subcaptionbox{Dinosaur(80554个三角网格)\label{fig:exp:dynamic:m10:dinosaur}}
 {  
-   \includegraphics[width=0.43\textwidth, page=10]{dynamiccd.pdf}
+   \includegraphics[width=0.42\textwidth, page=10]{dynamiccd.pdf}
 }
 \subcaptionbox{Hand(128314个三角网格)\label{fig:exp:dynamic:m10:hand}}
 {  
-   \includegraphics[width=0.43\textwidth, page=16]{dynamiccd.pdf}
+   \includegraphics[width=0.42\textwidth, page=16]{dynamiccd.pdf}
 }
 \caption{运动场景下本文算法与基于~$k$-DOP~树算法实验结果对比（$k=24,n=10$）}
 \label{fig:chart:exps:kdop:kcbp:k24:m10:dynamic}
 \end{figure}
-\vspace{-2em}
 
 当模型数量~$n$~的值增大时，三种算法整体趋势仍能保持一致，如图~\ref{fig:chart:exps:kdop:kcbp:k24:m10:dynamic}~所示为相同~$k$~值，相同运动路径（包括平移距离旋转角度以及运动步数）下~10~个模型下的碰撞检测结果。
 %对于~Budda~模型，本文算法仍耗时较久，原因与~$n=2$~时一致，即~$k$-CBP~相交，用~AABB~树进行模型的碰撞检测时，树形结构遍历较多且到叶子节点三角网格测试的次数也较多。
 从中可看出，当模型三角网格数量较少时，本文基于~$k$-CBP~结合~AABB~树的算法耗时最多，而随着三角网格数量增大，此算法和基于~$k$-DOP~树的算法耗时相差不大，但都多于本文基于$k$-CBP~结合~GJK~的算法。
 整体来看，在运动场景的碰撞检测环境中，本文基于$k$-CBP~结合~GJK~的算法在一定程度上有一定优势，从实验结果来看平均而言效率是基于~$k$-DOP~树算法的0.8 $\sim$ 5.6倍。%，而基于$k$-DOP~算法相对较稳定，但其初始化时间很长。
-\begin{figure}[htbp] 
+\begin{figure}[!ht] 
 \centering
 \subcaptionbox{Bunny(4968个三角网格)\label{fig:exp:static:k24:k46:bunny:dynamic}}
 {  
-   \includegraphics[width=\fourgraphicswidth\textwidth,page=11]{dynamiccd.pdf}
+   \includegraphics[width=0.42\textwidth,page=11]{dynamiccd.pdf}
 }
 \subcaptionbox{HappyBuddha(50000个三角网格)\label{fig:exp:static:k24:k46:happybuddha:dynamic}}
 {  
-    \includegraphics[width=\fourgraphicswidth\textwidth, page=18]{dynamiccd.pdf}
+    \includegraphics[width=0.42\textwidth, page=18]{dynamiccd.pdf}
 }
 \caption{运动场景下不同~$k$~值实验结果对比}
 \label{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}
@@ -1192,7 +1190,6 @@ Hand	&506.98 &	7926.88 &	4478.18 &	39538.70 \\
 选择不同的~$k$~值，具体可以结合具体应用场景中发生碰撞的概率和包围体的预期紧致程度进行平衡，从第~\ref{subsec:exper:tightness}小节的实验结果可以看出，
 一般而言对一般不规则形体取~$16 \leq k \leq 20$~能使紧致程度达80\%，当~$20 \leq k \leq 40 $~时能达到约~90\%。 
 
-\FloatBarrier
 \section{本章小结}
 \label{sec:chap03:summary}
 

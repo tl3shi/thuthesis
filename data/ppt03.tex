@@ -164,7 +164,7 @@ GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点�
     \subsection{实验结果及分析}
 
     \frame{
-      \frametitle{实验结果：$k$-CBP~的有效性}
+      \frametitle{实验结果：$k$-CBP~用于碰撞检测的有效性}
        \begin{table}[htbp]
          \tiny
       \caption{$k$-CBP~和包围盒应用于碰撞检测结果对比}
@@ -205,4 +205,80 @@ GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点�
           \includegraphics[width=.40\textwidth, page=6]{bvprebench.pdf}
         }\hspace{-2.0em}
        \end{figure} 
+       \scriptsize 构造时间上基本满足：$\textnormal{凸包} > k\textnormal{-CBP} > k\textnormal{-DOP} > \textnormal{Sphere} \approx  \textnormal{Box}$，
+       包围体命中率基本满足：$\textnormal{凸包} > k\textnormal{-CBP} > k\textnormal{-DOP} > \textnormal{Box} > \textnormal{Sphere}$。紧致程度和包围体的命中率满足正相关关系。
+    }
+
+    \frame{
+      \frametitle{实验结果：静止场景与$k$-DOP树对比}
+        \begin{figure}[htbp] 
+        \subfloat[Bunny(4968个三角网格)\label{fig:exp:static:bunny}]
+        {  
+           \includegraphics[width=\fourgraphicswidth\textwidth,page=3]{staticcd.pdf}
+        }
+        \subfloat[Apple(8040个三角网格)\label{fig:exp:static:apple}]
+        {  
+            \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{staticcd.pdf}
+        } 
+        \subfloat[HappyBuddha(50000个三角网格)\label{fig:exp:static:happyBuddha}]
+        {  
+           \includegraphics[width=\fourgraphicswidth\textwidth, page=14]{staticcd.pdf}
+        }
+        \caption{静止场景下本文算法与基于~$k$-DOP~树算法实验结果对比（$k=24$）}
+        \label{fig:chart:exps:kdop:kcbp:k24}
+        \end{figure}
+    }
+     \frame{
+      \frametitle{实验结果：静止场景与$k$-DOP树对比}
+       \begin{figure}[!ht] 
+          \centering
+          \subfloat[Bunny(4968个三角网格)\label{fig:exp:static:k24:k46:bunny}]
+          {  
+             \includegraphics[width=\fourgraphicswidth\textwidth,page=12]{staticcd.pdf}
+          }
+          \subfloat[HappyBuddha(50000个三角网格)\label{fig:exp:static:k24:k46:happybuddha}]
+          {  
+              \includegraphics[width=\fourgraphicswidth\textwidth, page=18]{staticcd.pdf}
+          }
+          \caption{静止场景下不同~$k$~值实验结果对比}
+          \label{fig:chart:exp:kdop:kcbp:k24:k46}
+      \end{figure}
+    }
+
+     \frame{
+      \frametitle{实验结果：运动场景与$k$-DOP树对比}
+     \begin{figure}[!ht] 
+          \centering
+          \subfloat[Bunny(4968个三角网格)\label{fig:exp:dynamic:m10:bunny}]
+          {  
+             \includegraphics[width=0.43\textwidth,page=7]{dynamiccd.pdf}
+          }
+          \subfloat[HappyBuddha(50000个三角网格)\label{fig:exp:dynamic:m10:happyBuddha}]
+          {  
+             \includegraphics[width=0.43\textwidth, page=14]{dynamiccd.pdf}
+          }
+          \subfloat[Hand(128314个三角网格)\label{fig:exp:dynamic:m10:hand}]
+          {  
+             \includegraphics[width=0.43\textwidth, page=16]{dynamiccd.pdf}
+          }
+          \caption{运动场景下本文算法与基于~$k$-DOP~树算法实验结果对比（$k=24,n=10$）}
+          \label{fig:chart:exps:kdop:kcbp:k24:m10:dynamic}
+          \end{figure} 
+    }
+    
+    \frame{
+      \frametitle{实验结果：运动场景与$k$-DOP树对比}
+         \begin{figure}[htbp] 
+    \centering
+    \subfloat[Bunny(4968个三角网格)\label{fig:exp:static:k24:k46:bunny:dynamic}]
+    {  
+       \includegraphics[width=\fourgraphicswidth\textwidth,page=11]{dynamiccd.pdf}
+    }
+    \subfloat[HappyBuddha(50000个三角网格)\label{fig:exp:static:k24:k46:happybuddha:dynamic}]
+    {  
+        \includegraphics[width=\fourgraphicswidth\textwidth, page=18]{dynamiccd.pdf}
+    }
+    \caption{运动场景下不同~$k$~值实验结果对比}
+    \label{fig:chart:exp:kdop:kcbp:k24:k46:dynamic}
+    \end{figure} 
     }
