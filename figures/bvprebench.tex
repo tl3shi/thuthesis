@@ -1,10 +1,12 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,nofonts]{article}
 \usepackage{pgfplots}
 \usepackage{ctex}
 \usepgfplotslibrary{colormaps}
 \pgfplotsset{compat=newest}
 \usepackage[graphics,tightpage,active]{preview}
 \usepackage{filecontents}
+
+\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 %use xelatex compile
@@ -13,15 +15,17 @@
 
 %\selectcolormodel{gray}  
 \pgfplotsset{
-  legend style={font=\footnotesize}
+  legend style={font=\footnotesize},
+  every axis y label/.style={at={(current axis.north west)},above=1mm},
+  %every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
 }
+
 
 % page1
 \begin{tikzpicture}
 \begin{axis}
 [
-    %title=Apple model(8118 points),
-     ylabel=Ê±¼ä(ms),
+     ylabel=æ—¶é—´(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
@@ -44,7 +48,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-     ylabel=Ê±¼ä(ms),
+     ylabel=æ—¶é—´(ms),
     stack plots=y,
     area style,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
@@ -68,7 +72,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-     ylabel=ÃüÖÐÂÊ(\%),
+     ylabel=å‘½ä¸­çŽ‡(\%),
     legend pos=north west,
     ymax=140,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
@@ -92,7 +96,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-     ylabel=ÃüÖÐÂÊ(\%),
+     ylabel=å‘½ä¸­çŽ‡(\%),
     stack plots=y,
     area style,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
@@ -121,7 +125,7 @@
 [
     ybar,
     ybar interval=0.5,
-     ylabel=ÃüÖÐÂÊ(\%),
+     ylabel=å‘½ä¸­çŽ‡(\%),
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
     xtick=data,
     x tick label style={rotate=30, font=\scriptsize},
@@ -147,7 +151,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-     ylabel=Ê±¼ä(ms),
+     ylabel=æ—¶é—´(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
@@ -169,7 +173,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-     ylabel=Ê±¼ä(ms),
+     ylabel=æ—¶é—´(ms),
     stack plots=y,
     area style,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
@@ -195,7 +199,7 @@
 \begin{axis}
 [
       %title=Apple model(8118 points),
-     ylabel=Ê±¼ä(ms),
+     ylabel=æ—¶é—´(ms),
 %    legend style={anchor=north east},
     legend pos=north east,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon, Alice},
@@ -219,7 +223,7 @@
 \begin{axis}
 [
       %title=Apple model(8118 points),
-     ylabel=Ê±¼ä(ms),
+     ylabel=æ—¶é—´(ms),
 %    legend style={anchor=north east},
     legend pos=north east,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon},
@@ -240,7 +244,7 @@
 \begin{axis}
 [
       %title=Apple model(8118 points),
-     ylabel=Ê±¼ä(ms),
+     ylabel=æ—¶é—´(ms),
 %    legend style={anchor=north east},
     legend pos=north east,
     symbolic x coords={Bunny, Apple, HappyBuddha, Dinosaur, Hand, Dragon},

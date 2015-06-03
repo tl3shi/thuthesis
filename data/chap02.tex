@@ -712,7 +712,7 @@ n)$一致，截面求交过程利用第~\ref{subsec:intersection-dual-mapping}~�
 当点数量极大时，如图~\ref{fig:exp:cpu:buggatti}~所示，实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略。
 当输入模型的点数量越大，本文算法的优势越明显。如~Budda~模型点数量~31k~左右，加速比约为~3 $\sim$ 6~倍，而含有~224k~个点的~Alice~模型和~1010k~个点的~Bugatti~模型，能够加速~7$\sim$9~倍。
 
-\begin{figure}[htbp] % use [htbp] to fix the position
+\begin{figure}[!ht] % use [htbp] to fix the position
 \centering
 \subcaptionbox{Budda模型(31232个点)\label{fig:exp:cpu:budda}}
 {  
@@ -736,7 +736,7 @@ n)$一致，截面求交过程利用第~\ref{subsec:intersection-dual-mapping}~�
 
 图~\ref{fig:chart:exps:shadertime}~为着色器算法根据不同模型构造不同面数的包围体所耗费的时间对比，横坐标表示多面体面数~$k$，纵坐标为运行时间，曲线~cpu、zbuffer和rtt\_pp分别表示基于CPU、深度缓冲（Z Buffer）和基于乒乓技术的算法的运行时间。
 
-\begin{figure}[htbp] % use [htbp] to fix the position
+\begin{figure}[!ht] % use [htbp] to fix the position
 \centering
 \subcaptionbox{Apple模型(8118个点)\label{fig:exp:shader:apple}}
 {  

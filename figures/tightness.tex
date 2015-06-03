@@ -10,7 +10,11 @@
 %use xelatex compile
 
 %\selectcolormodel{gray}  
-
+\pgfplotsset{
+  legend style={font=\footnotesize},
+  every axis y label/.style={at={(current axis.north west)},above=1mm},
+  %every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+}
 \begin{document}
 
 %\begin{tikzpicture}
@@ -28,7 +32,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
+    xlabel=$k$, ylabel=紧致程度(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
@@ -44,7 +48,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
+    xlabel=$k$, ylabel=紧致程度(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
@@ -61,7 +65,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
+    xlabel=$k$, ylabel=紧致程度(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
@@ -76,7 +80,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
+    xlabel=$k$, ylabel=紧致程度(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}
@@ -92,7 +96,7 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=紧致性(\%),
+    xlabel=$k$, ylabel=紧致程度(\%),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={$k$-DOP,$k$-CBP}

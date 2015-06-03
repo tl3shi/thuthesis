@@ -1,0 +1,208 @@
+  \section{基于$k$-CBP~的碰撞检测算法}
+    
+      \subsection{$k$-CBP~间的相交测试}
+      \begin{frame}
+        \frametitle{}
+        \begin{block}{AABB树法}
+          将生成的$k$-CBP视为普通的三角网格，实现简单，适用于模型较小的静止碰撞检测场景
+        \end{block}
+        \begin{block}{GJK法}
+          计算凸多面体之间的最近距离的~GJK~算法。\\
+          Minkowski~差，即~$\mathbb{A} - \mathbb{B} = \{ \bm{a} - \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\} $。
+GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点，因为若~$\mathbb{A}$~和
+~$\mathbb{B}$~相交即~$\mathbb{A}$~和~$\mathbb{B}$~必含有公共交集，
+即至少含有一点同时属于~$\mathbb{A}$~和~$\mathbb{B}$~，该点的~Minkowski~差即为原点~$\bm{O}(0, 0)$。
+        \end{block}
+      \end{frame}
+
+      \begin{frame}
+        \frametitle{二维~GJK~算法示例}
+        \begin{figure}[htbp]
+        \subfloat[相交]{
+          \includegraphics[width=.48\textwidth,page=1]{gjkExample.pdf}
+        } 
+        \subfloat[不相交]{
+          \includegraphics[width=.48\textwidth, page=2]{gjkExample.pdf}
+        }
+        \end{figure}
+      \end{frame}
+
+      \frame{
+        \frametitle{GJK~算法}
+        \vspace{-2em}
+         \begin{columns}[onlytextwidth]
+          \begin{column}{0.4\textwidth}
+              \begin{figure}[htbp]
+          \hspace{-10em}
+              \subfloat%[第一步]
+              {
+                \includegraphics[width=.60\textwidth,page=3]{gjkExample.pdf}
+              }\\\vspace{-2em} 
+              \subfloat%[不相交]
+              {
+                \includegraphics[width=.60\textwidth, page=4]{gjkExample.pdf}
+              }\\ \vspace{-0em} \hspace{-8em}
+              \subfloat%[不相交]
+              {
+                \includegraphics[width=.60\textwidth, page=5]{gjkExample.pdf}
+              }
+             \end{figure}
+          \end{column}
+          \begin{column}{1.2\textwidth}
+            \scalebox{0.5}
+            {
+              \begin{minipage}{\textwidth}
+                \begin{algorithm}[H]
+                \caption{基于~GJK~的~$k$-CBP~相交检测算法}
+                \label{alg:gjk}
+                \begin{algorithmic}[1]
+                \Require
+                两个~$k$-CBP~$k\texttt{-}CBP_1, k\texttt{-}CBP_2$
+                \Ensure
+                ~$k$-CBP~是否相交
+                \Function{KCBPDetectionBasedOnGJK}{$k\texttt{-}CBP_1, k\texttt{-}CBP_2$}
+                    \State $\bm{d} \gets \Call{initNormal}$
+                    \State $\bm{D} \gets \Call{Support}{k\texttt{-}CBP_1, k\texttt{-}CBP_2, \bm{d}}$
+                    \State $S \gets \{p\}$
+                    \State $iter \gets 1 , \bm{d} \gets -\bm{d}$
+                    \While{$inter++ < MaxIter$}
+                        \State $\bm{D} \gets \Call{Support}{k\texttt{-}CBP_1, k\texttt{-}CBP_2, \bm{d}}$
+                        \If {$\bm{D} \cdot \bm{d} < 0 $}
+                            \State \Return \textbf{False}
+                        \EndIf
+                        \State $S \gets S \cup \bm{D}$
+                        \State $ contains \gets \Call{CheckContainUpdate}{S, \bm{d}}$ \Comment{检测是否包含原点，对集合~$S$~进行规约，并获取下一次迭代的方向~$\bm{d}$}
+                        \If {$contains$}
+                            \State \Return \textbf{True} \Comment{包含原点，直接返回相交，否则继续迭代}
+                        \EndIf
+                    \EndWhile
+                    \State \Return \textbf{False} \Comment{达到最大迭代次数，根据需求返回相交或者不相交}
+                \EndFunction
+                \end{algorithmic}
+                \end{algorithm}
+              \end{minipage}
+          }
+          \end{column}
+        \end{columns}
+      }
+
+      \subsection{三角网格间的相交测试}
+      \frame{
+        %\frametitle{}
+            \begin{figure}[htbp]
+              \centering
+                \includegraphics[width=3.0in]{TriangleTriangleTest.eps}
+                \caption{两个非共面三角形的位置关系}
+              \label{fig:two:triangle:ui}
+            \end{figure}
+            \vspace{-2em}
+          \scriptsize 
+          三角形~$T_1,T_2$点坐标~$\Rightarrow$平面方程$\Pi_1,\Pi_2$$\Rightarrow$~$T_2$~到~$\Pi_1$~的有向距离~$\bm{l}_{1i}, i \in \{1,2,3\}$，
+          \begin{enumerate}[(1)]
+            \item 若~$\forall i \in \{1,2,3\}, l_{1i} = 0$，即三角形~$T_2$~的三个顶点到三角形~$T_1$~所在~$\Pi_1$~的距离都为$0$，则两个三角形共面；$\Rightarrow$ 共面三角形求交
+            \item 若~$\forall i \in \{1,2,3\}, l_{1i} > 0$ 或~$\forall i \in \{1,2,3\}, l_{1i} < 0$，即三角形~$T_2$~的三个顶点到三角形~$T_1$~所在~$\Pi_1$~的有向距离同号，则~$T_2$~在~$\Pi_1$~的同一侧，可立即排除相交；
+            \item 其他情况，三角形~$T_2$~必交~$\Pi_1$~于一条线段。$\Rightarrow$判断两个区间线段$D_1,D_2$是否相交。
+          \end{enumerate}
+          
+      }
+
+      \subsection{基于$k$-CBP~的碰撞检测算法}
+
+        \frame{
+            \begin{figure}
+            \centering
+            \includegraphics[width=3in]{figures/bunny-box-kcbp-collsion-detection-example.png}
+            \caption{~$k-$CBP~应用于碰撞检测示例}
+            \label{lbl:bunny-box-kcbp-collsion-detection-example}
+            \end{figure}
+
+            \scriptsize 图中模型~1~与~2、2~与~3~的包围盒分别相交, 而其~$16$-CBP~仅~1~与~2~相交, 实际模型仅~1~与~2~相交. 
+        }
+        \frame{
+          \frametitle{静止场景碰撞检测算法} 
+          \vspace{-2em}
+          \begin{figure}[htpb]
+            \centering
+            \includegraphics[width=0.5\textwidth]{bunny-aabb-bvh-4-layers.pdf}
+            \caption{Bunny~模型的~AABB~树形结构(部分)\href{./figures/bv-bunny.gif}{\beamergotobutton{动态图}} } %adobe pdf reader can open it in browser
+            \label{fig:bunny:aabb:bvh:toplayer4}
+          \end{figure} 
+          \vspace{-1em}
+           \begin{figure}[htpb]
+              \centering
+              \includegraphics[width=\textwidth]{collision-detection-flowchart.eps}
+              \caption{基于~$k$-CBP~的碰撞检测算法流程图}
+              \label{fig:flowchart:cd}
+            \end{figure} 
+        }
+          \frame{
+          \frametitle{运动场景碰撞检测算法} 
+          \begin{columns}[onlytextwidth]
+           \begin{column}{0.35\textwidth}
+           \begin{figure}[H]
+            \hspace{-4em}
+            \includegraphics[width=2.5in]{bunny-2d-AABB-Moving.pdf}
+            \caption{\tiny AABB~更新策略图}
+            \label{fig:bunny:moving}
+          \end{figure}
+          \scriptsize
+          将变换矩阵$\bm{M}=\bm{R}(\bm{n}, \theta) \cdot \bm{T}(\bm{t})$ \\
+          应用于GJK顶点、AABB顶点。
+          \end{column}
+          \begin{column}{0.95\textwidth}
+          \begin{figure}[htbp]
+            \centering
+            \includegraphics[width=1.8in]{dynamic-bunny-m10-sA1.png}
+            \caption{运动场景碰撞检测示例\href{./figures/cd-bunny.gif}{\beamergotobutton{动态图}}}
+            \label{fig:bunny:moving}
+          \end{figure}
+          %\animategraphics[controls, buttonsize=3mm, width=1.8in]{10}{bvh-bunny-origin/bvh-bunny-}{0}{9} % 不靠谱
+          \end{column}
+          \end{columns}
+        }
+
+    \subsection{实验结果及分析}
+
+    \frame{
+      \frametitle{实验结果：$k$-CBP~的有效性}
+       \begin{table}[htbp]
+         \tiny
+      \caption{$k$-CBP~和包围盒应用于碰撞检测结果对比}
+      \label{tab:exp:box:kcbp:collsiondetection}
+      \centering
+      \begin{tabular}{lccccccc}
+       \toprule[1.5pt]
+       \multirow{2}{*}{$n$} & CT(Box) & CT($16$-CBP) & DT(Box) & DT($16$-CBP) & $r$(Box) & $r$($k$-CBP) & DP(Model)\\ %\multirow{2}{*}{DP(Model)} \\
+                            & (ms)    & (ms)          & (ms)  & (ms)          & (\%)      & (\%)  & (对)  \\
+        \midrule[1.0pt]
+         10 & 0.1 & 1.8 &    26.0  & 0.1    & 0.00  & 100.00 & 0\\
+         30 & 0.2 & 2.9 &   134.0  & 70.0   & 45.45 & 83.33 & 5\\
+         50 & 0.5 & 4.8 &   506.0  & 255.2  & 46.34 & 86.36 & 19 \\
+         70 & 0.4 & 4.8 &   901.1  & 492.5  & 44.16 & 80.95 & 34 \\
+         90 & 0.7 & 5.7 &  1324.0  & 734.7  & 41.82 & 73.02 & 46 \\
+        100 & 0.7 & 7.8 &  1481.0  & 870.7  & 43.31 & 75.34 & 55 \\
+        150 & 1.0 & 9.8 &  4153.1  & 2473.0 & 42.98 & 70.75 & 150 \\
+        200 & 1.6 & 12.8 & 8049.3  & 4430.9 & 41.02 & 71.32 & 281 \\
+        \bottomrule[1.5pt]
+       \end{tabular}
+      \end{table}
+        \scriptsize 其中模型和凸包围多面体是否相交都采用了~AABB~树的方式进行判断。
+    }
+
+    \frame{
+      \frametitle{实验结果：不同包围体对比}
+        \begin{figure}[htbp]
+          \hspace{-4em}\subfloat[包围体构造时间]
+        {
+          \includegraphics[width=.40\textwidth,page=1]{bvprebench.pdf}
+        }\hspace{-1.6em}
+        \subfloat[包围体命中率]
+        {
+          \includegraphics[width=.40\textwidth, page=3]{bvprebench.pdf}
+        }\hspace{-1.6em}
+        \subfloat[初始化时间]
+        {
+          \includegraphics[width=.40\textwidth, page=6]{bvprebench.pdf}
+        }\hspace{-2.0em}
+       \end{figure} 
+    }

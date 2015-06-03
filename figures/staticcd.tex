@@ -14,13 +14,18 @@
 %\selectcolormodel{brown}  
 
 \pgfplotsset{
-  legend style={font=\footnotesize}
+  legend style={font=\footnotesize},
+  YLabelUp/.style={
+    every axis y label/.style={at={(current axis.north west)},above=1mm},
+  },
+  %every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
 }
 
 \begin{tikzpicture}
 \begin{axis}
 [
     %title=appleNew model(8118 points),
+    YLabelUp,
     scale only axis, 
     %axis y line*=left,
     xlabel=$n$, ylabel=时间(ms),
@@ -37,6 +42,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
+    YLabelUp,
     scale only axis, 
     %axis y line*=left,
     xlabel=$n$, ylabel=时间(ms),
@@ -335,6 +341,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
+    YLabelUp,
     scale only axis, 
     %axis y line*=left,
     xlabel=$n$, ylabel=时间(ms),
@@ -354,6 +361,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
+    YLabelUp,
     scale only axis, 
     %axis y line*=left,
     xlabel=$n$, ylabel=时间(ms),
@@ -375,6 +383,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
+    YLabelUp,
     scale only axis, 
     %axis y line*=left,
     xlabel=$n$, ylabel=时间(ms),
@@ -493,6 +502,7 @@
 \begin{axis}
 [
     scale only axis, 
+    YLabelUp,
     xlabel=$n$, ylabel=时间(ms),
     legend pos=north west,
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-CBP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-CBP)(GJK)}
@@ -513,6 +523,7 @@
 \begin{axis}
 [
     scale only axis, 
+    YLabelUp,
     xlabel=$n$, ylabel=时间(ms),
     legend pos=north west,
     legend entries={DT($24$-DOP), DT($24$-CBP)(AABB),DT($24$-CBP)(GJK),DT($46$-DOP), DT($46$-CBP)(AABB),DT($46$-CBP)(GJK)}

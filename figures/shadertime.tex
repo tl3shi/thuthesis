@@ -1,15 +1,22 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper,nofonts]{article}
 \usepackage{ctex}
 \usepackage{pgfplots}
 \usepgfplotslibrary{colormaps}
 \pgfplotsset{compat=newest}
 \usepackage[graphics,tightpage,active]{preview}
 \usepackage{filecontents}
+\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
 
-\selectcolormodel{gray}  
+%\selectcolormodel{gray}  
+
+\pgfplotsset{
+  legend style={font=\footnotesize},
+  every axis y label/.style={at={(current axis.north west)},above=1mm},
+  %every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+}
 
 %\begin{tikzpicture}
 %\begin{axis}[title=$120 \times 120$ Smooth Surface, xlabel=$x$, ylabel=$y$]
@@ -27,7 +34,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={cpu,zbuffer,rtt\_pp}
@@ -45,7 +52,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={cpu,zbuffer,rtt\_pp}
@@ -62,7 +69,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={cpu,zbuffer,rtt\_pp}
@@ -79,7 +86,7 @@
 %\begin{axis}
 %[
 %    %title=appleNew model(8118 points),
-%    xlabel=$k$, ylabel=$时间(ms)$,
+%    xlabel=$k$, ylabel=$鏃堕棿(ms)$,
 %%    legend style={anchor=north east},
 %    legend pos=north west,
 %    legend entries={cpu,zbuffer,rtt\_pp}
@@ -96,7 +103,7 @@
 \begin{axis}
 [
     %title=appleNew model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={cpu,zbuffer,rtt\_pp}

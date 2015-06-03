@@ -13,7 +13,9 @@
 %\selectcolormodel{gray}  
 
 \pgfplotsset{
-  legend style={font=\footnotesize}
+  legend style={font=\footnotesize},
+  every axis y label/.style={at={(current axis.north west)},above=1mm},
+  %every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
 }
 
 %\begin{tikzpicture}
@@ -31,16 +33,16 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU$\rm{'}$,$k$-CBP,$k$-CBP$\rm{'}$}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments\apple.cpu.csv};
-\addplot[red,mark=*] table [x=k, y=cput] {experiments\apple.cpu.csv};
-\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments\apple.cpu.csv};
-\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments\apple.cpu.csv};
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments/apple.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {experiments/apple.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments/apple.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments/apple.cpu.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -49,16 +51,16 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU$\rm{'}$,$k$-CBP,$k$-CBP$\rm{'}$}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments\budda.cpu.csv};
-\addplot[red,mark=*] table [x=k, y=cput] {experiments\budda.cpu.csv};
-\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments\budda.cpu.csv};
-\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments\budda.cpu.csv};
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments/budda.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {experiments/budda.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments/budda.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments/budda.cpu.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -68,16 +70,16 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU$\rm{'}$,$k$-CBP,$k$-CBP$\rm{'}$}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments\dinosaur.cpu.csv};
-\addplot[red,mark=*] table [x=k, y=cput] {experiments\dinosaur.cpu.csv};
-\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments\dinosaur.cpu.csv};
-\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments\dinosaur.cpu.csv};
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments/dinosaur.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {experiments/dinosaur.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments/dinosaur.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments/dinosaur.cpu.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -85,16 +87,16 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU$\rm{'}$,$k$-CBP,$k$-CBP$\rm{'}$}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments\alice.cpu.csv};
-\addplot[red,mark=*] table [x=k, y=cput] {experiments\alice.cpu.csv};
-\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments\alice.cpu.csv};
-\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments\alice.cpu.csv};
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments/alice.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {experiments/alice.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments/alice.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments/alice.cpu.csv};
 \end{axis}
 \end{tikzpicture}
 
@@ -103,16 +105,16 @@
 \begin{axis}
 [
     %title=Apple model(8118 points),
-    xlabel=$k$, ylabel=时间(ms),
+    xlabel=$k$, ylabel=鏃堕棿(ms),
 %    legend style={anchor=north east},
     legend pos=north west,
     legend entries={CPU,CPU$\rm{'}$,$k$-CBP,$k$-CBP$\rm{'}$}
 ]
 \pgfplotstableset{col sep = tab}
-\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments\Bugatti.cpu.csv};
-\addplot[red,mark=*] table [x=k, y=cput] {experiments\Bugatti.cpu.csv};
-\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments\Bugatti.cpu.csv};
-\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments\Bugatti.cpu.csv};
+\addplot[red,mark=*,densely dashed] table [x=k, y=cpu] {experiments/Bugatti.cpu.csv};
+\addplot[red,mark=*] table [x=k, y=cput] {experiments/Bugatti.cpu.csv};
+\addplot[blue,mark=triangle*,densely dashed] table [x=k, y=gpu] {experiments/Bugatti.cpu.csv};
+\addplot[blue,mark=triangle*] table [x=k, y=gput] {experiments/Bugatti.cpu.csv};
 \end{axis}
 \end{tikzpicture}
 

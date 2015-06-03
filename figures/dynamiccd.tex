@@ -1,5 +1,4 @@
-%\documentclass[a4paper,nofonts]{article}
-\documentclass[a4paper]{article}
+\documentclass[a4paper,nofonts]{article}
 \usepackage{ctex}
 \usepackage{pgfplots}
 \usepgfplotslibrary{colormaps}
@@ -7,7 +6,7 @@
 \usepackage[graphics,tightpage,active]{preview}
 \usepackage{filecontents}
 
-%\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
+\setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 
 \setlength{\PreviewBorder}{5pt} \PreviewEnvironment{tikzpicture}
 \begin{document}
@@ -15,7 +14,9 @@
 %\selectcolormodel{black}  
 
 \pgfplotsset{
-  legend style={font=\footnotesize}
+  legend style={font=\footnotesize},
+  every axis y label/.style={at={(current axis.north west)},above=1mm},
+  %every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
 }
 
 % page 1
