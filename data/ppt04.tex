@@ -3,8 +3,20 @@
     \frame{
       \frametitle{\secname}
       \begin{block}{总结}
+        \begin{enumerate}[(1)]
+          \item 提出了一种构造紧致凸包围多面体--$k$-CBP~的算法；
+          \item 构造~$k$-CBP~速度上比现有算法快~3$\sim$8~倍；
+          \item 构造的~$k$-CBP~紧致程度比现有的$k$-DOP紧致10\% $\sim$ 40\%；
+          \item 提出了一种基于~$k$-CBP~的碰撞检测算法；
+          \item 基于~$k$-CBP~的碰撞检测算法较$k$-DOP树初始化时间快8倍以上，静止场景快0.8 $\sim$ 3.2 倍，运动场景快0.8 $\sim$ 5.6 倍。
+        \end{enumerate}
       \end{block}
       \begin{block}{展望}
+      \begin{enumerate}[(1)]
+          \item 如何摆脱对AABB树的依赖；
+          \item 应用于近似碰撞检测算法；应用于可变形的模型连续碰撞检测，如何快速更新~$k$-CBP~；
+          \item 如何将~$k$-CBP~应用于如机器人抓取、路径规划等其他应用领域中；
+        \end{enumerate}
       \end{block}
     }
 
@@ -13,8 +25,6 @@
       \frametitle{\secname}
     \printbibliography
     }
-    
-    
     
     \section{感谢}
     \frame{
