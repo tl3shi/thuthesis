@@ -261,7 +261,7 @@ $k$~个法向~$normals$
 \label{subsec:determ-normals-by-shader}
 
 OpenGL~提供了可编程管线，它的轻便性、跨平台性和被广泛硬件厂家所支持使得~OpenGL~着色语言（OpenGL Shading Language，简称~GLSL）被广泛应用，在基于~GPU~的通用计算（General
-Purpose Graphic Process Unit，简称~GPGPU）中也发挥着重要作用。下面将分别介绍本文提出的基于深度缓冲(Z Buffer)和乒乓技术的算法。
+Purpose Graphic Process Unit，简称~GPGPU）中也发挥着重要作用。下面将分别介绍本文提出的基于深度缓冲（Z Buffer）和乒乓技术的算法。
 
 \subsubsection{基于深度缓冲的算法}
 	
@@ -762,6 +762,7 @@ n)$一致，截面求交过程利用第~\ref{subsec:intersection-dual-mapping}~�
 Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用中当模型规模较小时可直接用~CPU~计算即可。
 随着输入模型所含有点的数量规模的增加，CPU~和~GPU~运行时间之间的差距也越来越大。
 当多面体面数增加即~$k$~的增大时，在~Z Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所增加，而在基于乒乓技术的算法中，当点规模一定时，$k$~的变化对最后运行时间影响不明显，因此当较大的~$k$~时，这种算法更快。
+
 \begin{table}[htbp]
 \centering
 \caption{基于着色器并行算法加速比}
@@ -847,20 +848,20 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 
 \begin{figure}[htbp] 
 \centering
-\subcaptionbox{Apple(8118个点)\label{fig:exp:apple}}
+\subcaptionbox{Apple(8118个点)\label{fix:exp:tightness:apple}}
 {
     \includegraphics[width=\fourgraphicswidth\textwidth,page=1]{tightness.pdf}
 }
-\subcaptionbox{Budda(31232个点)\label{fig:exp:budda}}
+\subcaptionbox{Budda(31232个点)\label{fix:exp:tightness:budda}}
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth,page=2]{tightness.pdf}
 }
 \linebreak
-\subcaptionbox{Dinosaur(40277个点)\label{fig:exp:Dinasour}}
+\subcaptionbox{Dinosaur(40277个点)\label{fix:exp:tightness:Dinasour}}
 {  
     \includegraphics[width=\fourgraphicswidth\textwidth, page=3]{tightness.pdf}
 }
-\subcaptionbox{Alice(224291个点)\label{fig:exp:alice}}
+\subcaptionbox{Alice(224291个点)\label{fix:exp:tightness:alice}}
 {  
    \includegraphics[width=\fourgraphicswidth\textwidth, page=4]{tightness.pdf}
 }
