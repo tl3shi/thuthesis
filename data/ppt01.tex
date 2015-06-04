@@ -51,12 +51,14 @@
       \frame{
    \frametitle{本文目标}
    \begin{block}{综合比较}
+     \footnotesize
    \begin{description}
-     \item[$k$-DOP\cite{klosowski1998efficient}：]方向固定且有限，不同模型其截面方向一致， 不够紧致。
+     \item[$k$-DOP\footfullcite{klosowski1998efficient}：]方向固定且有限，不同模型其截面方向一致， 不够紧致。
      \item[凸包：]很(最)紧致， 但面片数量太多， 复杂度$O(n\log n)$。
     \end{description}
   \end{block}
   \begin{block}{本文凸包围体的目标}
+     \footnotesize
      \begin{description}
      \item[紧致：] 能够自适应模型，根据模型形状特点有不同的方向；
      \item[快速：] 生成凸包围体的速度要快，利用~GPU~加速；
@@ -70,7 +72,7 @@
    \frametitle{\subsecname~ }
     
    \begin{block}{碰撞检测算法}
-     许多应用的基础，例如在~3D~游戏，物理仿真，机器人，虚拟现实等领域中\cite{ericson2005real}。
+     许多应用的基础，例如在~3D~游戏，物理仿真，机器人，虚拟现实等领域中\footfullcite{ericson2005real}。
    \end{block}
 
    \begin{block}{分类}

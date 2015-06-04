@@ -88,7 +88,7 @@
         \label{lbl:ach-2d}
         \end{figure}
         \vspace{-4mm}
-        构造近似内凸包\cite{bentley1982approximation}，算法复杂度为~$O(n+\xi)$，扩展到三维为~$O(n+\xi^2\log\xi)$，然后利用$k$-means 聚类。
+        构造近似内凸包\footfullcite{bentley1982approximation}，算法复杂度为~$O(n+\xi)$，扩展到三维为~$O(n+\xi^2\log\xi)$，然后利用$k$-means 聚类。
     }
     \frame{
         \frametitle{$k$-means 聚类}
@@ -175,7 +175,7 @@
       \end{block}
       \begin{block}{对偶映射}
         法向~$\bm{n}(a,b,c)$~ + 平面上点~$\bm{p}(x_0,y_0,z_0)$ $\Rightarrow$ 平面方程~$ax + by + cz = ax_0 + by_0 + cz_0=d$, $d \neq 0$ \\
-        对偶点为~$\bm{p'}(a/d, b/d, c/d)$，对~$k$~个映射点求凸包，凸包平面映射回原来的交点，时间复杂度为$O(k\log k)$\cite{dengcg}。
+        对偶点为~$\bm{p'}(a/d, b/d, c/d)$，对~$k$~个映射点求凸包，凸包平面映射回原来的交点，时间复杂度为$O(k\log k)$\footfullcite{dengcg}。
       \end{block}
     }
 
@@ -253,7 +253,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
       \frametitle{生成$k$-CBP的效率：与文献\cite{karlsson2010parallel}算法对比}
         \vspace{-7mm}
         \begin{table} \tiny
-        \caption{本文算法与文献\cite{karlsson2010parallel}算法对比}
+        \caption{本文算法与文献\footfullcite{karlsson2010parallel}算法对比}
         \begin{tabular}{p{1.5cm}<{\centering}ccc ccc} %p本身占一列
        \toprule[1pt]
         \multirow{2}{*}{$k$} & \multicolumn{3}{c}{Apple(8118 points)} & \multicolumn{3}{c}{~~~~~Bugatti(1010815 points)}\\
@@ -324,7 +324,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
     }
 
     \frame{
-        \frametitle{生成$k$-CBP的紧致程度：$k$-DOP v.s 凸包 }
+        \frametitle{生成$k$-CBP的紧致程度：$k$-CBP v.s 凸包 }
         \vspace{-2em}
         \begin{table}
         \scriptsize
@@ -348,7 +348,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
     }
 
     \frame{
-        \frametitle{生成$k$-CBP的紧致程度：$k$-DOP v.s 凸包}
+        \frametitle{生成$k$-CBP的紧致程度：$k$-CBP v.s 凸包}
         \begin{figure}
         \includegraphics[width=4.0in]{figures/kcbp-convexhull.png}
         \caption{$k$-CBP~与凸包对比}
