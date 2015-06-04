@@ -63,10 +63,10 @@
       \frame{
    \frametitle{本文目标}
      \footnotesize
-     综合来看，\textbf{$k$-DOP}\footfullcite{klosowski1998efficient}的方向\textbf{固定}且为\textbf{有限的偶数}，不同模型其截面方向一致， \textbf{不够紧致}；\\ 
+     局限性：\textbf{$k$-DOP}\footfullcite{klosowski1998efficient}的方向\textbf{固定}且为\textbf{有限的偶数}，不同模型其截面方向一致， \textbf{不够紧致}；\\ 
      而凸包很(最)紧致，但面片数量太多，构造复杂度$O(n\log n)$。
     \begin{block}{本文凸包围体的目标}
-      \hspace{-1em}   \begin{minipage}{\textwidth}
+      \hspace{-0.5em}   \begin{minipage}{\textwidth}
     \begin{description}
       \item[紧致：] 能够自适应模型，根据模型形状特点有不同的方向；
       \item[快速：] 生成凸包围体的速度要快，利用~GPU~加速；
@@ -76,6 +76,7 @@
     \end{block}
 
        \note{
+         描述PPT。
 本文提出的 k-CBP 与 k-DOP 不同之处在于：
 (1) k-DOP 中 k 值通常仅局限于少数几个，例如 k = 6,8,14,18,20,26 等\cite{klosowski1998efficient}文
 献\cite{abenchmarking2007}最大支持 k = 46），且 k-DOP 中方向是成对平行的，k 值是偶数，而 k-CBP 中
