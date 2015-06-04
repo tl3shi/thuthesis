@@ -415,7 +415,7 @@ $ Support_\mathbb{D}(\bm{d_3'})  = Support_\mathbb{A}(\bm{d_3'}) - Support_\math
 
 具体的算法如算法~\ref{alg:gjk}~所示，文献~\onlinecite{bergen1999fast}~证明了集合~$\bm{S}$~中在三维空间最多只包含4个点，且算法最终会收敛。
 在实际实现过程中可以根据需求设定最大迭代次数，达到后或者认为没找到相交点或者采取保守态度进行下一步验证。
-算法~\ref{alg:gjk}~第~12~行~CHECKCONTAINUPDATE~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
+算法~\ref{alg:gjk}~第~12~行~\textproc{CheckContainUpdate}~子过称需检测~$\bm{S}$~是否包含原点，必要时进行规约并获取下一次迭代方向，以上两个例子已经对二维情况进行分析，
 具体三维实现可以参考文献~\onlinecite{bergen1999fast}。
 
 \FloatBarrier
@@ -524,7 +524,7 @@ $\bigtriangleup K_1P_1I_1 \sim \bigtriangleup K_2P_2I_1, \bigtriangleup V_1K_1I_
 \end{algorithmic}
 \end{algorithm}
 
-算法~\ref{alg:triangles:intersection}~第~10~行~在方法~EDGEEDGETEST~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
+算法~\ref{alg:triangles:intersection}~第~10~行~在方法~\textproc{EdgeEdgeTest}~进行边边测试子过程中，可通过点与有向线段的位置关系确定，如线段两个端点都在另外一个有向线段的一边说明两线段不相交，反之则相交，不需要求解出具体的交点坐标。
 在实际实现过程中，往往需要引入容差以提高算法的稳定性。文献~\onlinecite{Moller1997}~介绍了更多的优化技巧。
 
 \FloatBarrier

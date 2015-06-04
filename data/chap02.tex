@@ -181,7 +181,7 @@ $k$~个法向~$normals$
         %\State $tmp \gets max(tmp, \phi)$ \Comment{记录每个聚类变量属于哪一类}
     \EndFor
     \ForAll {$c \in init$}
-    \State $result \gets \Call{update}{c}$ 
+    \State $result \gets \Call{Update}{c}$ 
         \Comment{按照公式(\ref{equ:kmeans-update-center})更新中心点}
         \State \Comment{检测继续迭代条件是否满足，中心点容差范围内不再变化或迭代次数超过最大迭代次数}
         \If{$ \Call{checkState}{result, init, iter}$}
@@ -196,7 +196,7 @@ $k$~个法向~$normals$
 \end{algorithmic}
 \end{algorithm}
 
-算法~\ref{alg:kmeans-determine-normals}~中第7行~UPDATE~方法作用是聚类迭代更新每类的中心点，
+算法~\ref{alg:kmeans-determine-normals}~中第7行~\textproc{Update}~方法作用是聚类迭代更新每类的中心点，
 本文更新中心点时将每个法向对应的面片的面积作为权重即
 \begin{equation}
 \label{equ:kmeans-update-center}

@@ -59,9 +59,9 @@
     \end{block}
     \begin{block}{关键步骤}
           \begin{description}
-             \item[定法向：]结合近似内凸包和~$k$-means~
-             \item[搜截面：]GPU~中沿各法向搜索切点构造截面
-             \item[求交点：]截面对偶映射求得交点
+             \item[定法向：]结合近似内凸包和~$k$-means；
+             \item[搜截面：]GPU~中沿各法向搜索切点构造截面；
+             \item[求交点：]截面对偶映射求得交点。
           \end{description}
     \end{block}
     }
@@ -120,16 +120,16 @@
        % \end{block}
     }
 
-  \subsection{搜索截面}
+  \subsection{搜索截面及求交}
     \frame{
     \frametitle{搜索截面}
     \begin{block}{截面＝法向+点}
      法向已得，求投影点：对每个法向~$\bm{n_i}$，从输入模型的所有点中寻找最大投影值的点作为切点。
-	时间复杂度为~$O(k\cdot n)$, 其中~$k$~为法向数量, $n$~为模型所含点数. 
+	时间复杂度为~$O(k\cdot n)$， 其中~$k$~为法向数量，$n$~为模型所含点数。
    \end{block}
    \begin{block}{并行可行性}
 	各法向的计算相互独立， 借助~GPU~并行加速。
-	典型GPU并行平台：着色器（GLSL为例）和基于 GPU 的通用计算框架（CUDA为例）
+	典型GPU并行平台：着色器（GLSL为例）和基于 GPU 的通用计算框架（CUDA为例）。
 	\end{block}
     }
     
@@ -156,6 +156,7 @@
     
     \begin{frame}
     \frametitle{CUDA实现}
+    \vspace{-1em}
 	    \begin{figure}
 	    \includegraphics[width=2.5in]{gpureduction.eps}
 	    \caption{并行规约求最大投影值}
@@ -174,10 +175,9 @@
       \end{block}
       \begin{block}{对偶映射}
         法向~$\bm{n}(a,b,c)$~ + 平面上点~$\bm{p}(x_0,y_0,z_0)$ $\Rightarrow$ 平面方程~$ax + by + cz = ax_0 + by_0 + cz_0=d$, $d \neq 0$ \\
-        对偶点为~$\bm{p'}(a/d, b/d, c/d)$，对~$k$~个映射点求凸包，凸包平面映射回原来的交点，时间复杂度为$O(k\log k)$。
+        对偶点为~$\bm{p'}(a/d, b/d, c/d)$，对~$k$~个映射点求凸包，凸包平面映射回原来的交点，时间复杂度为$O(k\log k)$\cite{dengcg}。
       \end{block}
     }
-
 
   \subsection{实验与分析}
 
@@ -185,8 +185,9 @@
 
     \frame{
       \frametitle{生成$k$-CBP的效率：GLSL实验结果}
+      \vspace{-1em}
       \begin{figure}[htbp] % use [htbp] to fix the position
-        \vspace{-8mm}
+      \vspace{-8mm}
       \subfloat %Apple模型(8118个点)
       {  
          \includegraphics[width=\fourgraphicswidth\textwidth,page=1]{shadertime.pdf}
@@ -218,6 +219,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 
     \frame{
       \frametitle{生成$k$-CBP的效率：CUDA实验结果}
+      \vspace{-1em}
         \begin{figure}
         \vspace{-8mm}
         \subfloat%[\tiny Budda(31232 points)]
@@ -323,7 +325,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
 
     \frame{
         \frametitle{生成$k$-CBP的紧致程度：$k$-DOP v.s 凸包 }
-       % \begin{block}{结果}
+        \vspace{-2em}
         \begin{table}
         \scriptsize
         \caption{\label{tab:exp:cgal}$k$-CBP~与~QuickHull~凸包算法比较}
@@ -340,9 +342,8 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
          \end{tabular}
          \vspace{-2mm}
         \end{table}
-       % \end{block}
         \begin{block}{结论}
-        \scriptsize 与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度（Bugatti 凸包面的0.17\%的达到95.06\%紧致程度，构造速度快27倍），下图为可视化结果。
+        \footnotesize 与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度（Bugatti 凸包面的0.17\%的达到95.06\%紧致程度，构造速度快27倍），下图为可视化结果。
         \end{block}
     }
 

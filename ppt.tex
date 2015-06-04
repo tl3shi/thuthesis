@@ -2,7 +2,6 @@
 %\usepackage{fontspec}
 %\setsansfont{宋体}
 \usepackage[BoldFont,SlantFont]{xeCJK}
-%\setCJKmainfont[BoldFont={SimHei},ItalicFont={KaiTi}]{SimSun}
 \setCJKmainfont[BoldFont={Adobe Heiti Std},ItalicFont={Adobe Kaiti Std}]{SimSun}
 
 \usepackage{latexsym,amssymb,amsmath,amsbsy,amsopn,amstext,xcolor,multicol}
@@ -16,11 +15,13 @@
 \usepackage{caption}
 \usepackage[caption=false,font=scriptsize]{subfig}
 \usepackage{multirow}
-\usepackage{multicol}
 \usepackage{booktabs}
 \usepackage{tikz}
 \usepackage{tikzscale}
 \usepackage{animate}
+\usepackage{times}
+%\usepackage{mathptmx}
+
 
 \defbibheading{bibliography}[\bibname]{} %avoid printbibliography 自动生成目录
 \addbibresource{ref/papers-bib-in-google.bib}
@@ -64,7 +65,7 @@
 \setbeamerfont{caption}{size=\scriptsize}
 \setbeamertemplate{caption}[numbered]
 \setbeamerfont{subsection in toc}{size=\footnotesize}
-\renewcommand*{\bibfont}{\scriptsize}
+\renewcommand*{\bibfont}{\footnotesize}
 
 \graphicspath{{figures/}}
 
@@ -98,6 +99,9 @@
    % \begin{multicols}{2}
     \tableofcontents[sections={<1-5>}]
   %\end{multicols}
+    \note{
+      note测试，我将按照下面几个内容来介绍本人的工作，首先是相关工作，然后介绍凸包围体生成算法和基于凸包围体的碰撞检测算法，最后进行总结。
+    }
   }
 
   \AtBeginSubsection[] {
@@ -109,9 +113,10 @@
     }
     \addtocounter{framenumber}{-1}  %目录页不计算页码
   }
-  %\include{data/ppt01}
-  %\include{data/ppt02}
-  %\include{data/ppt03}
+
+  \include{data/ppt01}
+  \include{data/ppt02}
+  \include{data/ppt03}
   \include{data/ppt04}
 
 \end{document}

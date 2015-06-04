@@ -4,10 +4,10 @@
       \begin{frame}
         \frametitle{}
         \begin{block}{AABB树法}
-          将生成的$k$-CBP视为普通的三角形，实现简单，适用于模型较小的静止碰撞检测场景
+          将生成的$k$-CBP视为普通的三角形，实现简单，适用于模型较小的静止碰撞检测场景。
         \end{block}
         \begin{block}{GJK法}
-          计算凸多面体之间的最近距离的~GJK~算法。\\
+          计算凸多面体之间的最近距离的~GJK~算法\cite{bergen1999fast}。\\
           Minkowski~差，即~$\mathbb{A} - \mathbb{B} = \{ \bm{a} - \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\} $。
 GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点，因为若~$\mathbb{A}$~和
 ~$\mathbb{B}$~相交即~$\mathbb{A}$~和~$\mathbb{B}$~必含有公共交集，
@@ -31,24 +31,25 @@ GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点�
         \frametitle{GJK~算法}
         \vspace{-2em}
          \begin{columns}[onlytextwidth]
-          \begin{column}{0.4\textwidth}
+          \begin{column}{0.46\textwidth}
               \begin{figure}[htbp]
-          \hspace{-10em}
+          \hspace{-9em}
               \subfloat%[第一步]
               {
-                \includegraphics[width=.60\textwidth,page=3]{gjkExample.pdf}
-              }\\\vspace{-2em} 
+                \includegraphics[width=.65\textwidth,page=3]{gjkExample.pdf}
+              }\\ \vspace{-3em}\hspace{3em}
               \subfloat%[不相交]
               {
-                \includegraphics[width=.60\textwidth, page=4]{gjkExample.pdf}
-              }\\ \vspace{-0em} \hspace{-8em}
+                \includegraphics[width=.65\textwidth, page=4]{gjkExample.pdf}
+              }\\ \vspace{-2em} \hspace{-8em}
               \subfloat%[不相交]
               {
-                \includegraphics[width=.60\textwidth, page=5]{gjkExample.pdf}
+                \includegraphics[width=.65\textwidth, page=5]{gjkExample.pdf}
               }
              \end{figure}
           \end{column}
-          \begin{column}{1.2\textwidth}
+          \begin{column}{1.05\textwidth}
+            \vspace{-2em}
             \scalebox{0.5}
             {
               \begin{minipage}{\textwidth}
@@ -89,17 +90,18 @@ GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点�
       \subsection{三角形间的相交测试}
       \frame{
         %\frametitle{}
+            \vspace{-0.5em}
             \begin{figure}[htbp]
               \centering
                 \includegraphics[width=3.0in]{TriangleTriangleTest.eps}
                 \caption{两个非共面三角形的位置关系}
               \label{fig:two:triangle:ui}
             \end{figure}
-            \vspace{-2em}
+            \vspace{-0.5em}
           \scriptsize 
-          三角形~$T_1,T_2$点坐标~$\Rightarrow$平面方程$\Pi_1,\Pi_2$$\Rightarrow$~$T_2$~到~$\Pi_1$~的有向距离~$\bm{l}_{1i}, i \in \{1,2,3\}$，
+          三角形~$T_1,T_2$坐标~$\Rightarrow$平面方程$\Pi_1,\Pi_2$$\Rightarrow$~$T_2$~到~$\Pi_1$~的有向距离~$\bm{l}_{1i}, i \in \{1,2,3\}$\cite{Moller1997}:
           \begin{enumerate}[(1)]
-            \item 若~$\forall i \in \{1,2,3\}, l_{1i} = 0$，即三角形~$T_2$~的三个顶点到三角形~$T_1$~所在~$\Pi_1$~的距离都为$0$，则两个三角形共面；$\Rightarrow$ 共面三角形求交
+            \item 若~$\forall i \in \{1,2,3\}, l_{1i} = 0$，即三角形~$T_2$~的三个顶点到三角形~$T_1$~所在~$\Pi_1$~的距离都为$0$，则两个三角形共面；$\Rightarrow$ 共面三角形求交。
             \item 若~$\forall i \in \{1,2,3\}, l_{1i} > 0$ 或~$\forall i \in \{1,2,3\}, l_{1i} < 0$，即三角形~$T_2$~的三个顶点到三角形~$T_1$~所在~$\Pi_1$~的有向距离同号，则~$T_2$~在~$\Pi_1$~的同一侧，可立即排除相交；
             \item 其他情况，三角形~$T_2$~必交~$\Pi_1$~于一条线段。$\Rightarrow$判断两个区间线段$D_1,D_2$是否相交。
           \end{enumerate}
@@ -109,14 +111,15 @@ GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点�
       \subsection{基于$k$-CBP~的碰撞检测算法}
 
         \frame{
+          \frametitle{$k$-CBP的有效性}
             \begin{figure}
             \centering
-            \includegraphics[width=3in]{figures/bunny-box-kcbp-collsion-detection-example.png}
-            \caption{~$k-$CBP~应用于碰撞检测示例}
+            \includegraphics[width=2.5in]{figures/bunny-box-kcbp-collsion-detection-example.png}
+            \caption{~$k$-CBP~应用于碰撞检测示例}
             \label{lbl:bunny-box-kcbp-collsion-detection-example}
             \end{figure}
 
-            \scriptsize 图中模型~1~与~2、2~与~3~的包围盒分别相交, 而其~$16$-CBP~仅~1~与~2~相交, 实际模型仅~1~与~2~相交. 
+            \footnotesize 图中模型~1~与~2、2~与~3~的包围盒分别相交, 而其~$16$-CBP~仅~1~与~2~相交, 实际模型仅~1~与~2~相交. 
         }
         \frame{
           \frametitle{静止场景碰撞检测算法} 
