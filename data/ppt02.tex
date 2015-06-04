@@ -34,6 +34,10 @@
         \end{figure}
         \end{column}
       \end{columns}
+
+      \note{这是凸包围多面体的定义，其实就是空间中将模型包裹起来的k个平面，右图就是一个k=34的例子。
+      其实这个问题的关键就是如何确定这些平面的方向。
+      }
     }
 
        \frame{
@@ -41,21 +45,9 @@
        \begin{block}{构造$k$-CBP~算法流程图}
         \begin{figure}
         \centering
-        %\includegraphics[width=4.0in]{figures/collision-detection-flowchart.eps}
         \includegraphics[width=4.0in]{kcbp-flowchart-x-aix.eps}
-        %\caption{构造$k$-CBP~算法流程图}
         \label{lbl:kcbp-algorithm-flowchart}
         \end{figure}
-     %   \hspace*{.1\linewidth}
-     %   \begin{minipage}{\textwidth}
-     %     \begin{exampleblock}{关键步骤}
-     %     \begin{description}
-     %        \item[定法向：]结合近似内凸包和~$k$-means~
-     %        \item[搜截面：]GPU~中沿各法向搜索切点构造截面
-     %        \item[求交点：]截面对偶映射求得交点
-     %     \end{description}
-     %   \end{exampleblock}
-     % \end{minipage}
     \end{block}
     \begin{block}{关键步骤}
           \begin{description}
@@ -64,7 +56,13 @@
              \item[求交点：]截面对偶映射求得交点。
           \end{description}
     \end{block}
+
+    \note{这是本文构造凸包围多面体的算法流程图，关键就是这3步。\\
+      定法向：方向的好坏直接决定最后多面体的紧致程度，本文结合了近似内凸包和kmeans聚类算法来确定法向。\\
+      搜截面：因为法向确定后，搜索截面的过程各个法向之间相互独立互不影响，因此可以较方便用GPU加速。\\
+      求交点：确定好平面后直接求交即可得到k-cbp的顶点。
     }
+}
 
   \subsection{截面法向的生成}
 
@@ -88,7 +86,13 @@
         \label{lbl:ach-2d}
         \end{figure}
         \vspace{-4mm}
-        构造近似内凸包\footfullcite{bentley1982approximation}，算法复杂度为~$O(n+\xi)$，扩展到三维为~$O(n+\xi^2\log\xi)$，然后利用$k$-means 聚类。
+        构造近似内凸包\footfullcite{bentley1982approximation}，算法复杂度为~$O(n+\lambda)$，扩展到三维为~$O(n+\lambda^2 \log \lambda)$，然后利用$k$-means 聚类。
+        
+        \note{
+          以二维为例，近似内凸包构造分为3个步骤，先分组，然后选出每组的极值点，最后将极值点按条件连接起来即可。此算法时间复杂度为~$O(n+\lambda)$，$\lambda$为分的组数。\\
+          三维情况类似。\\
+          得到近似凸包后，根据凸包面片的方向作为参与kmeans聚类算法的点集。
+        }
     }
     \frame{
         \frametitle{$k$-means 聚类}
@@ -110,14 +114,18 @@
         \caption{通过聚类确定法向}
         \label{lbl:gen-fixed-normals}
         \end{figure}
-        %\begin{block}{聚类关键}
-            \begin{description}
-             \item[初始方向：]均匀分布；
-             \item[聚类度量：]余弦；
-             \item[中心更新：]
-       中心点：$\bm{c_i}=\frac{\sum_{i=1}^{i=n} \omega_i \cdot \bm{n_i} } {\sum_{i=1}^{i=n} \omega_i}$，权重$\omega_i$为面片面积。
-            \end{description}
-       % \end{block}
+        \begin{description}
+         \item[初始方向：]均匀分布；
+         \item[距离度量：]余弦；
+         \item[中心更新：]
+   中心点：$\bm{c_i}=\frac{\sum_{i=1}^{i=n} \omega_i \cdot \bm{n_i} } {\sum_{i=1}^{i=n} \omega_i}$，权重$\omega_i$为面片面积。
+        \end{description}
+
+        \note{
+          聚类算法需要关注下面3个问题，一是初始的方向，本文的算法采用均匀分布的方式确定，如图a，在球面上均匀分布k个点，球心和点的连线作为初始方向，图中k=26。 \\
+          然后是类与类之间的距离如何度量，用余弦的方式可以使方向相近的点聚到一类。\\
+          中心点的更新，以面片所在方向的面积作为权重，使得最后结果靠近面片较大的方向。图c为聚类后的结果，比图b紧致15\%左右。
+        }
     }
 
   \subsection{搜索截面及求交}
@@ -131,6 +139,10 @@
 	各法向的计算相互独立， 借助~GPU~并行加速。
 	典型GPU并行平台：着色器（GLSL为例）和基于 GPU 的通用计算框架（CUDA为例）。
 	\end{block}
+
+    \note{
+     方向确定后，直接沿着方向搜索切点即可。因为各方向搜索过程相互独立，所以可借助GPU加速，本文采用两种典型的GPU加速平台，一种是OpenGL着色语言为代表的着色器平台，另一种是GPGPU通用计算框架CUDA。
+    }
     }
     
     \frame{
@@ -142,16 +154,22 @@
 	    		\caption{基于Z Buffer算法流程图}
 		\end{figure}
 	    	\end{column}
-		
-		\hspace{1em}
-		
-		 \begin{column}{0.5\textwidth}
+          \hspace{1em}
+           \begin{column}{0.5\textwidth}
 		   	\begin{figure}
 		 	\includegraphics[width=\textwidth]{shader-rtt_pp.eps}
 	    		\caption{基于乒乓技术算法流程图}
 			\end{figure}	
 	    	\end{column}
-       	     \end{columns}
+       	\end{columns}
+
+        \note{
+          \scriptsize
+          GLSL中，本文提出了两种算法，
+          一种是利用OpenGL的深度测试，深度测试的目的是决定哪个片段将要保留下来，默认情况下，最前面即有较小（或较大，可设置）的 z 坐标值的片段将通过测试被保留下来。每个片段的深度信息保存在深度缓冲中，当新的片段通过测试后将更新缓冲中的值。在顶点着色器中，将所有点的 x,y 坐标值设为一样，并将该点在法向上的投影作为 z 值即深度值，所有点经过深度测试后将只有 z 值最大的点被保留下来，该点就是沿着这个法向的切点。这样经过k次渲染即可找到所有的k个切点。\\
+          \scriptsize
+          另外一种是乒乓技术，乒乓技术是需要把前一次运算结果传递给下一次运算用来作为后继运算的输。算法将输入点分成 x 份，每次只处理一份，在当前渲染过程中，找出在该批点集中沿着所有法向投影值最大的点，当处理下批点集即下一次渲染时，将与上次局部最大投影值进行比较，若有新的投影最大值就更新，如此反复 x 次，当所有点都被处理完毕后得到沿着所有法向投影最大值的点即切点。所以这个算法对k不是很敏感，因为k较小时，GPU一次总能处理k个方向，这点从后面的实验结果也能看出。
+        }
    }
     
     \begin{frame}
@@ -166,6 +184,11 @@
 	    \small 
 	    将输入点交给数量为~$t$~的线程计算点积得到投影值，
  线程~$i$~和~$i+t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。OpenCL等并行计算框架类似。
+  
+ \note{
+      CUDA实现中原理如上图所示，将输入点交给数量为~$t$~的线程计算点积得到投影值，线程~$i$~和~$i+t/2$~比较选取较大者，经~$\log_2t$~次比较可得最大值。
+      这种规约方式在其他GPGPU框架中也类似，如OpenCL等。
+ }
     \end{frame}
 
         \frame{
@@ -177,6 +200,11 @@
         法向~$\bm{n}(a,b,c)$~ + 平面上点~$\bm{p}(x_0,y_0,z_0)$ $\Rightarrow$ 平面方程~$ax + by + cz = ax_0 + by_0 + cz_0=d$, $d \neq 0$ \\
         对偶点为~$\bm{p'}(a/d, b/d, c/d)$，对~$k$~个映射点求凸包，凸包平面映射回原来的交点，时间复杂度为$O(k\log k)$\footfullcite{dengcg}。
       \end{block}
+      
+      \note{
+        确定平面后，接下来就是求每个平面上的交点。一种比较直接的算法是通过枚举所有每~3~个平面交于~1~点的情况，然后排除在平面外部的交点，剩下的构成~$k$-CBP~的顶点，时间复杂度为$O(k^3)$。
+        通过计算几何中的对偶映射技术可以将复杂度降低到$O(k\log k)$。
+      }
     }
 
   \subsection{实验结果与分析}
@@ -210,7 +238,8 @@
       \end{figure}
 
       \note{
-      从实验结果可以看出，当模型规模不大时，如图~\ref{fig:exp:shader:apple}~所示的含有8千多个点的~Apple~模型，
+        这是基于OpenGL着色语言实现的实验结果。
+      从实验结果可以看出，当模型规模不大时，如左上图所示的含有8千多个点的~Apple~模型，
 Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用中当模型规模较小时可直接用~CPU~计算即可。
 随着输入模型所含有点的数量规模的增加，CPU~和~GPU~运行时间之间的差距也越来越大。
 当多面体面数增加即~$k$~的增大时，在~Z Buffer~算法中，需要更多的绘制次数，因此其运行时间也有所增加，而在基于乒乓技术的算法中，当点规模一定时，$k$~的变化对最后运行时间影响不明显，因此当较大的~$k$~时，这种算法更快。
@@ -244,7 +273,8 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
         \end{figure}
 
         \note{
-        图~\ref{chart:exps:cputime} 中横纵坐标分别代表多面体面数和运行时间, 其中虚线代表搜索截面的过程, 实线为构造凸包围多面体总体耗时. 当模型点数量较大时, 搜索截面的过程占据了算法绝大多数时间, 且随着凸包围多面体的面数~$k$~ 值增加而线性增长, 这与搜索截面时间复杂度($O(k\cdot n)$)一致, 截面求交过程的时间复杂度为$O(k\log k)$,
+         这是CUDA的实验结果，
+        图中横纵坐标分别代表多面体面数和运行时间, 其中虚线代表搜索截面的过程, 实线为构造凸包围多面体总体耗时. 当模型点数量较大时, 搜索截面的过程占据了算法绝大多数时间, 且随着凸包围多面体的面数~$k$~ 值增加而线性增长, 这与搜索截面时间复杂度($O(k\cdot n)$)一致, 截面求交过程的时间复杂度为$O(k\log k)$,
 当点数量极大时, 实线虚线几乎重合即求交等步骤耗时相比整体算法而言几乎可忽略.
         }
     }
@@ -282,6 +312,10 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
         \end{table}
         \vspace{-3mm}
         \scriptsize  当点数量较小时，能够提高~3-4~倍速度，模型变大，加速比更大，Bugatti~模型的提速达到~4$\sim$8~倍。
+        
+        \note{
+          这是和一篇专门讲并行求包围体的算法的论文的对比结果（Swedish瑞典，sigrad会是Eurographics的子会议议题官网说的是the Swedish Chapter of Eurographics），可以看出当点数量较小时，能够提高~3-4~倍速度，模型变大，加速比更大，Bugatti~模型的提速达到~4$\sim$8~倍。
+        }
     }
 
   %\subsubsection{凸包围多面体的紧致程度}
@@ -309,8 +343,10 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
         \caption{紧致程度对比: \tiny Apple(8k), Budda(31k), Dinosaur(40k), Alice(224k)}
         \label{chart:exps:tightness}
         \end{figure}
-        \vspace{-3mm}
-        \scriptsize \centering 较~$k$-DOP~提升 10\% $\sim$ 40\%，下图可视化结果。
+        
+        \note{
+          这是本文算法和k-DOP的对比，较~$k$-DOP~提升 10\% $\sim$ 40\%，下图可视化结果。
+        }
     }
     \frame{
       \frametitle{生成$k$-CBP的紧致程度：$k$-DOP v.s $k$-CBP }
@@ -321,6 +357,10 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
       \caption{~$k$-CBP~与~$k$-DOP~对比}
       \label{fig:kdop:kcbp:ui}
       \end{figure}
+
+      \note{
+        该图中是不同k值的对比，左边为k-DOP结果，右边为本文结果。从外观上看，确实也紧致了不少。
+      }
     }
 
     \frame{
@@ -345,6 +385,10 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
         \begin{block}{结论}
         \footnotesize 与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度（Bugatti 凸包面的0.17\%的达到95.06\%紧致程度，构造速度快27倍），下图为可视化结果。
         \end{block}
+
+        \note{
+        这是本文算法和CGAL中的凸包的对比，其中f表示面数量，$\tau$的值为紧致程度，紧致程度是用凸包的体积除以凸包围多面体的体积来衡量的。与凸包相比，本文算法在大大简化包围体平面数量的同时能保持较好的紧致程度（Bugatti 凸包面的0.17\%的达到95.06\%紧致程度，构造速度快27倍），下图为可视化结果。
+      }
     }
 
     \frame{
