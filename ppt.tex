@@ -19,7 +19,7 @@
 \usepackage{tikz}
 \usepackage{tikzscale}
 \usepackage{animate}
-\usepackage{times}
+%\usepackage{times} %与上面的冲突，加上这个 粗体斜体就失效
 %\usepackage{mathptmx}
 
 
@@ -58,6 +58,14 @@
         rulesepcolor=\color{red!20!green!20!blue!20},
         numbers=none,fontadjust=true}
 \lstdefinelanguage{shader}{morekeywords={uniform, layout, uniform, vec2, vec3, vec4, in, out, gl_Position, dot, flat, int ,float, gl_VertexID, xyz, w, x, y, z, location, version, sampler2DRect, bgr, gl_FragData, texture2DRect, gl_TexCoord,for,xy},morecomment=[l]{//}}
+
+%\setbeameroption{show notes} %un-comment to see the notes
+
+%\usepackage{pgfpages}
+%\renewcommand\pgfsetupphysicalpagesizes{%
+%    \pdfpagewidth\pgfphysicalwidth\pdfpageheight\pgfphysicalheight%
+%}
+%\setbeameroption{show notes on second screen}
 
 \begin{document}
 
