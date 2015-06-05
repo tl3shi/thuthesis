@@ -198,7 +198,7 @@
       \end{block}
       \begin{block}{对偶映射}
         法向~$\bm{n}(a,b,c)$~ + 平面上点~$\bm{p}(x_0,y_0,z_0)$ $\Rightarrow$ 平面方程~$ax + by + cz = ax_0 + by_0 + cz_0=d$, $d \neq 0$ \\
-        对偶点为~$\bm{p'}(a/d, b/d, c/d)$，对~$k$~个映射点求凸包，凸包平面映射回原来的交点，时间复杂度为$O(k\log k)$\footfullcite{dengcg}。
+        对偶点为~$\bm{p'}(a/d, b/d, c/d)$，对~$k$~个映射点求凸包，凸包平面映射回原来的交点，时间复杂度为$O(k\log k)$。\footfullcite{dengcg}
       \end{block}
       
       \note{
@@ -283,13 +283,10 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
       \frametitle{生成$k$-CBP的效率：与文献\cite{karlsson2010parallel}算法对比}
         \vspace{-7mm}
         \begin{table} \tiny
-        \caption{本文算法与文献\footfullcite{karlsson2010parallel}算法对比}
+          \caption{本文算法与文献\footfullcite{karlsson2010parallel}算法对比}
         \begin{tabular}{p{1.5cm}<{\centering}ccc ccc} %p本身占一列
        \toprule[1pt]
         \multirow{2}{*}{$k$} & \multicolumn{3}{c}{Apple(8118 points)} & \multicolumn{3}{c}{~~~~~Bugatti(1010815 points)}\\
-        %\cmidrule(lr){2-4}\cmidrule(lr){5-7}
-        %\hline
-        %\rowcolor[gray]{0.9} $k$ &
         ~&SSE(ms) & $k$-CBP(ms) &  Speedup &SSE(ms) & $k$-CBP(ms) &  Speedup \\
      \midrule[0.5pt]
         6 & 0.4 & 0.12  & 3.20     & 24.2 & 3.20  & 7.56 \\
@@ -314,7 +311,7 @@ Z Buffer~算法和传统的~CPU~算法差别不是很大，因此在实际应用
         \scriptsize  当点数量较小时，能够提高~3-4~倍速度，模型变大，加速比更大，Bugatti~模型的提速达到~4$\sim$8~倍。
         
         \note{
-          这是和一篇专门讲并行求包围体的算法的论文的对比结果（Swedish瑞典，sigrad会是Eurographics的子会议议题官网说的是the Swedish Chapter of Eurographics），可以看出当点数量较小时，能够提高~3-4~倍速度，模型变大，加速比更大，Bugatti~模型的提速达到~4$\sim$8~倍。
+         这是和一篇专门讲并行求包围体的算法的论文的对比结果（Swedish瑞典，sigrad会是Eurographics的子会议议题官网说的是the Swedish Chapter of Eurographics），可以看出当点数量较小时，能够提高~3-4~倍速度，模型变大，加速比更大，Bugatti~模型的提速达到~4$\sim$8~倍。
         }
     }
 
