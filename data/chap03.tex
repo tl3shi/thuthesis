@@ -166,7 +166,7 @@ GJK~算法需要用到闵科夫斯基和（Minkowski Sum）的概念如下定义
 %\end{equation}
 ~$\mathbb{A} + \mathbb{B} = \{ \bm{a} + \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\}$， 
 将相应的加号改为减号得到~Minkowski~差，即~$\mathbb{A} - \mathbb{B} = \{ \bm{a} - \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\} $。
-GJK~算法的核心基础在于若两个凸多边相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点，因为若~$\mathbb{A}$~和
+GJK~算法的核心基础在于若两个凸多边形相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点，因为若~$\mathbb{A}$~和
 ~$\mathbb{B}$~相交即~$\mathbb{A}$~和~$\mathbb{B}$~必含有公共交集，
 即至少含有一点同时属于~$\mathbb{A}$~和~$\mathbb{B}$~，该点的~Minkowski~差即为原点~$\bm{O}(0, 0)$，
 更加详细的原理和证明过程可以参考文献~\onlinecite{gilbert1988fast,bergen1999fast}。下面将以一个二维例子阐述此思想。

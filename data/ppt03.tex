@@ -9,7 +9,7 @@
         \begin{block}{GJK法}
           计算凸多面体之间的最近距离的~GJK~算法\footfullcite{bergen1999fast}。\\
           Minkowski~差，即~$\mathbb{A} - \mathbb{B} = \{ \bm{a} - \bm{b} | \bm{a} \in \mathbb{A}, \bm{b} \in \mathbb{B}\} $。
-GJK~算法的核心思想在于若两个凸多边相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点，因为若~$\mathbb{A}$~和
+GJK~算法的核心思想在于若两个凸多边形相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点，因为若~$\mathbb{A}$~和
 ~$\mathbb{B}$~相交即~$\mathbb{A}$~和~$\mathbb{B}$~必含有公共交集，
 即至少含有一点同时属于~$\mathbb{A}$~和~$\mathbb{B}$~，该点的~Minkowski~差即为原点~$\bm{O}(0, 0)$。
         \end{block}
@@ -17,7 +17,7 @@ GJK~算法的核心思想在于若两个凸多边相交，则凸多边形顶点�
         \note{
           基于k-CBP的碰撞检测问题，首先要解决k-CBP间的相交测试，有下面两种方法：\\
           一是将k-CBP视为普通的三角网格模型，用传统AABB树方法进行相交检测。\\
-          二是利用计算凸体之间最近距离的GJK算法。该算法利用了Minkowski（闵可夫斯基）差的概念。核心思想在于若两个凸多边相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点。
+          二是利用计算凸体之间最近距离的GJK算法。该算法利用了Minkowski（闵可夫斯基）差的概念。核心思想在于若两个凸多边形相交，则凸多边形顶点的~Minkowski~差所围成的多边形必包含原点。
         }
       \end{frame}
 
@@ -148,7 +148,7 @@ GJK~算法的核心思想在于若两个凸多边相交，则凸多边形顶点�
           \begin{figure}[htpb]
             \centering
             \includegraphics[width=0.5\textwidth]{bunny-aabb-bvh-4-layers.pdf}
-            \caption{Bunny~模型的~AABB~树形结构(部分)\href{./figures/bv-bunny.gif}{\beamergotobutton{动态图}} } %adobe pdf reader can open it in browser
+            \caption{Bunny~模型的~AABB~树形结构(部分)\href{./bv-bunny.gif}{\beamergotobutton{动态图}} } %adobe pdf reader can open it in browser
             \label{fig:bunny:aabb:bvh:toplayer4}
           \end{figure} 
           \vspace{-1em}
@@ -181,7 +181,7 @@ GJK~算法的核心思想在于若两个凸多边相交，则凸多边形顶点�
           \begin{figure}[htbp]
             \centering
             \includegraphics[width=1.8in]{dynamic-bunny-m10-sA1.png}
-            \caption{运动场景碰撞检测示例\href{./figures/cd-bunny.gif}{\beamergotobutton{动态图}}}
+            \caption{运动场景碰撞检测示例\href{./cd-bunny.gif}{\beamergotobutton{动态图}}}
             \label{fig:bunny:moving}
           \end{figure}
           %\animategraphics[controls, buttonsize=3mm, width=1.8in]{10}{bvh-bunny-origin/bvh-bunny-}{0}{9} % 不靠谱
