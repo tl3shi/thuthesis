@@ -1,3 +1,3 @@
-xelatex ppt.tex
+xelatex -output-driver="xdvipdfmx -V 5" ppt.tex
 bibtex ppt.aux
-xelatex ppt.tex
+xelatex -output-driver="xdvipdfmx -V 5" ppt.tex

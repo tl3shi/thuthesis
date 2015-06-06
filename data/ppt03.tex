@@ -225,32 +225,32 @@ GJK~算法的核心思想在于若两个凸多边形相交，则凸多边形顶�
         }
     }
 
-    \frame{
-      \frametitle{实验结果：不同包围体对比}
-      \vspace{-2em}
-        \begin{figure}[htbp]
-          \hspace{-4em}\subfloat[包围体构造时间]
-        {
-          \includegraphics[width=.40\textwidth,page=1]{bvprebench.pdf}
-        }\hspace{-1.6em}
-        \subfloat[包围体命中率]
-        {
-          \includegraphics[width=.40\textwidth, page=3]{bvprebench.pdf}
-        }\hspace{-1.6em}
-        \subfloat[初始化时间]
-        {
-          \includegraphics[width=.40\textwidth, page=6]{bvprebench.pdf}
-        }\hspace{-1.6em}
-       \end{figure} 
-       \vspace{-1em}
-       \scriptsize 构造时间上基本满足：$\textnormal{凸包} > k\textnormal{-CBP} > k\textnormal{-DOP} > \textnormal{Sphere} \approx  \textnormal{Box}$，
-       包围体命中率基本满足：$\textnormal{凸包} > k\textnormal{-CBP} > k\textnormal{-DOP} > \textnormal{Box} > \textnormal{Sphere}$。紧致程度和包围体的命中率满足正相关关系。
+  %  \frame{
+  %    \frametitle{实验结果：不同包围体对比}
+  %    \vspace{-2em}
+  %      \begin{figure}[htbp]
+  %        \hspace{-4em}\subfloat[包围体构造时间]
+  %      {
+  %        \includegraphics[width=.40\textwidth,page=1]{bvprebench.pdf}
+  %      }\hspace{-1.6em}
+  %      \subfloat[包围体命中率]
+  %      {
+  %        \includegraphics[width=.40\textwidth, page=3]{bvprebench.pdf}
+  %      }\hspace{-1.6em}
+  %      \subfloat[初始化时间]
+  %      {
+  %        \includegraphics[width=.40\textwidth, page=6]{bvprebench.pdf}
+  %      }\hspace{-1.6em}
+  %     \end{figure} 
+  %     \vspace{-1em}
+  %     \scriptsize 构造时间上基本满足：$\textnormal{凸包} > k\textnormal{-CBP} > k\textnormal{-DOP} > \textnormal{Sphere} \approx  \textnormal{Box}$，
+  %     包围体命中率基本满足：$\textnormal{凸包} > k\textnormal{-CBP} > k\textnormal{-DOP} > \textnormal{Box} > \textnormal{Sphere}$。紧致程度和包围体的命中率满足正相关关系。
 
-       \note{
-        这个实验是对不同包围体进行了比较。左是构造时间，中为碰撞检测的命中率，右为碰撞检测初始化时间（包括了构造包围体时间和AABB树时间），命中率低的需要初始化模型数量更多因此初始化时间更长。
-        紧致程度和包围体的命中率满足正相关关系。 // 碰撞检测时间PPT中省略，因为碰撞检测算法一致，没有明显差别。
-       }
-    }
+  %     \note{
+  %      这个实验是对不同包围体进行了比较。左是构造时间，中为碰撞检测的命中率，右为碰撞检测初始化时间（包括了构造包围体时间和AABB树时间），命中率低的需要初始化模型数量更多因此初始化时间更长。
+  %      紧致程度和包围体的命中率满足正相关关系。 // 碰撞检测时间PPT中省略，因为碰撞检测算法一致，没有明显差别。
+  %     }
+  %  }
 
     \frame{
       \frametitle{实验结果：静止场景与$k$-DOP树对比}
