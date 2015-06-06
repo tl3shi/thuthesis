@@ -218,7 +218,7 @@ soups~）模型之间（如简单多边形，样条曲面构成的模型）的�
 J.Guibas~\cite{Guibas2003Zonotopes}等人在2003 年提出了一种利用对偶的方法用线段表示三维包围盒的隐式表达法，称其为~Zonotopes（二维称为~Zonogon），这种方法不用显示描述记录构成包围盒的多面体的每个面，节省存储且同样能够在较快的时间内进行碰撞检测等。\\
 \indent
 \item \textbf{其他}
-还有如图~\ref{fig:subfig-bv-cylinder}~所示的圆柱形\cite{Schomer2000Smallest}、图~\ref{fig:subfig-bvcone}~所示的圆锥形\cite{held1997erit}和如图~\ref{fig:subfig-bv-ellipse}~所示的椭球形\cite{Wang2004Efficient,hebing2009}等等包围体。
+还有如图~\ref{fig:subfig-bv-cylinder}~所示的圆柱形\cite{Schomer2000Smallest}、图~\ref{fig:subfig-bvcone}~所示的圆锥形\cite{held1997erit}和如图~\ref{fig:subfig-bv-ellipse}~所示的椭球形\cite{Wang2004Efficient,hebing2009}等包围体。
 \end{inparaenum}
 
 \subsection{包围体的应用}
@@ -282,7 +282,7 @@ Architecture，简称~CUDA，后同）~平台上基于~GPU~构造~AABB~包围体
 碰撞检测算法按照不同的分类标准可以有不同的分类方法。
 根据其利用的加速结构不同大致可以分为两类，
 一类是空间划分树（Spatial Partition Tree~，例如四叉树、八叉树和~KD~树等），如文献~\onlinecite{Melax2000}就提出了一种基于~BSP~的算法应用于~3D~游戏中的碰撞检测。
-另外一种就是层次结构包围体（Bounding Volume Hierarchies，简称~BVH，也称包围体树），如在第~\ref{sec:convex-bv}~节中提到的~AABB~，~OBB~等包围体树。
+另外一类就是层次结构包围体（Bounding Volume Hierarchies，简称~BVH，也称包围体树），如在第~\ref{sec:convex-bv}~节中提到的~AABB~，~OBB~等包围体树。
 包围体树跟常见的空间划分树最大的区别就是，在~BVH~中的两个或多个包围体可以包含相同的空间，而空间划分树的每个划分结构是分离的，且在~BVH~中，父节点不一定必须完整包含子节点，只需要包含子节点对应原始物体的那部分即可\cite{ericson2005real}。 
 根据参与碰撞检测的物体模型的表现形式，又可以分为凸体模型或凹体模型，多边形或者三角网格模型，构造实体几何（Constructive
 Solid Geometry，简称~CSG）模型，隐式方程或者参数表达曲面模型等，例如文献~\onlinecite{Zeiller1995}就讨论了计算机动画系统中基于~CSG~模型的碰撞检测算法，GJK（Gilbet Johnson Keerthi）~算法\cite{gilbert1988fast,bergen1999fast}
@@ -409,7 +409,7 @@ Convex hull & 5 & 5 & 1 & 5 \\
 \label{sec:structure}
 本文着重讨论如何快速地生成紧致性可控的凸包围体以及将此包围体应用于静止和运动场景的碰撞检测。
 
-第一章首先介绍了当前各种凸包围体的特征及应用，然后再介绍了碰撞检测问题的背景和本文研究的基于凸包围体的碰撞检测算法。
+第一章首先介绍了当前各种凸包围体的特征及应用，然后介绍了碰撞检测问题的背景和本文研究的基于凸包围体的碰撞检测算法。
 
 第二章提出了紧致性可控的凸包围多面体（$k$-Convex Bounding Polyhedron，简称~$k$-CBP）~的生成算法，紧致性可控主要通过凸包围体的平面数量~$k$~来调节。
 该算法法首先利用近似内凸包和~$k$-means~聚类算法生成构成凸包围多面体~$k$~个截面的法向，
