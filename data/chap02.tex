@@ -661,7 +661,7 @@ $|\bm{A}| \not= 0$，且解~$x_i = \frac{|\bm{A_i}|}{|\bm{A}|}, i =
 \end{algorithmic}
 \end{algorithm}
 
-完整的算法如算法~\ref{alg:enum_algortihm}~所示，算法输入为第~\ref{sec:search:planes}节中得到的截面$planes$，输出为~$k$-CBP~，每个~$k$-CBP~的多边形截面由围成多边形的交点和多边形所在平面构成。
+完整的算法如算法~\ref{alg:enum_algortihm}~所示，算法输入为第~\ref{sec:search:planes}~节中得到的截面$planes$，输出为~$k$-CBP~，每个~$k$-CBP~的多边形截面由围成多边形的交点和多边形所在平面构成。
 算法枚举遍历所有平面的组合，搜索出三个平面交于一点的情况，排除在半空间外部的交点即可得到~$k$-CBP~的顶点，算法复杂度为~$O(k^3)$，此算法思想简单易于理解和实现，但当平面数量较多（即~$k$~值较大）时，会耗费很多时间，与枚举法相比基于对偶映射的算法实现较复杂但其时间复杂度为~$O(k \log k)$，效率更高。
 
 \subsection{对偶映射算法}
